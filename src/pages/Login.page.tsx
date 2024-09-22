@@ -1,3 +1,3 @@
 export function LoginPage() {
-  return <div>Login page</div>;
+  return <div>Login page test</div>;
 }
