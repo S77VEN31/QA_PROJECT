@@ -5,21 +5,18 @@ BEGIN;
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS public.apellidos CASCADE;
 DROP TABLE IF EXISTS public.deduccionesobrero CASCADE;
-DROP TABLE IF EXISTS public.deduccionobrpagos CASCADE;
-DROP TABLE IF EXISTS public.deduccionpatpagos CASCADE;
 DROP TABLE IF EXISTS public.deduccionespatronales CASCADE;
 DROP TABLE IF EXISTS public.departamentos CASCADE;
 DROP TABLE IF EXISTS public.empleados CASCADE;
-DROP TABLE IF EXISTS public.impuestopagos CASCADE;
 DROP TABLE IF EXISTS public.impuestorenta CASCADE;
 DROP TABLE IF EXISTS public.nombres CASCADE;
 DROP TABLE IF EXISTS public.organizaciones CASCADE;
 DROP TABLE IF EXISTS public.pagos CASCADE;
 DROP TABLE IF EXISTS public.reservaspatronales CASCADE;
-DROP TABLE IF EXISTS public.reservaspatpagos CASCADE;
 DROP TABLE IF EXISTS public.usuarios CASCADE;
 DROP TABLE IF EXISTS public.salarios CASCADE;
 DROP TABLE IF EXISTS public.empleadosdepartamentos CASCADE;
+DROP TABLE IF EXISTS public.porcentajesvoluntarios CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.apellidos
 (
@@ -31,33 +28,20 @@ CREATE TABLE IF NOT EXISTS public.apellidos
 CREATE TABLE IF NOT EXISTS public.deduccionesobrero
 (
     dedobrid serial NOT NULL,
-    nombre text COLLATE pg_catalog."default" NOT NULL,
-    porcentaje numeric(4, 2) NOT NULL,
+    obrivm numeric(4, 2) NOT NULL,
+    obreym numeric(4, 2) NOT NULL,
+    obrbanco numeric(4, 2) NOT NULL,
     validfrom timestamp without time zone,
     validto timestamp with time zone,
     enabled boolean NOT NULL,
     CONSTRAINT deduccionobrero_pkey PRIMARY KEY (dedobrid)
 );
 
-CREATE TABLE IF NOT EXISTS public.deduccionobrpagos
-(
-    pagoid integer,
-    dedobrid integer,
-    deduccioncalculada double precision
-);
-
-CREATE TABLE IF NOT EXISTS public.deduccionpatpagos
-(
-    pagoid integer,
-    dedpatid integer,
-    deduccioncalculada double precision
-);
-
 CREATE TABLE IF NOT EXISTS public.deduccionespatronales
 (
     dedpatid serial NOT NULL,
-    nombre text COLLATE pg_catalog."default" NOT NULL,
-    porcentaje numeric(4, 2) NOT NULL,
+    pativm numeric(4, 2) NOT NULL,
+    pateym numeric(4, 2) NOT NULL,
     validfrom timestamp without time zone,
     validto timestamp without time zone,
     enabled boolean NOT NULL,
@@ -78,14 +62,8 @@ CREATE TABLE IF NOT EXISTS public.empleados
     apellido1id integer NOT NULL,
     apellido2id integer NOT NULL,
     fechanacimiento date NOT NULL,
-    organizacionid integer NOT NULL,
+    organizacionid smallint NOT NULL,
     CONSTRAINT empleadooptimo_pkey PRIMARY KEY (cedula)
-);
-
-CREATE TABLE IF NOT EXISTS public.impuestopagos
-(
-    pagoid integer,
-    deduccioncalculada double precision
 );
 
 CREATE TABLE IF NOT EXISTS public.impuestorenta
@@ -120,25 +98,30 @@ CREATE TABLE IF NOT EXISTS public.pagos
     salarioid integer,
     cedula integer NOT NULL,
     fechapago timestamp without time zone NOT NULL,
+    pateym numeric(11, 2) NOT NULL,
+    pativm numeric(11, 2) NOT NULL,
+    obreym numeric(11, 2) NOT NULL,
+    obrivm numeric(11, 2) NOT NULL,
+    obrbanco numeric(11, 2) NOT NULL,
+    obrsolidarista numeric(11, 2) NOT NULL DEFAULT 0,
+    resaguinaldo numeric(11, 2) NOT NULL,
+    rescesantia numeric(11, 2) NOT NULL,
+    resvacaciones numeric(11, 2) NOT NULL,
+    impuestorenta numeric(11, 2) NOT NULL,
+    enabled boolean NOT NULL DEFAULT true,
     CONSTRAINT pagos_pkey PRIMARY KEY (pagoid)
 );
 
 CREATE TABLE IF NOT EXISTS public.reservaspatronales
 (
     reservaid serial,
-    nombre text NOT NULL,
-    porcentaje numeric(4, 2) NOT NULL,
+    resaguinaldo numeric(4, 2) NOT NULL,
     validfrom timestamp without time zone,
     validto timestamp without time zone,
     enabled boolean NOT NULL,
+    rescesantia numeric(4, 2) NOT NULL,
+    resvacaciones numeric(4, 2) NOT NULL,
     PRIMARY KEY (reservaid)
-);
-
-CREATE TABLE IF NOT EXISTS public.reservaspatpagos
-(
-    pagoid integer NOT NULL,
-    reservaid integer NOT NULL,
-    reservacalculada double precision NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.usuarios
@@ -168,37 +151,16 @@ CREATE TABLE IF NOT EXISTS public.empleadosdepartamentos
     enabled boolean
 );
 
-ALTER TABLE IF EXISTS public.deduccionobrpagos
-    ADD CONSTRAINT deduccion_relationship FOREIGN KEY (dedobrid)
-    REFERENCES public.deduccionesobrero (dedobrid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
-ALTER TABLE IF EXISTS public.deduccionobrpagos
-    ADD CONSTRAINT pago_relationship FOREIGN KEY (pagoid)
-    REFERENCES public.pagos (pagoid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-CREATE INDEX IF NOT EXISTS idx_pagoid_deduccionobrpago
-    ON public.deduccionobrpagos(pagoid);
-
-
-ALTER TABLE IF EXISTS public.deduccionpatpagos
-    ADD CONSTRAINT deduccion_relationship FOREIGN KEY (dedpatid)
-    REFERENCES public.deduccionespatronales (dedpatid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
-ALTER TABLE IF EXISTS public.deduccionpatpagos
-    ADD CONSTRAINT pago_relationship FOREIGN KEY (pagoid)
-    REFERENCES public.pagos (pagoid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-CREATE INDEX IF NOT EXISTS idx_pagoid_deduccionpatpago
-    ON public.deduccionpatpagos(pagoid);
-
+CREATE TABLE IF NOT EXISTS public.porcentajesvoluntarios
+(
+    "voluntarioId" serial NOT NULL,
+    cedula integer NOT NULL,
+    porcentaje numeric(3, 2) NOT NULL,
+    validfrom timestamp without time zone,
+    validto timestamp without time zone,
+    enabled boolean NOT NULL,
+    PRIMARY KEY ("voluntarioId")
+);
 
 ALTER TABLE IF EXISTS public.empleados
     ADD CONSTRAINT apellido1_relationship FOREIGN KEY (apellido1id)
@@ -236,15 +198,6 @@ CREATE INDEX IF NOT EXISTS idx_organizacionid_empleadooptimo
     ON public.empleados(organizacionid);
 
 
-ALTER TABLE IF EXISTS public.impuestopagos
-    ADD CONSTRAINT pago_relationship FOREIGN KEY (pagoid)
-    REFERENCES public.pagos (pagoid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-CREATE INDEX IF NOT EXISTS idx_pagoid_impuestopago
-    ON public.impuestopagos(pagoid);
-
-
 ALTER TABLE IF EXISTS public.pagos
     ADD FOREIGN KEY (cedula)
     REFERENCES public.empleados (cedula) MATCH SIMPLE
@@ -256,22 +209,6 @@ ALTER TABLE IF EXISTS public.pagos
 ALTER TABLE IF EXISTS public.pagos
     ADD FOREIGN KEY (salarioid)
     REFERENCES public.salarios (salarioid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.reservaspatpagos
-    ADD FOREIGN KEY (pagoid)
-    REFERENCES public.pagos (pagoid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.reservaspatpagos
-    ADD FOREIGN KEY (reservaid)
-    REFERENCES public.reservaspatronales (reservaid) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -296,6 +233,14 @@ ALTER TABLE IF EXISTS public.empleadosdepartamentos
 ALTER TABLE IF EXISTS public.empleadosdepartamentos
     ADD FOREIGN KEY (departamentoid)
     REFERENCES public.departamentos (departamentoid) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.porcentajesvoluntarios
+    ADD FOREIGN KEY (cedula)
+    REFERENCES public.empleados (cedula) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;

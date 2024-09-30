@@ -14,17 +14,6 @@ CREATE TABLE Empleado (
 SELECT COUNT(*) FROM Empleado;
 SELECT * FROM Empleado;
 
-SELECT
-pg_size_pretty(pg_table_size('empleado')) AS table_size,
-pg_size_pretty(pg_indexes_size('empleado')) AS indexes_size;
-
-SELECT
-    pg_size_pretty(AVG(pg_column_size(cedula) + pg_column_size(nombre) + pg_column_size(apellido1) + pg_column_size(apellido2)
-	 + pg_column_size(salario) + pg_column_size(fecha_nacimiento) + pg_column_size(Organizacion) + pg_column_size(Departamento)))
-	AS size_registro
-FROM
-    empleado;
-
 -- Tabla EmpleadoOpt
 CREATE TABLE IF NOT EXISTS EmpleadoOptimizado (
     cedula INTEGER PRIMARY KEY,
@@ -51,17 +40,6 @@ FROM Empleado;
 SELECT * FROM EmpleadoOptimizado;
 SELECT COUNT(*) FROM EmpleadoOptimizado;
 
-SELECT
-pg_size_pretty(pg_table_size('EmpleadoOptimizado')) AS table_size,
-pg_size_pretty(pg_indexes_size('EmpleadoOptimizado')) AS indexes_size;
-
-SELECT
-    pg_size_pretty(AVG(pg_column_size(cedula) + pg_column_size(nombre) + pg_column_size(apellido1) + pg_column_size(apellido2)
-	 + pg_column_size(salario) + pg_column_size(fecha_nacimiento) + pg_column_size(organizacion) + pg_column_size(departamento)))
-	AS size_registro
-FROM
-    EmpleadoOptimizado;
-
 -- NOMBRES
 SELECT DISTINCT nombre, count(nombre) as apariciones FROM empleadooptimizado GROUP BY nombre ORDER BY apariciones DESC;
 SELECT DISTINCT nombre FROM empleadooptimizado;
@@ -81,19 +59,6 @@ CREATE INDEX idx_nombre ON public.nombres (nombre);
 
 SELECT empleadooptimizado.cedula, nombres.nombre, nombres.nombreId FROM public.empleadooptimizado INNER JOIN nombres ON empleadooptimizado.nombre = nombres.nombre;
 
-SELECT
-pg_size_pretty(pg_table_size('nombres')) AS table_size,
-pg_size_pretty(pg_indexes_size('nombres')) AS indexes_size;
-
-SELECT
-    pg_size_pretty(AVG(pg_column_size(nombreId) + pg_column_size(nombre)))
-	AS size_registro
-FROM
-    nombres;
-
-SELECT
-pg_size_pretty(pg_indexes_size('nombres')) AS nombres;
-
 -- APELLIDOS
 DROP TABLE apellidos;
 CREATE TABLE IF NOT EXISTS public.apellidos
@@ -110,19 +75,6 @@ SELECT DISTINCT apellido2 FROM empleadooptimizado;
 CREATE INDEX idx_apellido ON public.apellidos (apellido);
 SELECT * FROM apellidos;
 
-SELECT
-pg_size_pretty(pg_table_size('apellidos')) AS table_size,
-pg_size_pretty(pg_indexes_size('apellidos')) AS indexes_size;
-
-SELECT
-pg_size_pretty(pg_indexes_size('apellidos')) AS apellidos;
-
-SELECT
-    pg_size_pretty(AVG(pg_column_size(apellidoId) + pg_column_size(apellido)))
-	AS size_registro
-FROM
-    apellidos;
-
 -- ORGANIZACIONES
 DROP TABLE IF EXISTS organizaciones;
 CREATE TABLE IF NOT EXISTS public.organizaciones
@@ -138,12 +90,7 @@ FROM empleadooptimizado) AS organizacionesTemp;
 
 SELECT * FROM organizaciones;
 
-SELECT
-pg_size_pretty(pg_table_size('organizaciones')) AS table_size,
-pg_size_pretty(pg_indexes_size('organizaciones')) AS indexes_size;
-
 CREATE INDEX idx_organizaciones ON organizaciones (orgNombre);
-SELECT pg_size_pretty(pg_indexes_size('organizaciones')) AS organizaciones;
 
 -- DEPARTAMENTOS
 DROP TABLE IF EXISTS departamentos;
@@ -160,44 +107,9 @@ FROM empleadooptimizado) AS departamentosTemp;
 
 SELECT * FROM departamentos;
 
-SELECT
-pg_size_pretty(pg_table_size('departamentos')) AS table_size,
-pg_size_pretty(pg_indexes_size('departamentos')) AS indexes_size;
-
 CREATE INDEX idx_departamentos ON departamentos (depNombre);
 
-SELECT
-pg_size_pretty(pg_indexes_size('departamentos')) AS departamentos;
-
--- Tabla de EmpleadoÓptimo
-DROP TABLE IF EXISTS EmpleadoOptimo;
-CREATE TABLE IF NOT EXISTS public.EmpleadoOptimo
-(
-    cedula integer PRIMARY KEY,
-    nombreId integer,
-    apellido1Id int,
-    apellido2Id int,
-    salario int,
-    fecha_nacimiento TIMESTAMP,
-    organizacionId int,
-    departamentoId int,
-	CONSTRAINT nombres_relationship
-    FOREIGN KEY (nombreId)
-    REFERENCES nombres (nombreId),
-	CONSTRAINT apellido1_relationship
-    FOREIGN KEY (apellido1Id)
-    REFERENCES apellidos (apellidoId),
-	CONSTRAINT apellido2_relationship
-    FOREIGN KEY (apellido2Id)
-    REFERENCES apellidos (apellidoId),
-	CONSTRAINT organizacion_relationship
-    FOREIGN KEY (organizacionId)
-    REFERENCES organizaciones (organizacionId),
-	CONSTRAINT departamento_relationship
-    FOREIGN KEY (departamentoId)
-    REFERENCES departamentos (departamentoId)
-);
-
+-- Tabla de empleados
 INSERT INTO empleados (cedula, nombreid, apellido1id, apellido2id, fechanacimiento, organizacionid)
 SELECT CAST(cedula AS INTEGER) AS cedula,
 	nombres.nombreId,
@@ -209,88 +121,68 @@ FROM EmpleadoOptimizado INNER JOIN nombres ON nombres.nombre = empleadooptimizad
 INNER JOIN apellidos as apellidos1 ON apellidos1.apellido = empleadooptimizado.apellido1
 INNER JOIN apellidos as apellidos2 ON apellidos2.apellido = empleadooptimizado.apellido2;
 
-SELECT * FROM empleados LIMIT 100;
-SELECT
-pg_size_pretty(pg_table_size('EmpleadoOptimo')) AS table_size,
-pg_size_pretty(pg_indexes_size('EmpleadoOptimo')) AS indexes_size;
+SELECT * FROM empleados
+INNER JOIN nombres ON nombres.nombreid = empleados.nombreid
+INNER JOIN apellidos as apellidos1 ON apellidos1.apellidoid = empleados.apellido1id
+INNER JOIN apellidos as apellidos2 ON apellidos2.apellidoid = empleados.apellido2id LIMIT 100;
 
--- CAST(CAST(departamento AS FLOAT) AS INTEGER) AS departamento
-SELECT
-    pg_size_pretty(AVG(pg_column_size(cedula) + pg_column_size(nombreid) + pg_column_size(apellido1id) + pg_column_size(apellido2id)
-	 + pg_column_size(salario) + pg_column_size(fecha_nacimiento) + pg_column_size(organizacionid) + pg_column_size(departamentoid)))
-	AS size_registro
-FROM
-    EmpleadoOptimo;
+-- INSERTAR EN EMPLEADOSDEPARTAMENTOS
+INSERT INTO public.empleadosdepartamentos(
+	cedula, departamentoid, validfrom, validto, enabled)
+SELECT empleadooptimizado.cedula, empleadoOptimizado.departamento, CURRENT_DATE, NULL, true FROM empleadooptimizado;
 
-CREATE INDEX idx_nombre_empleadooptimo ON empleadooptimo (nombreId);
-CREATE INDEX idx_apellido1_empleadooptimo ON empleadooptimo (apellido1Id);
-CREATE INDEX idx_apellido2_empleadooptimo ON empleadooptimo (apellido2Id);
+CREATE INDEX idx_departamentoId_empleadosdepartamentos ON empleadosdepartamentos (departamentoId);
+CREATE INDEX idx_cedula_empleadosdepartamentos ON empleadosdepartamentos (cedula);
 
-DROP INDEX idx_departamentoId_empleadooptimo;
-CREATE INDEX idx_organizacionId_empleadooptimo on empleadooptimo (organizacionId);
-CREATE INDEX idx_departamentoId_empleadooptimo ON empleadooptimo (departamentoId);
+-- INSERTAR SALARIOS
+INSERT INTO public.salarios(
+	cedula, salariobruto, validfrom, validto, enabled)
+SELECT empleadooptimizado.cedula, empleadooptimizado.salario, CURRENT_DATE, NULL, true FROM empleadooptimizado;
 
-SELECT pg_size_pretty(pg_indexes_size('EmpleadoOptimo')) AS EmpleadoOptimo;
+CREATE INDEX idx_cedula_salarios ON salarios (cedula);
+
+-- Crear indices en tabla empleado
+CREATE INDEX idx_nombre_empleados ON empleados (nombreId);
+CREATE INDEX idx_apellido1_empleados ON empleados (apellido1Id);
+CREATE INDEX idx_apellido2_empleados ON empleados (apellido2Id);
+
+CREATE INDEX idx_organizacionId_empleados on empleados (organizacionId);
+
 
 -- DEDUCCIONES PATRONALES
-CREATE TABLE IF NOT EXISTS public.deduccionPatronal
-(
-	dedPatId SERIAL PRIMARY KEY,
-	dedPatNombre TEXT,
-	dedPatPorcentaje FLOAT
-);
+INSERT INTO public.deduccionespatronales(
+	pativm, pateym, validfrom, validto, enabled)
+	VALUES (5.42, 9.25, CURRENT_DATE, NULL, true);
+	
 
-INSERT INTO deduccionPatronal (dedPatNombre, dedPatPorcentaje) VALUES 
-('SEM', 0.0925),
-('IVM', 0.0542), 
-('Cuota Patronal Banco Popular', 0.0025), 
-('Asignaciones Familiares', 0.0500),
-('IMAS', 0.0050),
-('INA', 0.0150),
-('Aporte Patrono Banco Popular', 0.0025),
-('Fondo de Capitalización Laboral', 0.0150),
-('Fondo de Pensiones Complementarias', 0.0200),
-('INS', 0.0100);
-
-SELECT pg_size_pretty(pg_indexes_size('deduccionPatronal')) AS deduccionPatronal;
+SELECT * FROM deduccionespatronales
 
 -- DEDUCCIONES OBRERO
-CREATE TABLE IF NOT EXISTS public.deduccionObrero
-(
-	dedObrId SERIAL PRIMARY KEY,
-	dedObrNombre TEXT,
-	dedObrPorcentaje FLOAT
-);
+INSERT INTO public.deduccionesobrero(
+	obrivm, obreym, obrbanco, validfrom, validto, enabled)
+	VALUES (4.17, 5.5, 1.0, CURRENT_DATE, null, true);
 
-INSERT INTO deduccionObrero (dedObrNombre, dedObrPorcentaje) VALUES 
-('SEM',0.0925),
-('IVM', 0.0542),
-('Aporte Trabajador Banco Popular', 0.0100);
+select * from deduccionesobrero;
 
-SELECT pg_size_pretty(pg_indexes_size('deduccionObrero')) AS deduccionObrero;
+-- RESERVAS PATRONALES
+INSERT INTO public.reservaspatronales(
+	resaguinaldo, validfrom, validto, enabled, rescesantia, resvacaciones)
+	VALUES
+	(8.33, CURRENT_DATE, NULL, true, 6.33, 4.16);
 
+SELECT * FROM reservaspatronales;
 -- IMPUESTO DE RENTA AL SALRIO
-DROP TABLE impuestoRenta;
-CREATE TABLE IF NOT EXISTS public.impuestoRenta
-(
-	impuestoId SERIAL PRIMARY KEY,
-	impuestoMinimo FLOAT,
-	impuestoMaximo FLOAT, 
-	impuestoPorcentaje FLOAT
-);
-
-INSERT INTO impuestoRenta (impuestoMinimo, impuestoMaximo, impuestoPorcentaje) VALUES 
-(0.00, 929000.00, 0.0),
-(929000.00, 1363000.00, 0.10),
-(1363000.00, 2392000.00, 0.15),
-(2392000.00, 4783000.00, 0.20),
-(4783000.00, 999999999.00, 0.25);
+INSERT INTO public.impuestorenta(
+	impuestominimo, impuestomaximo, impuestoporcentaje, validfrom, validto, enabled)
+	VALUES
+(0.00, 929000.00, 0.0, CURRENT_DATE, NULL, true),
+(929000.00, 1363000.00, 10, CURRENT_DATE, NULL, true),
+(1363000.00, 2392000.00, 15, CURRENT_DATE, NULL, true),
+(2392000.00, 4783000.00, 20, CURRENT_DATE, NULL, true),
+(4783000.00, 999999999.00, 25, CURRENT_DATE, NULL, true);
 
 SELECT * FROM impuestoRenta;
 
-UPDATE impuestoRenta
-SET impuestoMinimo = 4783000
-WHERE impuestoId = 5;
 
 SELECT impuestoPorcentaje, impuestoMinimo, impuestoMaximo, e.cedula, e.salario FROM impuestoRenta
 CROSS JOIN empleadoOptimo e WHERE e.salario >= CAST(impuestoMinimo AS int) AND
