@@ -195,23 +195,9 @@ CROSS JOIN empleadoOptimo e WHERE e.salario >= impuestoMinimo AND
 SELECT pg_size_pretty(pg_indexes_size('impuestoRenta')) AS impuestoRenta;
 
 -- PAGOS
-DROP TABLE IF EXISTS public.pagos
-CREATE TABLE IF NOT EXISTS public.pagos
-(
-	pagoId SERIAL PRIMARY KEY,
-	salarioBruto FLOAT,
-	cedula INTEGER,
-	fechaPago TIMESTAMP,
-	CONSTRAINT cedula_relationship
-    FOREIGN KEY (cedula)
-    REFERENCES EmpleadoOptimo (cedula)
-);
-
 CREATE INDEX idx_cedula_pagos ON pagos (cedula);
-CREATE INDEX idx_salariobruto_pagos ON pagos (salarioBruto);
-CREATE INDEX idx_fechaPago_pagos ON pagos (fechaPago);
-
-SELECT pg_size_pretty(pg_indexes_size('pagos')) AS pagos;
+CREATE INDEX idx_salarioid_pagos ON pagos (salarioid);
+CREATE INDEX idx_fechapago_pagos ON pagos (fechaPago);
 
 -- DEDUCCIONES PATRONALES POR PAGO
 DROP TABLE IF EXISTS public.deduccionPatPago
