@@ -184,6 +184,101 @@ INSERT INTO public.impuestorenta(
 SELECT * FROM impuestoRenta;
 
 
+SELECT * FROM salarios CROSS JOIN impuestoRenta LIMIT 100;
+SELECT
+	s.cedula,
+	s.salarioid,
+    s.salariobruto,
+    -- Calculate the tax by multiplying taxable amount by impuestoporcentaje
+	SUM(
+		(CASE
+	        WHEN s.salariobruto > ir.impuestominimo THEN
+	            LEAST(s.salariobruto, ir.impuestomaximo) - ir.impuestominimo
+	        ELSE
+	            0
+	    END * ir.impuestoporcentaje / 100)
+	) AS tax
+FROM
+    salarios s
+CROSS JOIN
+    impuestorenta ir
+WHERE
+    ir.enabled = true
+GROUP BY s.cedula, s.salarioid, s.salariobruto
+LIMIT 100;
+
+
+SELECT
+	s.cedula,
+	s.salarioid,
+	s.salariobruto,
+	obr.obrivm * s.salariobruto / 100 as obrivm,
+	obr.obreym * s.salariobruto / 100 as obreym,
+	obr.obrbanco * s.salariobruto / 100 as obrbanco,
+	pat.pativm * s.salariobruto / 100 as pativm,
+	pat.pateym * s.salariobruto / 100 as pateym,
+	res.resaguinaldo * s.salariobruto / 100 as resaguinaldo,
+	res.rescesantia * s.salariobruto / 100 as rescesantia,
+	res.resvacaciones * s.salariobruto / 100 as resvacaciones,
+	-- Calcular impuesto de renta sumando el porcentaje correspondiente a cada tramo
+	SUM(
+		(CASE
+	        WHEN s.salariobruto > ir.impuestominimo THEN
+	            LEAST(s.salariobruto, ir.impuestomaximo) - ir.impuestominimo
+	        ELSE
+	            0
+	    END * ir.impuestoporcentaje / 100)
+	) AS tax
+FROM salarios s
+CROSS JOIN
+    impuestorenta ir
+CROSS JOIN
+	deduccionesobrero obr
+CROSS JOIN 
+	deduccionespatronales pat
+CROSS JOIN 
+	reservaspatronales res
+WHERE ir.enabled = true
+AND obr.enabled = true
+AND pat.enabled = true
+AND res.enabled = true
+GROUP BY s.cedula, s.salarioid, s.salariobruto, obr.obrivm, obr.obreym, obr.obrbanco,
+pat.pativm, pat.pateym, res.resaguinaldo, res.rescesantia, res.resvacaciones;
+
+
+SELECT * FROM deduccionesobrero;
+SELECT * FROM deduccionespatronales;
+SELECT * FROM reservaspatronales;
+
+SELECT
+	s.cedula,
+	s.salarioid,
+    s.salariobruto,
+	CASE
+	    WHEN s.salariobruto > ir.impuestominimo THEN
+	        LEAST(s.salariobruto, ir.impuestomaximo) - ir.impuestominimo
+		ELSE
+			0
+	END AS taxableamount,
+    -- Calculate the tax by multiplying taxable amount by impuestoporcentaje
+		(CASE
+	        WHEN s.salariobruto > ir.impuestominimo THEN
+	            LEAST(s.salariobruto, ir.impuestomaximo) - ir.impuestominimo
+	        ELSE
+	            0
+	    END * ir.impuestoporcentaje / 100)
+	AS tax
+FROM
+    salarios s
+CROSS JOIN
+    impuestorenta ir
+WHERE
+    ir.enabled = true
+LIMIT 100;
+
+
+
+
 SELECT impuestoPorcentaje, impuestoMinimo, impuestoMaximo, e.cedula, e.salario FROM impuestoRenta
 CROSS JOIN empleadoOptimo e WHERE e.salario >= CAST(impuestoMinimo AS int) AND
 	e.salario < CAST(impuestoMaximo AS int);
