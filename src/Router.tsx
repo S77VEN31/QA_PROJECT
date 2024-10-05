@@ -1,6 +1,5 @@
+import { DashboardPage, HomePage, LoginPage } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { DashboardPage } from './pages/Dashboard.page';
-import { HomePage } from './pages/Home.page';
 
 const router = createBrowserRouter([
   {
@@ -9,7 +8,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <div>Login page</div>,
+    element: <LoginPage />,
   },
   {
     path: '/dashboard',

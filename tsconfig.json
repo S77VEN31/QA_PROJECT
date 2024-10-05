@@ -18,6 +18,7 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
+      "@pages": ["./src/pages/index.ts"],
       "@test-utils": ["./test-utils"]
     }
   },
