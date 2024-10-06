@@ -3,17 +3,23 @@ import api from './api';
 
 // Interfaces
 interface ReportDetailParams {
-  date?: string;
+  startDate?: string;
+  endDate?: string;
   IDCard?: string;
   departmentID?: string;
   startRange?: number;
-  endRange?: number;
+  limitRange?: number;
 }
 
 const getReportDetail = async (params: ReportDetailParams) => {
+  const queryParams = {
+    ...params,
+  };
+
   const response = await api.get(`/report/detail`, {
-    params,
+    params: queryParams,
   });
+
   return response.data;
 };
 

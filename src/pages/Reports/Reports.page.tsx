@@ -1,18 +1,14 @@
-// React
 import { useEffect, useState } from 'react';
-// API
 import { getDepartments, getReportDetail } from '@api';
-// Components
 import {
   CheckboxCard,
   DateRangePicker,
+  ElipticPagination,
   FortnightReportTable,
   SearchableSelect,
   SearchInput,
 } from '@components';
-// Types
 import { ReportDetailData } from '@types';
-// Classes
 import classes from './Reports.page.module.css';
 
 export function ReportsPage() {
@@ -27,10 +23,11 @@ export function ReportsPage() {
   const [showReservas, setShowReservas] = useState(true);
   const [IDCard, setIDCard] = useState('');
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [activePage, setActivePage] = useState(1);
+  const limitRange = 9;
 
   useEffect(() => {
     getDepartments().then((departmentsData) => {
-      console.log('Departments Data:', departmentsData);
       const formattedDepartments = departmentsData.map((dep: any) => ({
         label: dep.depnombre,
         value: dep.departamentoid,
@@ -39,10 +36,12 @@ export function ReportsPage() {
     });
   }, []);
 
-  useEffect(() => {
+  const loadPageData = (page: number) => {
+    setActivePage(page); // Asegurar que la página activa se actualice antes de hacer fetch
+
     const params: any = {
-      startRange: 0,
-      endRange: 100,
+      startRange: (page - 1) * limitRange,
+      limitRange,
     };
 
     if (selectedDepartment) {
@@ -54,17 +53,31 @@ export function ReportsPage() {
     }
 
     if (dateRange[0]) {
-      params.date = dateRange[0].toISOString();
+      params.startDate = dateRange[0].toISOString();
+    }
+
+    if (dateRange[1]) {
+      params.endDate = dateRange[1].toISOString();
     }
 
     getReportDetail(params)
       .then((responseData) => {
         setData(responseData);
+        console.log('Report details:', responseData);
+        console.log('Report details params:', params || 'No params');
       })
       .catch((error) => {
         console.error('Error fetching report details:', error);
       });
+  };
+
+  useEffect(() => {
+    loadPageData(1);
   }, [selectedDepartment, IDCard, dateRange]);
+
+  const handlePageChange = (page: number) => {
+    loadPageData(page);
+  };
 
   return (
     <div className={classes.mainLayout}>
@@ -122,6 +135,13 @@ export function ReportsPage() {
           showReservas={showReservas}
         />
       </main>
+      <footer className={classes.footer}>
+        <ElipticPagination
+          totalPages={activePage + 1} // Asumimos que siempre habrá al menos una página más.
+          activePage={activePage}
+          onPageChange={handlePageChange}
+        />
+      </footer>
     </div>
   );
 }

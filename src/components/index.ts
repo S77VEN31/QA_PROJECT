@@ -8,6 +8,8 @@ import { DateRangePicker } from './Datepickers/DateRangePicker/DateRangePicker';
 import { SearchInput } from './Inputs/SearchInput/SearchInput';
 // Navbars
 import { NavbarNested } from './Navbars/NavbarNested/NavbarNested';
+// Pagination
+import { ElipticPagination } from './Pagination/ElipticPagination';
 // Selects
 import { SearchableSelect } from './Selects/SearchableSelect/SearchableSelect';
 // Tables
@@ -17,6 +19,7 @@ export {
   CheckboxCard,
   ColorSchemeToggle,
   DateRangePicker,
+  ElipticPagination,
   FortnightReportTable,
   NavbarNested,
   SearchableSelect,

@@ -34,3 +34,10 @@
   align-items: flex-start;
   overflow-y: auto;
 }
+
+.footer {
+  grid-row: 3;
+    display: flex;
+    justify-content: center;
+    height: 60px;
+}
