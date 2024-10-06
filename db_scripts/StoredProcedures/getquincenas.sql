@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION getquincenas(
 	p_fechafin DATE,
     p_cedula INT,
     p_departamentoId SMALLINT,
+	p_start INT,
 	p_limit INT
 )
 RETURNS TABLE (
@@ -29,8 +30,8 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 DECLARE
-	has_where BOOLEAN := FALSE;
 	l_fechafin DATE;
+	l_start INT;
 	queryStr TEXT;
 BEGIN
 	queryStr := '
@@ -47,7 +48,13 @@ BEGIN
 	INNER JOIN apellidos a1 ON a1.apellidoId = e.apellido1Id
 	INNER JOIN apellidos a2 ON a2.apellidoId = e.apellido2Id
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
+	WHERE p.pagoid > $5
 	';
+	IF p_start IS NULL THEN
+		l_start := 0;
+	ELSE
+		l_start := p_start;
+	END IF;
 	
 	IF p_fechapago IS NOT NULL THEN
 		IF p_fechafin IS NULL THEN
@@ -55,32 +62,20 @@ BEGIN
 		ELSE
 			l_fechafin := p_fechafin;
 		END IF;
-		queryStr := queryStr || ' WHERE (p.fechapago BETWEEN $1 AND $2)';
-		has_where := TRUE;
+		queryStr := queryStr || ' AND (p.fechapago BETWEEN $1 AND $2)';
 	ELSE
 		IF p_fechafin IS NOT NULL THEN
 			l_fechafin := p_fechafin;
-			queryStr := queryStr || ' WHERE p.fechapago <= $2';
-			has_WHERE := TRUE;
+			queryStr := queryStr || ' AND p.fechapago <= $2';
 		END IF;
 	END IF;
 
 	IF p_cedula IS NOT NULL THEN
-		IF has_where = TRUE THEN
-			queryStr := queryStr || ' AND p.cedula = $3';
-		ELSE
-			queryStr := queryStr || ' WHERE p.cedula = $3';
-			has_where := TRUE;
-		END IF;
+		queryStr := queryStr || ' AND p.cedula = $3';
 	END IF;
 
 	IF p_departamentoId IS NOT NULL THEN
-		IF has_where = TRUE THEN
-			queryStr := queryStr || ' AND d.departamentoId = $4';
-		ELSE
-			queryStr := queryStr || ' WHERE d.departamentoId = $4';
-			has_where := TRUE;
-		END IF;
+		queryStr := queryStr || ' AND d.departamentoId = $4';
 	END IF;
 
 	queryStr := queryStr || ' ORDER BY p.pagoid';
@@ -90,10 +85,10 @@ BEGIN
 	END IF;
 	
     RETURN QUERY EXECUTE queryStr
-	USING p_fechapago, l_fechafin, p_cedula, p_departamentoId;
+	USING p_fechapago, l_fechafin, p_cedula, p_departamentoId, l_start;
 END;
 $$;
 
 DROP FUNCTION getquincenas(date, date, integer, smallint, integer);
 
-SELECT * FROM getquincenas('2024-10-05'::DATE, NULL::DATE, NULL::INT, 10::SMALLINT, 100::INT);
+SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, NULL::INT);
