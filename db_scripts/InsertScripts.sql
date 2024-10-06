@@ -1,5 +1,6 @@
 
 -- Tabla temporal
+DROP TABLE IF EXISTS Empleado;
 CREATE TABLE Empleado (
     cedula TEXT,
     nombre TEXT,
@@ -15,6 +16,7 @@ SELECT COUNT(*) FROM Empleado;
 SELECT * FROM Empleado;
 
 -- Tabla EmpleadoOpt
+DROP TABLE IF EXISTS EmpleadoOptimizado;
 CREATE TABLE IF NOT EXISTS EmpleadoOptimizado (
     cedula INTEGER PRIMARY KEY,
     nombre TEXT,
@@ -44,7 +46,7 @@ SELECT COUNT(*) FROM EmpleadoOptimizado;
 SELECT DISTINCT nombre, count(nombre) as apariciones FROM empleadooptimizado GROUP BY nombre ORDER BY apariciones DESC;
 SELECT DISTINCT nombre FROM empleadooptimizado;
 
-DROP TABLE nombres;
+DROP TABLE IF EXISTS nombres;
 CREATE TABLE IF NOT EXISTS public.nombres
 (
 	nombreId SERIAL PRIMARY KEY,
@@ -79,7 +81,7 @@ SELECT * FROM apellidos;
 DROP TABLE IF EXISTS organizaciones;
 CREATE TABLE IF NOT EXISTS public.organizaciones
 (
-	organizacionId SMALLINT PRIMARY KEY,
+	organizacionId SMALLSERIAL PRIMARY KEY,
 	orgNombre TEXT
 );
 
@@ -96,7 +98,7 @@ CREATE INDEX idx_organizaciones ON organizaciones (orgNombre);
 DROP TABLE IF EXISTS departamentos;
 CREATE TABLE IF NOT EXISTS public.departamentos
 (
-	departamentoId SMALLINT PRIMARY KEY,
+	departamentoId SMALLSERIAL PRIMARY KEY,
 	depNombre TEXT
 );
 
@@ -294,8 +296,10 @@ CREATE INDEX idx_cedula_pagos ON pagos (cedula);
 CREATE INDEX idx_salarioid_pagos ON pagos (salarioid);
 CREATE INDEX idx_fechapago_pagos ON pagos (fechaPago);
 
+-- De aquí para abjao no es muy importante
+
 -- DEDUCCIONES PATRONALES POR PAGO
-DROP TABLE IF EXISTS public.deduccionPatPago
+DROP TABLE IF EXISTS public.deduccionPatPago;
 CREATE TABLE IF NOT EXISTS public.deduccionPatPago
 (
 	pagoId INTEGER,
@@ -314,7 +318,7 @@ CREATE INDEX idx_pagoId_deduccionPatPago ON deduccionPatPago (pagoId);
 SELECT pg_size_pretty(pg_indexes_size('deduccionPatPago')) AS deduccionPatPago;
 
 -- DEDUCCIONES DEL OBRERO POR PAGO
-DROP TABLE IF EXISTS public.deduccionObrPago
+DROP TABLE IF EXISTS public.deduccionObrPago;
 CREATE TABLE IF NOT EXISTS public.deduccionObrPago
 (
 	pagoId INTEGER,
@@ -333,7 +337,7 @@ CREATE INDEX idx_pagoId_deduccionObrPago ON deduccionObrPago (pagoId);
 SELECT pg_size_pretty(pg_indexes_size('deduccionObrPago')) AS deduccionObrPago;
 
 -- IMPUESTO DE RENTA POR PAGO
-DROP TABLE IF EXISTS public.impuestoPago
+DROP TABLE IF EXISTS public.impuestoPago;
 CREATE TABLE IF NOT EXISTS public.impuestoPago
 (
 	pagoId INTEGER,

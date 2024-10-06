@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS public.deduccionespatronales
 
 CREATE TABLE IF NOT EXISTS public.departamentos
 (
-    departamentoid smallint NOT NULL,
+    departamentoid SMALLSERIAL NOT NULL,
     depnombre text COLLATE pg_catalog."default",
     CONSTRAINT departamentos_pkey PRIMARY KEY (departamentoid)
 );
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS public.nombres
 
 CREATE TABLE IF NOT EXISTS public.organizaciones
 (
-    organizacionid smallint NOT NULL,
+    organizacionid SMALLSERIAL NOT NULL,
     orgnombre text COLLATE pg_catalog."default",
     CONSTRAINT organizaciones_pkey PRIMARY KEY (organizacionid)
 );
