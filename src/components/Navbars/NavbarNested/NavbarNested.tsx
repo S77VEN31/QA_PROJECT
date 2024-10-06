@@ -1,3 +1,4 @@
+import { ColorSchemeToggle } from '@components';
 import {
   IconAdjustments,
   IconCalendarStats,
@@ -6,11 +7,11 @@ import {
   IconPresentationAnalytics,
 } from '@tabler/icons-react';
 import { Code, Group, ScrollArea } from '@mantine/core';
-import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
 import { LinksGroup } from './NavbarLinksGroup';
 import classes from './NavbarNested.module.css';
 
 const mockdata = [
+  { label: 'Reportes', icon: IconGauge, link: '/dashboard/reports' },
   { label: 'Pagos', icon: IconGauge, link: '/dashboard/pagos' },
   {
     label: 'Planilla',

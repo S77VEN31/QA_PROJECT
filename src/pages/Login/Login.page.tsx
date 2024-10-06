@@ -1,3 +1,4 @@
+import { ColorSchemeToggle } from '@components';
 import {
   Anchor,
   Button,
@@ -10,7 +11,6 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
 import styles from './Login.page.module.css';
 
 export function LoginPage() {

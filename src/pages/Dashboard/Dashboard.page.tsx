@@ -1,5 +1,5 @@
+import { NavbarNested } from '@components';
 import { Outlet } from 'react-router-dom';
-import { NavbarNested } from '@/components/Navbars/NavbarNested/NavbarNested';
 
 export function DashboardPage() {
   return (
