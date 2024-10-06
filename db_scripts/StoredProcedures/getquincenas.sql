@@ -1,7 +1,9 @@
 CREATE OR REPLACE FUNCTION getquincenas(
     p_fechapago DATE,
     p_cedula INT,
-    p_departamentoId SMALLINT
+    p_departamentoId SMALLINT,
+	minPage INT,
+	maxPage INT
 )
 RETURNS TABLE (
     pagoid INT,
@@ -26,7 +28,15 @@ RETURNS TABLE (
 )
 LANGUAGE plpgsql
 AS $$
+DECLARE
+	l_maxPage INT;
 BEGIN
+	IF maxPage IS NULL THEN
+		l_maxPage := minPage + 100;
+	ELSE
+		l_maxPage := maxPage;
+	END IF;
+	
     RETURN QUERY
     SELECT p.pagoid, p.salarioid, p.cedula, (n.nombre || ' ' || a1.apellido || ' ' || a2.apellido) AS nombre,
 		   ed.departamentoId, d.depnombre, s.salariobruto,
@@ -43,10 +53,11 @@ BEGIN
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
     WHERE (p_fechapago IS NULL OR p.fechapago = p_fechapago)
       AND (p_cedula IS NULL OR p.cedula = p_cedula)
-      AND (p_departamentoId IS NULL OR d.departamentoId = p_departamentoId);
+      AND (p_departamentoId IS NULL OR d.departamentoId = p_departamentoId)
+	  AND p.pagoid BETWEEN minPage AND l_maxPage
+	 ORDER BY p.pagoid;
 END;
 $$;
 
 DROP FUNCTION getquincenas(date, integer, smallint)
-
-SELECT * FROM getquincenas('2024-10-5'::DATE, NULL::INT, NULL::SMALLINT)
+SELECT * FROM getquincenas('2024-10-5'::DATE, NULL::INT, NULL::SMALLINT, 101::INT, 200::INT)

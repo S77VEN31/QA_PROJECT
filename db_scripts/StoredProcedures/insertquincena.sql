@@ -44,7 +44,7 @@ $$;
 
 SELECT * FROM pagos
 
-CALL insertquincena('2024-10-05')
+CALL insertquincena('2024-10-06')
 
 
 
