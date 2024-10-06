@@ -30,6 +30,7 @@ export function ReportsPage() {
 
   useEffect(() => {
     getDepartments().then((departmentsData) => {
+      console.log('Departments Data:', departmentsData);
       const formattedDepartments = departmentsData.map((dep: any) => ({
         label: dep.depnombre,
         value: dep.departamentoid,
