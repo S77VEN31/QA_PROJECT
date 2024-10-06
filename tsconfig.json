@@ -19,7 +19,10 @@
     "paths": {
       "@/*": ["./src/*"],
       "@pages": ["./src/pages/index.ts"],
-      "@test-utils": ["./test-utils"]
+      "@test-utils": ["./test-utils"],
+      "@api": ["./src/api/index.ts"],
+      "@types": ["./src/types/index.ts"],
+      "@components": ["./src/components/index.ts"],
     }
   },
   "include": ["src", "test-utils"]

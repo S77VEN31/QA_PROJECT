@@ -1,7 +1,6 @@
-import axios from 'axios';
+// Department
+import { getDepartments } from './department.api';
+// Report
+import { getReportDetail } from './report.api';
 
-const api = axios.create({
-  baseURL: 'https://secure-tor-71725-08cba26ab54a.herokuapp.com',
-});
-
-export default api;
+export { getDepartments, getReportDetail };

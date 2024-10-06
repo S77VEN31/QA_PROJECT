@@ -1,4 +1,4 @@
-import { DashboardPage, HomePage, LoginPage } from '@pages';
+import { DashboardPage, HomePage, LoginPage, ReportsPage } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -15,8 +15,8 @@ const router = createBrowserRouter([
     element: <DashboardPage />,
     children: [
       {
-        path: 'events',
-        element: <div>Events page</div>,
+        path: 'reports',
+        element: <ReportsPage />,
       },
       {
         path: 'pagos',

@@ -2926,9 +2926,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/core@npm:^7.12.2":
-  version: 7.12.2
-  resolution: "@mantine/core@npm:7.12.2"
+"@mantine/core@npm:^7.13.2":
+  version: 7.13.2
+  resolution: "@mantine/core@npm:7.13.2"
   dependencies:
     "@floating-ui/react": "npm:^0.26.9"
     clsx: "npm:^2.1.1"
@@ -2937,25 +2937,25 @@ __metadata:
     react-textarea-autosize: "npm:8.5.3"
     type-fest: "npm:^4.12.0"
   peerDependencies:
-    "@mantine/hooks": 7.12.2
+    "@mantine/hooks": 7.13.2
     react: ^18.2.0
     react-dom: ^18.2.0
-  checksum: 10c0/75643e8e6f33564e98b68259aedbc9ef543832e6466e93686b832587fcd187314d493ff4cfdb143acd3d21d835b4efe1bee1da853702ab9dbd6a9a758c2c1ce8
+  checksum: 10c0/e5c41c73cea377a8c62683ab1abd24cc26394b68d0230f8df5b9925cd76dff52c6386a00f2c5f3221d7e9e82aeb988ca8e0f2aa042cc2378dea079e932a2290e
   languageName: node
   linkType: hard
 
-"@mantine/dates@npm:^7.12.2":
-  version: 7.12.2
-  resolution: "@mantine/dates@npm:7.12.2"
+"@mantine/dates@npm:^7.13.2":
+  version: 7.13.2
+  resolution: "@mantine/dates@npm:7.13.2"
   dependencies:
     clsx: "npm:^2.1.1"
   peerDependencies:
-    "@mantine/core": 7.12.2
-    "@mantine/hooks": 7.12.2
+    "@mantine/core": 7.13.2
+    "@mantine/hooks": 7.13.2
     dayjs: ">=1.0.0"
     react: ^18.2.0
     react-dom: ^18.2.0
-  checksum: 10c0/b7e74e823867997b11ad4c77de03a1b8ea77229f904bc9f1247b3479bf1e92b4af8983a8b9fe466775c55c731bd0ccb65e4b57bf527d4473526ab6069e19fc37
+  checksum: 10c0/a48f01df14ff9608b105a157264f4fce1f56a7415d41a5ea709f6da95711dc39a0ec2a50893a4b369b05199f8f66711848864d515713d49f4b258a41c0677b54
   languageName: node
   linkType: hard
 
@@ -2985,12 +2985,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/hooks@npm:^7.12.2":
-  version: 7.12.2
-  resolution: "@mantine/hooks@npm:7.12.2"
+"@mantine/hooks@npm:^7.13.2":
+  version: 7.13.2
+  resolution: "@mantine/hooks@npm:7.13.2"
   peerDependencies:
     react: ^18.2.0
-  checksum: 10c0/818674346619c2d30f53114a6b6da2b01cf6cf9ea1e262046964769d47c512fd75300be218651062df426822cfb38a0bc76d093798c8b4ddef66576c6fcf46e2
+  checksum: 10c0/2d56c22e268689e0f25a2c3616af9e51aa3468338dccac5da03b18ecbce36424252ed7c8479da5861720763c714989f73d24bbfb1c3e0cc87647100480720268
   languageName: node
   linkType: hard
 
@@ -9468,11 +9468,11 @@ __metadata:
     "@mantine/carousel": "npm:^7.12.2"
     "@mantine/charts": "npm:^7.12.2"
     "@mantine/code-highlight": "npm:^7.12.2"
-    "@mantine/core": "npm:^7.12.2"
-    "@mantine/dates": "npm:^7.12.2"
+    "@mantine/core": "npm:^7.13.2"
+    "@mantine/dates": "npm:^7.13.2"
     "@mantine/dropzone": "npm:^7.12.2"
     "@mantine/form": "npm:^7.12.2"
-    "@mantine/hooks": "npm:^7.12.2"
+    "@mantine/hooks": "npm:^7.13.2"
     "@mantine/modals": "npm:^7.12.2"
     "@mantine/notifications": "npm:^7.12.2"
     "@mantine/nprogress": "npm:^7.12.2"
