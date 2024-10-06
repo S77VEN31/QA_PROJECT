@@ -32,7 +32,8 @@ BEGIN
     CROSS JOIN reservaspatronales res
     WHERE obr.enabled = true
     AND pat.enabled = true
-    AND res.enabled = true;
+    AND res.enabled = true
+	AND payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 year'));
 
 EXCEPTION
     -- Handle any errors without explicit rollback or commit
@@ -44,7 +45,7 @@ $$;
 
 SELECT * FROM pagos
 
-CALL insertquincena('2024-10-06')
+CALL insertquincena('2024-10-10')
 
-
+SELECT *, (CURRENT_DATE + INTERVAL '5 year') FROM salarios s WHERE '2024-10-4' BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 year'));
 

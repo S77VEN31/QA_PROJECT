@@ -1,9 +1,9 @@
 CREATE OR REPLACE FUNCTION getquincenas(
     p_fechapago DATE,
+	p_fechafin DATE,
     p_cedula INT,
     p_departamentoId SMALLINT,
-	minPage INT,
-	maxPage INT
+	p_limit INT
 )
 RETURNS TABLE (
     pagoid INT,
@@ -29,17 +29,13 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 DECLARE
-	l_maxPage INT;
+	has_where BOOLEAN := FALSE;
+	l_fechafin DATE;
+	queryStr TEXT;
 BEGIN
-	IF maxPage IS NULL THEN
-		l_maxPage := minPage + 100;
-	ELSE
-		l_maxPage := maxPage;
-	END IF;
-	
-    RETURN QUERY
-    SELECT p.pagoid, p.salarioid, p.cedula, (n.nombre || ' ' || a1.apellido || ' ' || a2.apellido) AS nombre,
-		   ed.departamentoId, d.depnombre, s.salariobruto,
+	queryStr := '
+	SELECT p.pagoid, p.salarioid, p.cedula, (n.nombre || '' '' || a1.apellido || '' '' || a2.apellido) AS nombre,
+           ed.departamentoId, d.depnombre, s.salariobruto,
            p.fechapago, p.pateym, p.pativm, p.obreym, p.obrivm, p.obrbanco, 
            p.obrsolidarista, p.resaguinaldo, p.rescesantia, p.resvacaciones, 
            p.impuestorenta, p.enabled
@@ -51,13 +47,53 @@ BEGIN
 	INNER JOIN apellidos a1 ON a1.apellidoId = e.apellido1Id
 	INNER JOIN apellidos a2 ON a2.apellidoId = e.apellido2Id
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
-    WHERE (p_fechapago IS NULL OR p.fechapago = p_fechapago)
-      AND (p_cedula IS NULL OR p.cedula = p_cedula)
-      AND (p_departamentoId IS NULL OR d.departamentoId = p_departamentoId)
-	  AND p.pagoid BETWEEN minPage AND l_maxPage
-	 ORDER BY p.pagoid;
+	';
+	
+	IF p_fechapago IS NOT NULL THEN
+		IF p_fechafin IS NULL THEN
+			l_fechafin := p_fechapago;
+		ELSE
+			l_fechafin := p_fechafin;
+		END IF;
+		queryStr := queryStr || ' WHERE (p.fechapago BETWEEN $1 AND $2)';
+		has_where := TRUE;
+	ELSE
+		IF p_fechafin IS NOT NULL THEN
+			l_fechafin := p_fechafin;
+			queryStr := queryStr || ' WHERE p.fechapago <= $2';
+			has_WHERE := TRUE;
+		END IF;
+	END IF;
+
+	IF p_cedula IS NOT NULL THEN
+		IF has_where = TRUE THEN
+			queryStr := queryStr || ' AND p.cedula = $3';
+		ELSE
+			queryStr := queryStr || ' WHERE p.cedula = $3';
+			has_where := TRUE;
+		END IF;
+	END IF;
+
+	IF p_departamentoId IS NOT NULL THEN
+		IF has_where = TRUE THEN
+			queryStr := queryStr || ' AND d.departamentoId = $4';
+		ELSE
+			queryStr := queryStr || ' WHERE d.departamentoId = $4';
+			has_where := TRUE;
+		END IF;
+	END IF;
+
+	queryStr := queryStr || ' ORDER BY p.pagoid';
+
+	IF p_limit IS NOT NULL THEN
+		queryStr := queryStr || ' LIMIT ' || p_limit::TEXT;
+	END IF;
+	
+    RETURN QUERY EXECUTE queryStr
+	USING p_fechapago, l_fechafin, p_cedula, p_departamentoId;
 END;
 $$;
 
-DROP FUNCTION getquincenas(date, integer, smallint)
-SELECT * FROM getquincenas('2024-10-5'::DATE, NULL::INT, NULL::SMALLINT, 101::INT, 200::INT)
+DROP FUNCTION getquincenas(date, date, integer, smallint, integer);
+
+SELECT * FROM getquincenas('2024-10-05'::DATE, NULL::DATE, NULL::INT, 10::SMALLINT, 100::INT);

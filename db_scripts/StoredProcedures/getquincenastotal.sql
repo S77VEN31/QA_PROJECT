@@ -86,6 +86,6 @@ $$;
 
 DROP FUNCTION getquincenastotal(date, integer, smallint)
 
-SELECT * FROM getquincenastotal(NULL::DATE, NULL::INT, NULL::SMALLINT)
+SELECT * FROM getquincenastotal(NULL::DATE, NULL::INT, 3::SMALLINT)
 
 SELECT * FROM salarios ORDER BY salariobruto DESC LIMIT 3
