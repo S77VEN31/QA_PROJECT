@@ -48,7 +48,7 @@ BEGIN
 	INNER JOIN apellidos a1 ON a1.apellidoId = e.apellido1Id
 	INNER JOIN apellidos a2 ON a2.apellidoId = e.apellido2Id
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
-	WHERE p.pagoid > $5
+	WHERE TRUE
 	';
 	IF p_start IS NULL THEN
 		l_start := 0;
@@ -62,11 +62,11 @@ BEGIN
 		ELSE
 			l_fechafin := p_fechafin;
 		END IF;
-		queryStr := queryStr || ' AND (p.fechapago BETWEEN $1 AND $2)';
+		queryStr := queryStr || ' AND (p.fechapago::DATE BETWEEN $1 AND $2)';
 	ELSE
 		IF p_fechafin IS NOT NULL THEN
 			l_fechafin := p_fechafin;
-			queryStr := queryStr || ' AND p.fechapago <= $2';
+			queryStr := queryStr || ' AND p.fechapago::DATE <= $2';
 		END IF;
 	END IF;
 
@@ -83,6 +83,8 @@ BEGIN
 	IF p_limit IS NOT NULL THEN
 		queryStr := queryStr || ' LIMIT ' || p_limit::TEXT;
 	END IF;
+
+	queryStr := queryStr || ' OFFSET ' || l_start::TEXT;
 	
     RETURN QUERY EXECUTE queryStr
 	USING p_fechapago, l_fechafin, p_cedula, p_departamentoId, l_start;
@@ -91,4 +93,11 @@ $$;
 
 DROP FUNCTION getquincenas(date, date, integer, smallint, integer);
 
-SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, NULL::INT);
+SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, NULL::INT) ORDER BY pagoid DESC LIMIT 1;
+
+SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, 3::SMALLINT, 0::INT, NULL::INT)
+SELECT * FROM getquincenas(NULL::DATE, '2024-10-07'::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, NULL::INT)
+SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, 3::SMALLINT, 9::INT, 9::INT)
+
+
+SELECT COUNT(*) FROM empleadosdepartamentos GROUP BY departamentoId;

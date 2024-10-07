@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.deduccionesobrero
     obreym numeric(4, 2) NOT NULL,
     obrbanco numeric(4, 2) NOT NULL,
     validfrom timestamp without time zone,
-    validto timestamp with time zone,
+    validto timestamp without time zone,
     enabled boolean NOT NULL,
     CONSTRAINT deduccionobrero_pkey PRIMARY KEY (dedobrid)
 );
