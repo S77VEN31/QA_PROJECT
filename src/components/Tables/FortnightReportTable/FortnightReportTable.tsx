@@ -39,7 +39,7 @@ export function FortnightReportTable({
     const resvacaciones = parseFloat(row.resvacaciones);
 
     const totalDeducciones = obreym + obrivm + obrbanco + obrsolidarista + impuestorenta;
-    const porcentajeDeducciones = (totalDeducciones / salarioBruto) * 100;
+    const porcentajeDeducciones = (totalDeducciones / (salarioBruto / 2)) * 100;
     const porcentajeRestante = 100 - porcentajeDeducciones;
 
     return (

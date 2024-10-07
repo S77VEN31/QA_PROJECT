@@ -1,5 +1,8 @@
+// React
 import { useEffect, useState } from 'react';
+// API
 import { getDepartments, getReportDetail } from '@api';
+// Components
 import {
   CheckboxCard,
   DateRangePicker,
@@ -8,7 +11,9 @@ import {
   SearchableSelect,
   SearchInput,
 } from '@components';
+// Types
 import { ReportDetailData } from '@types';
+// Classes
 import classes from './Reports.page.module.css';
 
 export function ReportsPage() {
@@ -63,8 +68,6 @@ export function ReportsPage() {
     getReportDetail(params)
       .then((responseData) => {
         setData(responseData);
-        console.log('Report details:', responseData);
-        console.log('Report details params:', params || 'No params');
       })
       .catch((error) => {
         console.error('Error fetching report details:', error);
@@ -104,6 +107,7 @@ export function ReportsPage() {
         </div>
         <div className={classes.inputsContainer}>
           <SearchInput
+            type="number"
             value={IDCard}
             onChange={setIDCard}
             placeholder="Búsqueda por cédula"
