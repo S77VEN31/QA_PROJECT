@@ -5,7 +5,21 @@ CREATE PROCEDURE AsignarSalarioDepartamento(
 )
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    dept_exists BOOLEAN;
 BEGIN
+    -- Check if the department exists
+    SELECT EXISTS (
+        SELECT 1
+        FROM departamentos
+        WHERE departamentoid = p_departamentoid
+    ) INTO dept_exists;
+
+    -- Raise an exception if the department does not exist
+    IF NOT dept_exists THEN
+        RAISE EXCEPTION 'Department with ID % does not exist', p_departamentoid;
+    END IF;
+
 	UPDATE salarios
 	SET enabled = false, validto = CURRENT_TIMESTAMP
 	FROM empleadosdepartamentos
