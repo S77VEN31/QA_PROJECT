@@ -1,6 +1,6 @@
 // Department
-import { getDepartments } from './department.api';
+import { getDepartments, AssignDepartmentSalary } from './department.api';
 // Report
 import { getReportDetail } from './report.api';
 
-export { getDepartments, getReportDetail };
+export { getDepartments, getReportDetail, AssignDepartmentSalary };
