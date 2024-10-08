@@ -1,4 +1,4 @@
-import { DashboardPage, HomePage, LoginPage, ReportsPage } from '@pages';
+import { DashboardPage, HomePage, LoginPage, ReportsPage, AssignDepartmentSalaryPage } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -31,8 +31,8 @@ const router = createBrowserRouter([
         element: <div>Calcular page</div>,
       },
       {
-        path: 'departamentos/administrar',
-        element: <div>Administrar page</div>,
+        path: 'departamentos/asignarsalario',
+        element: <AssignDepartmentSalaryPage />,
       },
       {
         path: 'departamentos/consultar',
