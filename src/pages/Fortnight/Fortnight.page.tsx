@@ -69,7 +69,7 @@ export function FortnightPage() {
 
   const handleNotification = async (date: NullableDate, n?: number, apiCall?: any) => {
     if (!validateDate(date)) {
-      return; // Salimos si la fecha no es válida
+      return; 
     }
 
     if (date instanceof Date) {
