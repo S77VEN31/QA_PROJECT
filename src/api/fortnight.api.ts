@@ -1,5 +1,6 @@
-// API
+// Axios
 import { AxiosError } from 'axios';
+// API
 import api from './api';
 
 interface FortnightParams {
@@ -33,7 +34,7 @@ const insertNFortnights = async (params: NFortnightParams) => {
   const { timestamp, n } = params;
   console.log('Inserting fortnight with timestamp: ', timestamp.toISOString());
   try {
-    const response = await api.put('/fortnight', { timestamp: timestamp.toISOString(), n: n });
+    const response = await api.put('/fortnight', { timestamp: timestamp.toISOString(), n });
     return response.status;
   } catch (error) {
     console.log(error);
