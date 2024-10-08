@@ -47,7 +47,7 @@ $$;
 DROP PROCEDURE insertquincena(DATE)
 SELECT COUNT(*) FROM pagos
 
-CALL insertquincena('2024-10-08 20:00:00'::timestamp)
+CALL insertquincena('2024-12-28 00:00:00'::timestamp)
 
 SELECT * FROM pagos
 
