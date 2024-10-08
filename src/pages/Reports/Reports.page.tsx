@@ -1,7 +1,7 @@
 // React
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, getReportDetail } from '@api';
+import { getDepartments, getReportDetail, getReportTotal } from '@api';
 // Components
 import {
   CheckboxCard,
@@ -10,14 +10,18 @@ import {
   FortnightReportTable,
   SearchableSelect,
   SearchInput,
+  TotalReportTable,
 } from '@components';
 // Types
-import { ReportDetailData } from '@types';
+import { ReportDetailData, ReportTotalData } from '@types';
+// Mantine
+import { Title } from '@mantine/core';
 // Classes
 import classes from './Reports.page.module.css';
 
 export function ReportsPage() {
   const [data, setData] = useState<ReportDetailData[]>([]);
+  const [totalData, setTotalData] = useState<ReportTotalData[]>([]);
   const [departments, setDepartments] = useState<{ label: string; value: number }[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<{
     label: string;
@@ -40,6 +44,34 @@ export function ReportsPage() {
       setDepartments(formattedDepartments);
     });
   }, []);
+
+  const loadTotalData = () => {
+    const params: any = {};
+
+    if (selectedDepartment) {
+      params.departmentID = selectedDepartment.value.toString();
+    }
+
+    if (IDCard) {
+      params.IDCard = IDCard;
+    }
+
+    if (dateRange[0]) {
+      params.startDate = dateRange[0].toISOString();
+    }
+
+    if (dateRange[1]) {
+      params.endDate = dateRange[1].toISOString();
+    }
+    console.log('HERE');
+    getReportTotal(params)
+      .then((responseData) => {
+        setTotalData(responseData);
+      })
+      .catch((error) => {
+        console.error('Error fetching report totals:', error);
+      });
+  };
 
   const loadPageData = (page: number) => {
     setActivePage(page);
@@ -77,6 +109,7 @@ export function ReportsPage() {
 
   useEffect(() => {
     loadPageData(1);
+    loadTotalData();
   }, [selectedDepartment, IDCard, dateRange]);
 
   const handlePageChange = (page: number) => {
@@ -86,6 +119,7 @@ export function ReportsPage() {
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
+        <Title>Reportes de quincenas</Title>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"
@@ -133,6 +167,14 @@ export function ReportsPage() {
         />
       </header>
       <main className={classes.main}>
+        <Title order={2}>Resumen</Title>
+        <TotalReportTable
+          data={totalData}
+          showPatronal={showPatronal}
+          showObrero={showObrero}
+          showReservas={showReservas}
+        />
+        <Title order={2}>Detalle</Title>
         <FortnightReportTable
           data={data}
           showPatronal={showPatronal}
