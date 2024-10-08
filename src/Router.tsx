@@ -2,6 +2,7 @@
 import { getAuthToken } from '@api';
 // Pages
 import {
+  AssignDepartmentSalaryPage,
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
@@ -41,8 +42,8 @@ const router = createBrowserRouter([
         element: <FortnightPage />,
       },
       {
-        path: 'departamentos/administrar',
-        element: <div>Administrar page</div>,
+        path: 'departamentos/asignarsalario',
+        element: <AssignDepartmentSalaryPage />,
       },
       {
         path: 'departamentos/consultar',
