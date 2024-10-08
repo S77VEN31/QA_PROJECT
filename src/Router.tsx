@@ -1,4 +1,4 @@
-import { DashboardPage, HomePage, LoginPage, ReportsPage } from '@pages';
+import { DashboardPage, FortnightPage, HomePage, LoginPage, ReportsPage } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'pagos',
-        element: <div>Pagos page</div>,
+        element: <FortnightPage />,
       },
       {
         path: 'planilla/historial',

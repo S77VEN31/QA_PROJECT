@@ -42,7 +42,8 @@ export function ReportsPage() {
   }, []);
 
   const loadPageData = (page: number) => {
-    setActivePage(page); // Asegurar que la página activa se actualice antes de hacer fetch
+    setActivePage(page);
+    setData([]);
 
     const params: any = {
       startRange: (page - 1) * limitRange,
@@ -141,7 +142,7 @@ export function ReportsPage() {
       </main>
       <footer className={classes.footer}>
         <ElipticPagination
-          totalPages={activePage + 1} // Asumimos que siempre habrá al menos una página más.
+          totalPages={activePage + 1}
           activePage={activePage}
           onPageChange={handlePageChange}
         />

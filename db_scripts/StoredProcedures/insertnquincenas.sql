@@ -1,32 +1,13 @@
 CREATE OR REPLACE PROCEDURE insertnquincenas(IN num_payments INT, IN start_date TIMESTAMP)
 LANGUAGE plpgsql
 AS $$
-DECLARE
-    conflict_date TIMESTAMP;
 BEGIN
-    -- Verificar que las quincenas son 5 o 10 (5 meses)
-    IF num_payments NOT IN (5, 10) THEN
-        RAISE EXCEPTION 'Invalid number of payments. Must be either 5 or 10.';
+    -- Validación de que fecha de inicio sea el 14 o 28 del mes.
+    IF EXTRACT(DAY FROM start_date) NOT IN (14, 28) THEN
+        RAISE EXCEPTION 'Invalid start date. The start date must be either the 14th or the 28th of the month.';
     END IF;
 
-	 -- Paso 1: Revisar si alguna de las fechas ya tiene pagos.
-    SELECT payment_date
-    INTO conflict_date
-    FROM (
-        SELECT start_date + (n * INTERVAL '14 days') AS payment_date
-        FROM generate_series(0, num_payments - 1) n
-    ) AS payment_dates
-    WHERE EXISTS (
-        SELECT 1 FROM public.pagos p WHERE p.fechapago::date = payment_dates.payment_date::date
-    )
-    LIMIT 1;
-
-    -- Si hay un conflicto en las fechas, levantar una excepción y abortar.
-    IF conflict_date IS NOT NULL THEN
-        RAISE EXCEPTION 'Payment already exists for the date %', conflict_date::date;
-    END IF;
-
-    -- Step 2: Perform a bulk insert for the valid payment dates
+    -- Inserción de todos los pagos, calculando que las fechas de los pagos sean el 14 y el 28 de cada mes.
     INSERT INTO public.pagos (
         salarioid, cedula, fechapago, pateym, pativm, obreym, obrivm, obrbanco, 
         resaguinaldo, rescesantia, resvacaciones, impuestorenta, enabled
@@ -50,14 +31,32 @@ BEGIN
     CROSS JOIN deduccionespatronales pat
     CROSS JOIN reservaspatronales res
     CROSS JOIN (
-        -- Generate a series of payment dates
-        SELECT start_date + (n * INTERVAL '14 days') AS payment_date
-        FROM generate_series(0, num_payments - 1) n
+        SELECT 
+		    CASE
+		        -- Si la fecha es el 14, se alterna entre el 14 y el 28 para cada mes.
+		        WHEN EXTRACT(DAY FROM start_date) = 14 THEN
+		            -- Si n es par, se añade el 14, y si es impar, el 28.
+		            CASE 
+		                WHEN MOD(n, 2) = 0 THEN date_trunc('month', start_date + (n/2) * INTERVAL '1 month') + INTERVAL '13 days'
+		                ELSE date_trunc('month', start_date + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+		            END
+		        -- Si la fecha es el 28, se alterna entre el 28 del mes y el 14 del siguiente mes cada mes.
+		        WHEN EXTRACT(DAY FROM start_date) = 28 THEN
+		            -- If n is even, add the 28th of the month, if n is odd, add the 14th of the next month
+		            CASE 
+		                WHEN MOD(n, 2) = 0 THEN date_trunc('month', start_date + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+		                ELSE date_trunc('month', start_date + (n/2 + 1) * INTERVAL '1 month') + INTERVAL '13 days'
+		            END
+		    END AS payment_date
+		FROM generate_series(0, num_payments - 1) n
     ) AS payment_dates
     WHERE obr.enabled = TRUE
       AND pat.enabled = TRUE
       AND res.enabled = TRUE
-      AND payment_dates.payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 years'));
+      AND payment_dates.payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 years'))
+      AND NOT EXISTS (
+          SELECT 1 FROM public.pagos p WHERE p.fechapago::date = payment_dates.payment_date::date
+      );  -- Ensure there are no payments for the same date
 
 EXCEPTION
     -- Handle any errors
@@ -66,11 +65,68 @@ EXCEPTION
 END;
 $$;
 
-CALL  insertnquincenas(5, '2024-10-11'::TIMESTAMP);
-SET max_parallel_workers_per_gather = 16;
-SET max_parallel_workers = 17;
-SHOW max_parallel_workers;
-EXPLAIN ANALYZE SELECT
+
+CALL  insertnquincenas(5, '2024-10-14'::TIMESTAMP);
+
+
+SELECT 
+    CASE
+        -- If the start_date is the 14th, we add alternating 14th and 28th dates for each month
+        WHEN EXTRACT(DAY FROM '2024-10-14'::DATE) = 14 THEN
+            -- If n is even, add the 14th of the month, if n is odd, add the 28th
+            CASE 
+                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-10-14'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '13 days'
+                ELSE date_trunc('month', '2024-10-14'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+            END
+        -- If the start_date is the 28th, we add alternating 28th and 14th dates for each month
+        WHEN EXTRACT(DAY FROM '2024-10-14'::DATE) = 28 THEN
+            -- If n is even, add the 28th of the month, if n is odd, add the 14th of the next month
+            CASE 
+                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-10-14'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+                ELSE date_trunc('month', '2024-10-14'::DATE + (n/2 + 1) * INTERVAL '1 month') + INTERVAL '13 days'
+            END
+    END AS payment_date
+FROM generate_series(0, 5 - 1) n;
+
+SELECT 
+    CASE
+        -- If the start_date is the 14th, we add alternating 14th and 28th dates for each month
+        WHEN EXTRACT(DAY FROM '2024-10-28'::DATE) = 14 THEN
+            -- If n is even, add the 14th of the month, if n is odd, add the 28th
+            CASE 
+                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-10-28'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '13 days'
+                ELSE date_trunc('month', '2024-10-28'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+            END
+        -- If the start_date is the 28th, we add alternating 28th and 14th dates for each month
+        WHEN EXTRACT(DAY FROM '2024-10-28'::DATE) = 28 THEN
+            -- If n is even, add the 28th of the month, if n is odd, add the 14th of the next month
+            CASE 
+                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-10-28'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+                ELSE date_trunc('month', '2024-10-28'::DATE + (n/2 + 1) * INTERVAL '1 month') + INTERVAL '13 days'
+            END
+    END AS payment_date
+FROM generate_series(0, 10 - 1) n;
+
+SELECT 
+    CASE
+        -- If the start_date is the 14th, we add alternating 14th and 28th dates for each month
+        WHEN EXTRACT(DAY FROM '2024-10-28 12:00:00'::TIMESTAMP) = 14 THEN
+            -- If n is even, add the 14th of the month, if n is odd, add the 28th
+            CASE 
+                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-10-28 12:00:00'::TIMESTAMP + (n/2) * INTERVAL '1 month') + INTERVAL '13 days'
+                ELSE date_trunc('month', '2024-10-28 12:00:00'::TIMESTAMP + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+            END
+        -- If the start_date is the 28th, we add alternating 28th and 14th dates for each month
+        WHEN EXTRACT(DAY FROM '2024-10-28 12:00:00'::TIMESTAMP) = 28 THEN
+            -- If n is even, add the 28th of the month, if n is odd, add the 14th of the next month
+            CASE 
+                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-10-28 12:00:00'::TIMESTAMP + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+                ELSE date_trunc('month', '2024-10-28 12:00:00'::TIMESTAMP + (n/2 + 1) * INTERVAL '1 month') + INTERVAL '13 days'
+            END
+    END AS payment_date
+FROM generate_series(0, 10 - 1) n;
+
+SELECT
         s.salarioid, 
         s.cedula, 
         payment_dates.payment_date, 
@@ -89,11 +145,32 @@ EXPLAIN ANALYZE SELECT
     CROSS JOIN deduccionespatronales pat
     CROSS JOIN reservaspatronales res
     CROSS JOIN (
-        -- Generate a series of payment dates
-        SELECT '2024-10-11'::TIMESTAMP + (n * INTERVAL '14 days') AS payment_date
-        FROM generate_series(0, 5 - 1) n
+        SELECT 
+		    CASE
+		        -- If the start_date is the 14th, we add alternating 14th and 28th dates for each month
+		        WHEN EXTRACT(DAY FROM '2024-09-14'::DATE) = 14 THEN
+		            -- If n is even, add the 14th of the month, if n is odd, add the 28th
+		            CASE 
+		                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-09-14'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '13 days'
+		                ELSE date_trunc('month', '2024-09-14'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+		            END
+		        -- If the start_date is the 28th, we add alternating 28th and 14th dates for each month
+		        WHEN EXTRACT(DAY FROM '2024-09-14'::DATE) = 28 THEN
+		            -- If n is even, add the 28th of the month, if n is odd, add the 14th of the next month
+		            CASE 
+		                WHEN MOD(n, 2) = 0 THEN date_trunc('month', '2024-09-14'::DATE + (n/2) * INTERVAL '1 month') + INTERVAL '27 days'
+		                ELSE date_trunc('month', '2024-09-14'::DATE + (n/2 + 1) * INTERVAL '1 month') + INTERVAL '13 days'
+		            END
+		    END AS payment_date
+		FROM generate_series(0, 5 - 1) n
     ) AS payment_dates
     WHERE obr.enabled = TRUE
       AND pat.enabled = TRUE
       AND res.enabled = TRUE
-      AND payment_dates.payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 years'));
+      AND payment_dates.payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 years'))
+      AND NOT EXISTS (
+          SELECT 1 FROM public.pagos p WHERE p.fechapago::date = payment_dates.payment_date::date
+      );  -- Ensure there are no payments for the same date
+
+
+		
