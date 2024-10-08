@@ -43,7 +43,7 @@ export function ReportsPage() {
 
   const loadPageData = (page: number) => {
     setActivePage(page); // Asegurar que la página activa se actualice antes de hacer fetch
-
+    setData([]);
     const params: any = {
       startRange: (page - 1) * limitRange,
       limitRange,
