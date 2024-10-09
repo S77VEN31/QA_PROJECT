@@ -28,6 +28,13 @@
   gap: 1rem;
 }
 
+.buttonContainer {
+  display: flex;
+  flex-direction: column; /* Makes elements stack vertically */
+  padding-top: 10px; /* Adds space between the inputs and the button */
+  align-items: flex-start; /* Aligns elements to the left (optional) */
+}
+
 .main {
   display: flex;
   flex-direction: column;

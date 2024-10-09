@@ -79,26 +79,36 @@ export function AssignDepartmentSalaryPage() {
   }
   return (
     <div className={classes.mainLayout}>
-      <header className={classes.header}></header>
-      <main className={classes.main}>
-        <div className={classes.inputsContainer}>
-          <SearchableSelect
-            items={departments}
-            selectedItem={selectedDepartment}
-            setSelectedItem={setSelectedDepartment}
-            placeholder="Seleccione un departamento"
-            label="Departamento"
-          />
-          <NumInput
-            value={salary} // Bound to salary state
-            onChange={(value) => setSalary(value)} // Update salary state on change
-            placeholder="Ingrese el salario"
-            label="Salario"
-          />
-          <Button onClick={handleAssignSalary}>Asignar</Button>
-        </div>
-      </main>
-      <footer className={classes.footer}></footer>
+      <header className={classes.header}>
+      </header>
+        <main className={classes.main}>
+          <h1>Asignar salario a departamento</h1>
+          <p>Seleccione un departamento y asigne un salario. El salario debe ser distinto de 0.</p>
+          <div className={classes.inputsContainer}>
+            <SearchableSelect
+              items={departments}
+              selectedItem={selectedDepartment}
+              setSelectedItem={setSelectedDepartment}
+              placeholder="Seleccione un departamento"
+              label="Departamento"
+              aria-label="Seleccione un departamento"
+            />
+            <NumInput
+              value={salary}               // Bound to salary state
+              onChange={(value) => setSalary(value)}  // Update salary state on change
+              placeholder="Ingrese el salario"
+              label="Salario"
+              aria-label="Ingrese el salario"
+            />
+          </div>
+          <div className={classes.buttonContainer}>
+            <Button
+              onClick={handleAssignSalary}
+            >Asignar</Button>
+          </div>
+        </main>
+      <footer className={classes.footer}>
+      </footer>
     </div>
   );
 }
