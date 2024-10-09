@@ -5,7 +5,7 @@ import {
   HomePage,
   LoginPage,
   TotalReportPage,
-  AssignDepartamentSalaryPage
+  AssignDepartmentSalaryPage
 } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
