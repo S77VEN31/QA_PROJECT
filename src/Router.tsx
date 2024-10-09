@@ -1,11 +1,11 @@
 import {
+  AssignDepartmentSalaryPage,
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
   HomePage,
   LoginPage,
   TotalReportPage,
-  AssignDepartmentSalaryPage
 } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
