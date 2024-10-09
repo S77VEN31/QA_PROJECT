@@ -1,4 +1,3 @@
-// React
 import { useEffect, useState } from 'react';
 // API
 import { getDepartments, getReportTotal } from '@api';
@@ -13,7 +12,7 @@ import {
 // Types
 import { ReportTotalData } from '@types';
 // Mantine
-import { Title } from '@mantine/core';
+import { Button, Loader, Text, Title } from '@mantine/core';
 // Classes
 import classes from '../DetailedReport.page.module.css';
 
@@ -29,6 +28,8 @@ export function TotalReportPage() {
   const [showReservas, setShowReservas] = useState(true);
   const [IDCard, setIDCard] = useState('');
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   useEffect(() => {
     getDepartments().then((departmentsData) => {
@@ -41,7 +42,9 @@ export function TotalReportPage() {
   }, []);
 
   const loadPageData = () => {
+    setLoading(true);
     setTotalData([]);
+    setSearched(true); // Marcar que se ha realizado una búsqueda
 
     const params: any = {};
 
@@ -67,17 +70,17 @@ export function TotalReportPage() {
       })
       .catch((error) => {
         console.error('Error fetching report totals:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
-
-  useEffect(() => {
-    loadPageData();
-  }, [selectedDepartment, IDCard, dateRange]);
 
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
         <Title>Reporte de Totales</Title>
+
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"
@@ -98,40 +101,61 @@ export function TotalReportPage() {
             onChange={setShowReservas}
           />
         </div>
-        <div className={classes.inputsContainer}>
-          <SearchInput
-            type="number"
-            value={IDCard}
-            onChange={setIDCard}
-            placeholder="Búsqueda por cédula"
-            label="Cédula"
-          />
-          <SearchableSelect
-            items={departments}
-            selectedItem={selectedDepartment}
-            setSelectedItem={setSelectedDepartment}
-            placeholder="Seleccione un departamento"
-            label="Departamento"
-          />
+        <div className={classes.searchContainer}>
+          <div className={classes.filterContainer}>
+            <div className={classes.inputsContainer}>
+              <SearchInput
+                type="number"
+                value={IDCard}
+                onChange={setIDCard}
+                placeholder="Búsqueda por cédula"
+                label="Cédula"
+              />
+              <SearchableSelect
+                items={departments}
+                selectedItem={selectedDepartment}
+                setSelectedItem={setSelectedDepartment}
+                placeholder="Seleccione un departamento"
+                label="Departamento"
+              />
+            </div>
+            <DateRangePicker
+              startDateLabel="Fecha de inicio"
+              endDateLabel="Fecha de fin"
+              startDatePlaceholder="Seleccione una fecha"
+              endDatePlaceholder="Seleccione una fecha"
+              placeholder="Seleccione un rango"
+              initialRange={dateRange}
+              onRangeChange={setDateRange}
+            />
+          </div>
+          <Button onClick={loadPageData} className={classes.searchButton} color="blue">
+            Buscar
+          </Button>
         </div>
-        <DateRangePicker
-          startDateLabel="Fecha de inicio"
-          endDateLabel="Fecha de fin"
-          startDatePlaceholder="Seleccione una fecha"
-          endDatePlaceholder="Seleccione una fecha"
-          placeholder="Seleccione un rango"
-          initialRange={dateRange}
-          onRangeChange={setDateRange}
-        />
       </header>
       <main className={classes.main}>
-        <Title order={2}>Resumen</Title>
-        <TotalReportTable
-          data={totalData}
-          showPatronal={showPatronal}
-          showObrero={showObrero}
-          showReservas={showReservas}
-        />
+        <Title order={2}>Tabla de reportes totales</Title>
+        {loading ? (
+          <div className={classes.loaderContainer}>
+            <Loader color="blue" />
+          </div>
+        ) : (
+          <>
+            {!searched ? (
+              <Text>Por favor realice una búsqueda para ver los resultados.</Text>
+            ) : totalData.length > 0 ? (
+              <TotalReportTable
+                data={totalData}
+                showPatronal={showPatronal}
+                showObrero={showObrero}
+                showReservas={showReservas}
+              />
+            ) : (
+              <Text>No se encontraron resultados para su búsqueda.</Text>
+            )}
+          </>
+        )}
       </main>
     </div>
   );

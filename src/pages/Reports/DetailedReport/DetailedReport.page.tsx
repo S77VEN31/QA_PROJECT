@@ -1,4 +1,3 @@
-// React
 import { useEffect, useState } from 'react';
 // API
 import { getDepartments, getReportDetail } from '@api';
@@ -13,6 +12,8 @@ import {
 } from '@components';
 // Types
 import { ReportDetailData } from '@types';
+// Mantine
+import { Loader, Title } from '@mantine/core';
 // Classes
 import classes from '../DetailedReport.page.module.css';
 
@@ -29,6 +30,7 @@ export function DetailedReportPage() {
   const [IDCard, setIDCard] = useState('');
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [activePage, setActivePage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const limitRange = 9;
 
   useEffect(() => {
@@ -42,6 +44,7 @@ export function DetailedReportPage() {
   }, []);
 
   const loadPageData = (page: number) => {
+    setLoading(true);
     setActivePage(page);
     setData([]);
 
@@ -73,6 +76,9 @@ export function DetailedReportPage() {
       })
       .catch((error) => {
         console.error('Error fetching report details:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -87,6 +93,7 @@ export function DetailedReportPage() {
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
+        <Title>Reporte Detallado</Title>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"
@@ -134,12 +141,19 @@ export function DetailedReportPage() {
         />
       </header>
       <main className={classes.main}>
-        <FortnightReportTable
-          data={data}
-          showPatronal={showPatronal}
-          showObrero={showObrero}
-          showReservas={showReservas}
-        />
+        <Title order={2}>Tabla de reportes detallados</Title>
+        {loading ? (
+          <div className={classes.loaderContainer}>
+            <Loader color="blue" />
+          </div>
+        ) : (
+          <FortnightReportTable
+            data={data}
+            showPatronal={showPatronal}
+            showObrero={showObrero}
+            showReservas={showReservas}
+          />
+        )}
       </main>
       <footer className={classes.footer}>
         <ElipticPagination
