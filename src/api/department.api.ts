@@ -12,7 +12,7 @@ interface AssignDepartmentParams {
   salario?: number;
 }
 
-export const AssignDepartmentSalary = async (params: AssignDepartmentParams) => {
+export const assignDepartmentSalary = async (params: AssignDepartmentParams) => {
   const queryParams = new URLSearchParams({
     departamentoId: params.departamentoId?.toString() || '',
     salario: params.salario?.toString() || ''

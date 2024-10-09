@@ -1,7 +1,7 @@
 // React
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, AssignDepartmentSalary } from '@api';
+import { getDepartments, assignDepartmentSalary } from '@api';
 // Components
 import {
   SearchableSelect,
@@ -40,7 +40,7 @@ export function AssignDepartmentSalaryPage() {
         params.departamentoId = selectedDepartment.value;
         params.salario = salary;
         // Call the function to assign the salary
-        AssignDepartmentSalary(params)
+        assignDepartmentSalary(params)
         .then((responseData) => {
           // Display a success notification with the response body
           notifications.show({
