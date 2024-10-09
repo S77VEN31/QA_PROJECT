@@ -23,4 +23,24 @@ const getReportDetail = async (params: ReportDetailParams) => {
   return response.data;
 };
 
-export { getReportDetail };
+interface ReportTotalParams {
+  startDate?: string;
+  endDate?: string;
+  IDCard?: string;
+  departmentID?: string;
+}
+
+const getReportTotal = async (params: ReportTotalParams) => {
+  const queryParams = {
+    ...params,
+  };
+
+  const response = await api.get(`/report/total`, {
+    params: queryParams,
+  });
+
+  return response.data;
+};
+
+export { getReportDetail, getReportTotal };
+

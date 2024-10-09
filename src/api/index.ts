@@ -3,6 +3,6 @@ import { getDepartments } from './department.api';
 // Fortnight
 import { insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
-import { getReportDetail } from './report.api';
+import { getReportDetail, getReportTotal } from './report.api';
 
-export { getDepartments, getReportDetail, insertFortnight, insertNFortnights };
+export { getDepartments, getReportDetail, getReportTotal, insertFortnight, insertNFortnights };

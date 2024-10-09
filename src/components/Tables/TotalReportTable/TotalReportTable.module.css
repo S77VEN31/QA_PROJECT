@@ -1,0 +1,37 @@
+.header {
+  position: sticky;
+  top: 0;
+  background-color: var(--mantine-color-body);
+  transition: box-shadow 150ms ease;
+  z-index: 1; /* Para que el header esté por encima del contenido al hacer scroll */
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid
+    light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
+}
+
+.scrolled {
+  box-shadow: var(--mantine-shadow-sm); /* Aplica una sombra cuando se hace scroll */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scrollArea {
+  width: 100%;
+}
+
+.progressSection {
+  &:not(:first-of-type) {
+    border-left: 3px solid
+      light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  }
+}
