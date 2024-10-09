@@ -1,4 +1,12 @@
-import { DashboardPage, HomePage, LoginPage, ReportsPage, AssignDepartmentSalaryPage } from '@pages';
+import {
+  DashboardPage,
+  DetailedReportPage,
+  FortnightPage,
+  HomePage,
+  LoginPage,
+  TotalReportPage,
+  AssignDepartamentSalaryPage
+} from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -15,20 +23,16 @@ const router = createBrowserRouter([
     element: <DashboardPage />,
     children: [
       {
-        path: 'reports',
-        element: <ReportsPage />,
+        path: 'report/total',
+        element: <TotalReportPage />,
+      },
+      {
+        path: 'report/detailed',
+        element: <DetailedReportPage />,
       },
       {
         path: 'pagos',
-        element: <div>Pagos page</div>,
-      },
-      {
-        path: 'planilla/historial',
-        element: <div>Historial page</div>,
-      },
-      {
-        path: 'planilla/calcular',
-        element: <div>Calcular page</div>,
+        element: <FortnightPage />,
       },
       {
         path: 'departamentos/asignarsalario',

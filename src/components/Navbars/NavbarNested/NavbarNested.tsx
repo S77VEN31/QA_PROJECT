@@ -1,27 +1,20 @@
 import { ColorSchemeToggle } from '@components';
-import {
-  IconAdjustments,
-  IconCalendarStats,
-  IconGauge,
-  IconNotes,
-  IconPresentationAnalytics,
-} from '@tabler/icons-react';
+import { IconAdjustments, IconCalendarStats, IconGauge, IconPresentationAnalytics } from '@tabler/icons-react';
 import { Code, Group, ScrollArea } from '@mantine/core';
 import { LinksGroup } from './NavbarLinksGroup';
 import classes from './NavbarNested.module.css';
 
+
 const mockdata = [
-  { label: 'Reportes', icon: IconGauge, link: '/dashboard/reports' },
-  { label: 'Pagos', icon: IconGauge, link: '/dashboard/pagos' },
   {
-    label: 'Planilla',
-    icon: IconNotes,
-    initiallyOpened: true,
+    label: 'Reportes',
+    icon: IconGauge,
     links: [
-      { label: 'Historial', link: '/dashboard/planilla/historial' },
-      { label: 'Calcular', link: '/dashboard/planilla/calcular' },
+      { label: 'Total', link: '/dashboard/report/total' },
+      { label: 'Detallado', link: '/dashboard/report/detailed' },
     ],
   },
+  { label: 'Pagos', icon: IconGauge, link: '/dashboard/pagos' },
   {
     label: 'Departamentos',
     icon: IconCalendarStats,

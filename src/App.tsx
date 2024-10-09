@@ -1,9 +1,12 @@
 import '@mantine/core/styles.css';
 
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { Router } from './Router';
 import { theme } from './theme';
 import { Notifications } from '@mantine/notifications';
+
+import '@mantine/notifications/styles.css';
 
 import '@mantine/notifications/styles.css';
 

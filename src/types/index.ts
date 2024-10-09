@@ -15,3 +15,17 @@ export interface ReportDetailData {
   rescesantia: string;
   resvacaciones: string;
 }
+
+export interface ReportTotalData {
+  salariobruto: number;
+  pateym: string;
+  pativm: string;
+  obreym: string;
+  obrivm: string;
+  obrbanco: string;
+  obrsolidarista: string;
+  impuestorenta: string;
+  resaguinaldo: string;
+  rescesantia: string;
+  resvacaciones: string;
+}

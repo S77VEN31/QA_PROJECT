@@ -15,6 +15,7 @@ import { ElipticPagination } from './Pagination/ElipticPagination';
 import { SearchableSelect } from './Selects/SearchableSelect/SearchableSelect';
 // Tables
 import { FortnightReportTable } from './Tables/FortnightReportTable/FortnightReportTable';
+import { TotalReportTable } from './Tables/TotalReportTable/TotalReportTable';
 
 
 export {
@@ -27,4 +28,5 @@ export {
   SearchableSelect,
   SearchInput,
   NumInput,
+  TotalReportTable,
 };
