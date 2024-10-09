@@ -1,25 +1,32 @@
+// API
+import { getAuthToken } from '@api';
+// Pages
 import {
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
-  HomePage,
   LoginPage,
   TotalReportPage,
 } from '@pages';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+// Router
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+
+const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
+  const token = getAuthToken();
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+  return element;
+};
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/login',
     element: <LoginPage />,
   },
   {
     path: '/dashboard',
-    element: <DashboardPage />,
+    element: <ProtectedRoute element={<DashboardPage />} />,
     children: [
       {
         path: 'report/total',
