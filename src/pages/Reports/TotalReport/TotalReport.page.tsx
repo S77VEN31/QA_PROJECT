@@ -1,26 +1,23 @@
 // React
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, getReportDetail, getReportTotal } from '@api';
+import { getDepartments, getReportTotal } from '@api';
 // Components
 import {
   CheckboxCard,
   DateRangePicker,
-  ElipticPagination,
-  FortnightReportTable,
   SearchableSelect,
   SearchInput,
   TotalReportTable,
 } from '@components';
 // Types
-import { ReportDetailData, ReportTotalData } from '@types';
+import { ReportTotalData } from '@types';
 // Mantine
 import { Title } from '@mantine/core';
 // Classes
-import classes from './Reports.page.module.css';
+import classes from '../DetailedReport.page.module.css';
 
-export function ReportsPage() {
-  const [data, setData] = useState<ReportDetailData[]>([]);
+export function TotalReportPage() {
   const [totalData, setTotalData] = useState<ReportTotalData[]>([]);
   const [departments, setDepartments] = useState<{ label: string; value: number }[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<{
@@ -32,8 +29,6 @@ export function ReportsPage() {
   const [showReservas, setShowReservas] = useState(true);
   const [IDCard, setIDCard] = useState('');
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
-  const [activePage, setActivePage] = useState(1);
-  const limitRange = 9;
 
   useEffect(() => {
     getDepartments().then((departmentsData) => {
@@ -45,7 +40,9 @@ export function ReportsPage() {
     });
   }, []);
 
-  const loadTotalData = () => {
+  const loadPageData = () => {
+    setTotalData([]);
+
     const params: any = {};
 
     if (selectedDepartment) {
@@ -63,7 +60,7 @@ export function ReportsPage() {
     if (dateRange[1]) {
       params.endDate = dateRange[1].toISOString();
     }
-    console.log('HERE');
+
     getReportTotal(params)
       .then((responseData) => {
         setTotalData(responseData);
@@ -73,53 +70,14 @@ export function ReportsPage() {
       });
   };
 
-  const loadPageData = (page: number) => {
-    setActivePage(page);
-    setData([]);
-
-    const params: any = {
-      startRange: (page - 1) * limitRange,
-      limitRange,
-    };
-
-    if (selectedDepartment) {
-      params.departmentID = selectedDepartment.value.toString();
-    }
-
-    if (IDCard) {
-      params.IDCard = IDCard;
-    }
-
-    if (dateRange[0]) {
-      params.startDate = dateRange[0].toISOString();
-    }
-
-    if (dateRange[1]) {
-      params.endDate = dateRange[1].toISOString();
-    }
-
-    getReportDetail(params)
-      .then((responseData) => {
-        setData(responseData);
-      })
-      .catch((error) => {
-        console.error('Error fetching report details:', error);
-      });
-  };
-
   useEffect(() => {
-    loadPageData(1);
-    loadTotalData();
+    loadPageData();
   }, [selectedDepartment, IDCard, dateRange]);
-
-  const handlePageChange = (page: number) => {
-    loadPageData(page);
-  };
 
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
-        <Title>Reportes de quincenas</Title>
+        <Title>Reporte de Totales</Title>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"
@@ -174,21 +132,7 @@ export function ReportsPage() {
           showObrero={showObrero}
           showReservas={showReservas}
         />
-        <Title order={2}>Detalle</Title>
-        <FortnightReportTable
-          data={data}
-          showPatronal={showPatronal}
-          showObrero={showObrero}
-          showReservas={showReservas}
-        />
       </main>
-      <footer className={classes.footer}>
-        <ElipticPagination
-          totalPages={activePage + 1}
-          activePage={activePage}
-          onPageChange={handlePageChange}
-        />
-      </footer>
     </div>
   );
 }

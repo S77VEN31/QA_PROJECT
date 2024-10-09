@@ -38,8 +38,9 @@ const getReportTotal = async (params: ReportTotalParams) => {
   const response = await api.get(`/report/total`, {
     params: queryParams,
   });
-  console.log(response.data);
+
   return response.data;
 };
 
 export { getReportDetail, getReportTotal };
+
