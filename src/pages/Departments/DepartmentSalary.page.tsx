@@ -90,6 +90,8 @@ export function AssignDepartmentSalaryPage() {
               placeholder="Ingrese el salario"
               label="Salario"
             />
+          </div>
+          <div className={classes.buttonContainer}>
             <Button
               onClick={handleAssignSalary}
             >Asignar</Button>
