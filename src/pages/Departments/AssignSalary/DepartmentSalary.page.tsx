@@ -10,7 +10,7 @@ import { NotificationPosition } from '@mantine/notifications/lib/notifications.s
 // Types
 
 // Classes
-import classes from './DepartmentSalary.page.module.css';
+import classes from '../DepartmentSalary.page.module.css';
 
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 const notificationMessages = {

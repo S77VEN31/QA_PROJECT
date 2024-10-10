@@ -24,8 +24,8 @@ const mockdata = [
     label: 'Departamentos',
     icon: IconCalendarStats,
     links: [
-      { label: 'Asignar Salario', link: '/dashboard/departamentos/asignarsalario' },
-      { label: 'Consultar', link: '/dashboard/departamentos/consultar' },
+      { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
+      { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
     ],
   },
   { label: 'Colaboradores', icon: IconPresentationAnalytics, link: '/dashboard/colaboradores' },
