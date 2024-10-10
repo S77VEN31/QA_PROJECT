@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION calculate_tax(salariobruto NUMERIC)
+CREATE OR REPLACE FUNCTION calculate_tax(salariobruto NUMERIC, deduccionhijos INTEGER, deduccionconyuge INTEGER)
 RETURNS NUMERIC
 LANGUAGE sql
 AS $$
@@ -9,7 +9,7 @@ SELECT SUM(
     ELSE
       0
   END
-)
+) - (deduccionhijos + deduccionconyuge)
 FROM impuestorenta ir
 WHERE ir.enabled = true;
 $$;

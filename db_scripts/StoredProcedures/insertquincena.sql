@@ -9,7 +9,7 @@ BEGIN
 
     -- 2. Insert data into the pagos table from the calculated select
     INSERT INTO public.pagos (
-        salarioid, cedula, fechapago, pateym, pativm, obreym, obrivm, obrbanco, 
+        salarioid, cedula, fechapago, pateym, pativm, obreym, obrivm, obrbanco, obrsolidarista,
         resaguinaldo, rescesantia, resvacaciones, impuestorenta, enabled
     )
     SELECT
@@ -21,18 +21,23 @@ BEGIN
         obr.obreym * (s.salariobruto / 2) / 100 AS obreym,
         obr.obrivm * (s.salariobruto / 2) / 100 AS obrivm,
         obr.obrbanco * (s.salariobruto / 2) / 100 AS obrbanco,
+		s.obrsolidarista * (s.salariobruto / 2) / 100 AS obrsolidarista,
         res.resaguinaldo * (s.salariobruto / 2) / 100 AS resaguinaldo,
         res.rescesantia * (s.salariobruto / 2) / 100 AS rescesantia,
         res.resvacaciones * (s.salariobruto / 2) / 100 AS resvacaciones,
-        calculate_tax(s.salariobruto) / 2 AS impuestorenta,  -- Calcular el impuesto de renta para el salario
+        calculate_tax(s.salariobruto, (s.hijos * cred.credhijos),
+			(CASE WHEN s.conyuge = TRUE THEN cred.credconyuge ELSE 0 END)
+		) / 2 AS impuestorenta,-- Calcular el impuesto de renta para el salario
         true AS enabled
     FROM salarios s
     CROSS JOIN deduccionesobrero obr
     CROSS JOIN deduccionespatronales pat
     CROSS JOIN reservaspatronales res
+	CROSS JOIN creditosfiscales cred	
     WHERE obr.enabled = true
     AND pat.enabled = true
     AND res.enabled = true
+	AND cred.enabled = true
 	AND payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 year'));
 
 EXCEPTION
@@ -47,9 +52,9 @@ $$;
 DROP PROCEDURE insertquincena(DATE)
 SELECT COUNT(*) FROM pagos
 
-CALL insertquincena('2024-12-28 00:00:00'::timestamp)
+CALL insertquincena('2025-01-14 00:00:00'::timestamp)
 
-SELECT * FROM pagos
+SELECT DISTINCT fechapago FROM pagos
 
 SELECT
         s.salarioid, 
@@ -72,3 +77,29 @@ SELECT
     AND pat.enabled = true
     AND res.enabled = true
 	AND payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 year'));
+
+SELECT
+        s.salarioid, 
+        s.cedula, 
+        pat.pateym * (s.salariobruto / 2) / 100 AS pateym,
+        pat.pativm * (s.salariobruto / 2) / 100 AS pativm,
+        obr.obreym * (s.salariobruto / 2) / 100 AS obreym,
+        obr.obrivm * (s.salariobruto / 2) / 100 AS obrivm,
+        obr.obrbanco * (s.salariobruto / 2) / 100 AS obrbanco,
+		s.obrsolidarista * (s.salariobruto / 2) / 100 AS obrsolidarista,
+        res.resaguinaldo * (s.salariobruto / 2) / 100 AS resaguinaldo,
+        res.rescesantia * (s.salariobruto / 2) / 100 AS rescesantia,
+        res.resvacaciones * (s.salariobruto / 2) / 100 AS resvacaciones,
+        calculate_tax(s.salariobruto, s.hijos * cred.credhijos,
+			(CASE WHEN s.conyuge = TRUE THEN cred.credconyuge ELSE 0 END)
+		) / 2 AS impuestorenta,-- Calcular el impuesto de renta para el salario
+        true AS enabled
+    FROM salarios s
+    CROSS JOIN deduccionesobrero obr
+    CROSS JOIN deduccionespatronales pat
+    CROSS JOIN reservaspatronales res
+	CROSS JOIN creditosfiscales cred	
+    WHERE obr.enabled = true
+    AND pat.enabled = true
+    AND res.enabled = true
+	AND cred.enabled = true
