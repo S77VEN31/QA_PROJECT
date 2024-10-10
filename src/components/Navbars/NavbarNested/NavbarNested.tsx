@@ -1,9 +1,13 @@
 import { ColorSchemeToggle } from '@components';
-import { IconAdjustments, IconCalendarStats, IconGauge, IconPresentationAnalytics } from '@tabler/icons-react';
+import {
+  IconAdjustments,
+  IconCalendarStats,
+  IconGauge,
+  IconPresentationAnalytics,
+} from '@tabler/icons-react';
 import { Code, Group, ScrollArea } from '@mantine/core';
 import { LinksGroup } from './NavbarLinksGroup';
 import classes from './NavbarNested.module.css';
-
 
 const mockdata = [
   {
@@ -19,8 +23,8 @@ const mockdata = [
     label: 'Departamentos',
     icon: IconCalendarStats,
     links: [
-      { label: 'Asignar Salario', link: '/dashboard/departamentos/asignarsalario' },
-      { label: 'Consultar', link: '/dashboard/departamentos/consultar' },
+      { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
+      { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
     ],
   },
   { label: 'Colaboradores', icon: IconPresentationAnalytics, link: '/dashboard/colaboradores' },

@@ -1,5 +1,6 @@
 import {
   AssignDepartmentSalaryPage,
+  AssignUsersPage,
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
@@ -35,12 +36,12 @@ const router = createBrowserRouter([
         element: <FortnightPage />,
       },
       {
-        path: 'departamentos/asignarsalario',
+        path: 'departments/assign-salary',
         element: <AssignDepartmentSalaryPage />,
       },
       {
-        path: 'departamentos/consultar',
-        element: <div>Consultar page</div>,
+        path: 'departments/assign-users',
+        element: <AssignUsersPage />,
       },
       {
         path: 'colaboradores',
