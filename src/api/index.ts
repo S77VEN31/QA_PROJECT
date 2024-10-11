@@ -3,7 +3,7 @@ import { getAuthToken, setupInterceptors } from './api';
 // Auth
 import { login } from './auth.api';
 // Department
-import { assignDepartmentSalary, getDepartments } from './department.api';
+import { assignDepartmentSalary, getDepartments, insertDepartment } from './department.api';
 // Fortnight
 import { insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
@@ -15,6 +15,7 @@ export {
   getDepartments,
   getReportDetail,
   getReportTotal,
+  insertDepartment,
   insertFortnight,
   insertNFortnights,
   login,

@@ -26,6 +26,7 @@ const mockdata = [
     links: [
       { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
       { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
+      { label: 'Crear Departamento', link: '/dashboard/departamentos/crear' },
     ],
   },
   { label: 'Colaboradores', icon: IconPresentationAnalytics, link: '/dashboard/colaboradores' },
