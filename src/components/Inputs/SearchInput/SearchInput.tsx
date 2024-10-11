@@ -1,11 +1,9 @@
-;
 // Icons
 import { IconSearch } from '@tabler/icons-react';
 // Mantine
 import { CloseButton, Input } from '@mantine/core';
 // Classes
 import classes from './SearchInput.module.css';
-
 
 // Interfaces
 interface SearchInputProps {

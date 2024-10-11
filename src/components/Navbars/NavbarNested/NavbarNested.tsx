@@ -1,18 +1,24 @@
+// Components
 import { ColorSchemeToggle } from '@components';
+// Icons
 import {
   IconAdjustments,
   IconCalendarStats,
   IconGauge,
+  IconNotes,
   IconPresentationAnalytics,
 } from '@tabler/icons-react';
+// Mantine
 import { Code, Group, ScrollArea } from '@mantine/core';
+// Components
 import { LinksGroup } from './NavbarLinksGroup';
+// Classes
 import classes from './NavbarNested.module.css';
 
 const mockdata = [
   {
     label: 'Reportes',
-    icon: IconGauge,
+    icon: IconNotes,
     links: [
       { label: 'Total', link: '/dashboard/report/total' },
       { label: 'Detallado', link: '/dashboard/report/detailed' },
@@ -23,9 +29,13 @@ const mockdata = [
     label: 'Departamentos',
     icon: IconCalendarStats,
     links: [
-      { label: 'Crear Departamento', link: '/dashboard/departmentos/create' },
+      { label: 'Crear Departamento', link: '/dashboard/departments/create' },
       { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
       { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
+      {
+        label: 'Asignar Salario Colaborador',
+        link: '/dashboard/departments/assign-employee-salary',
+      },
     ],
   },
   { label: 'Colaboradores', icon: IconPresentationAnalytics, link: '/dashboard/colaboradores' },

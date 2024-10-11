@@ -12,6 +12,7 @@ interface SearchableSelectProps {
   setSelectedItem: (item: { label: string; value: number } | null) => void;
   placeholder?: string;
   label?: string;
+  required?: boolean;
 }
 
 export function SearchableSelect({
@@ -20,6 +21,7 @@ export function SearchableSelect({
   setSelectedItem,
   placeholder,
   label,
+  required,
 }: SearchableSelectProps) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -28,10 +30,12 @@ export function SearchableSelect({
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (search === '') {
-      setSelectedItem(null);
+    if (selectedItem) {
+      setSearch(selectedItem.label);
+    } else {
+      setSearch('');
     }
-  }, [search, setSelectedItem]);
+  }, [selectedItem]);
 
   const shouldFilterOptions = items.every((item) => item.label !== search);
   const filteredOptions = shouldFilterOptions
@@ -45,7 +49,7 @@ export function SearchableSelect({
   ));
 
   return (
-    <Input.Wrapper label={label} className={classes.wrapper}>
+    <Input.Wrapper label={label} className={classes.wrapper} required={required}>
       <Combobox
         store={combobox}
         withinPortal={false}

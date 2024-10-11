@@ -1,28 +1,37 @@
+;
+// API
+import { getAuthToken } from '@api';
+// Pages
 import {
-  AssignDepartmentSalaryPage,
-  AssignUsersPage,
+  CreateDepartmentPage,
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
-  HomePage,
   LoginPage,
+  SetEmployeeSalaryPage,
+  SetSalaryPage,
+  SetUserPage,
   TotalReportPage,
-  InsertDepartmentPage
 } from '@pages';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+// Router
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+
+const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
+  const token = getAuthToken();
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+  return element;
+};
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/login',
     element: <LoginPage />,
   },
   {
     path: '/dashboard',
-    element: <DashboardPage />,
+    element: <ProtectedRoute element={<DashboardPage />} />,
     children: [
       {
         path: 'report/total',
@@ -38,15 +47,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'departments/assign-salary',
-        element: <AssignDepartmentSalaryPage />,
+        element: <SetSalaryPage />,
       },
       {
         path: 'departments/assign-users',
-        element: <AssignUsersPage />,
+        element: <SetUserPage />,
       },
       {
         path: 'departments/create',
-        element: <InsertDepartmentPage />
+        element: <CreateDepartmentPage />,
+      },
+      {
+        path: 'departments/assign-employee-salary',
+        element: <SetEmployeeSalaryPage />,
       },
       {
         path: 'colaboradores',
