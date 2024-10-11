@@ -1,13 +1,7 @@
 DROP PROCEDURE IF EXISTS AsignarSalarioEmpleado;
-CREATE OR REPLACE PROCEDURE AsignarSalarioEmpleado(
-    IN p_cedula INT,
-    IN p_salario INT,
-	IN p_hijos SMALLINT,
-	IN p_conyuge BOOLEAN,
-	IN p_solidarista NUMERIC(4,2)
-)
-LANGUAGE plpgsql
-AS $$
+CREATE OR REPLACE PROCEDURE public.asignarsalarioempleado(IN p_cedula integer, IN p_salario integer, IN p_hijos smallint, IN p_conyuge boolean, IN p_solidarista numeric)
+ LANGUAGE plpgsql
+AS $procedure$
 DECLARE
 	actual_time TIMESTAMP;
     emp_exists BOOLEAN;
@@ -44,7 +38,7 @@ BEGIN
 	WHERE s.cedula = p_cedula
 	AND s.validto = actual_time;
 END;
-$$;
+$procedure$
 
 INSERT INTO departamentos (depnombre)
     VALUES ('Departamento Pruebas');
