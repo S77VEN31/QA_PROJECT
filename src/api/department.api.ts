@@ -1,33 +1,30 @@
 // API
 import { api } from './api';
+import { CreateDepartmentParams, SetSalaryParams } from './api.d';
 
-export const getDepartments = async () => {
-  const response = await api.get('/department');
+export const getDepartments = async (query?: string) => {
+  const response = await api.get(`/department?cardID=${query}`);
   return response.data;
 };
 
-interface AssignDepartmentParams {
-  departamentID?: number;
-  salary?: number;
-  children?: number;
-  spouse?: boolean;
-  percentage?: number;
-}
+export const getEmployeeSalary = async (cardID: string, departmentID: number) => {
+  const response = await api.get(
+    `/department/employee?cardID=${cardID}&departmentID=${departmentID}`
+  );
+  return response.data;
+};
 
-export const assignDepartmentSalary = async (params: AssignDepartmentParams) => {
-  const body = {
-    ...params,
-  };
-
-  console.log(body);
-
+export const setDepartmentSalary = async (body: SetSalaryParams) => {
   const response = await api.patch(`/department`, body);
-  console.log(response);
   return response.data;
 };
 
-export const insertDepartment = async (depNombre: string) => {
-  const response = await api.post(`/department?depNombre=${depNombre}`);
-  console.log(response);
+export const setEmployeeSalary = async (body: SetSalaryParams, query: string) => {
+  const response = await api.patch(`/department/employee?cardID=${query}`, body);
+  return response.data;
+};
+
+export const createDepartment = async (body: CreateDepartmentParams) => {
+  const response = await api.post('/department', body);
   return response.data;
 };

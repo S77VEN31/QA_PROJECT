@@ -1,14 +1,16 @@
+;
 // API
 import { getAuthToken } from '@api';
 // Pages
 import {
-  AssignDepartmentSalaryPage,
-  AssignUsersPage,
+  CreateDepartmentPage,
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
-  InsertDepartmentPage,
   LoginPage,
+  SetEmployeeSalaryPage,
+  SetSalaryPage,
+  SetUserPage,
   TotalReportPage,
 } from '@pages';
 // Router
@@ -45,15 +47,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'departments/assign-salary',
-        element: <AssignDepartmentSalaryPage />,
+        element: <SetSalaryPage />,
       },
       {
         path: 'departments/assign-users',
-        element: <AssignUsersPage />,
+        element: <SetUserPage />,
       },
       {
         path: 'departments/create',
-        element: <InsertDepartmentPage />,
+        element: <CreateDepartmentPage />,
+      },
+      {
+        path: 'departments/assign-employee-salary',
+        element: <SetEmployeeSalaryPage />,
       },
       {
         path: 'colaboradores',
