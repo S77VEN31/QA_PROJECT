@@ -7,12 +7,14 @@ import { SearchableSelect } from '@components';
 // Mantine
 import { Button, NumberInput, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { notifications } from '@mantine/notifications';
 // Classes
 import classes from './SetUser.module.css';
 
-const defaultNotificationPosition = 'top-center';
-const notificationMessages = {
+
+//const defaultNotificationPosition = 'top-center';
+/**
+ * 
+ * const notificationMessages = {
   successToast: (responseData: any) => ({
     title: 'Operación exitosa',
     message: responseData.message || 'Colaboradores asignados correctamente',
@@ -38,6 +40,8 @@ const notificationMessages = {
     position: defaultNotificationPosition,
   },
 };
+ */
+
 
 export function SetUserPage() {
   const [departments, setDepartments] = useState<{ label: string; value: number }[]>([]);
@@ -63,7 +67,9 @@ export function SetUserPage() {
       setDepartments(formattedDepartments);
     });
   }, []);
-
+  /**
+  * 
+ 
   function handleAddCollaborator() {
     const { IDCard, IDCards } = form.values;
     const numericIDCard = Number(IDCard);
@@ -94,7 +100,7 @@ export function SetUserPage() {
       notifications.show(notificationMessages.invalidFields);
     }
   }
-
+ */
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
@@ -105,12 +111,12 @@ export function SetUserPage() {
         </Text>
       </header>
       <main className={classes.main}>
-        <form onSubmit={form.onSubmit(handleSubmit)} className={classes.form}>
+        <form className={classes.form}>
           <div className={classes.inputsContainer}>
             <SearchableSelect
               items={departments}
               selectedItem={form.values.selectedDepartment}
-              setSelectedItem={(item) => form.setFieldValue('selectedDepartment', item)}
+              setSelectedItem={(item) => form.setFieldValue('selectedDepartment', item as any)}
               placeholder="Seleccione un departamento"
               label="Departamento"
             />
