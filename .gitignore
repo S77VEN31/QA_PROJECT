@@ -130,3 +130,7 @@ dist
 .pnp.*
 
 .DS_Store
+
+# Authentication scripts
+db_scripts/StoredProcedures/authenticate_user.sql
+db_scripts/StoredProcedures/register_user.sql
