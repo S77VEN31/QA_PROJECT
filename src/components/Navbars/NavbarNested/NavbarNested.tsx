@@ -10,6 +10,7 @@ import { Code, Group, ScrollArea } from '@mantine/core';
 import { LinksGroup } from './NavbarLinksGroup';
 import classes from './NavbarNested.module.css';
 
+
 const mockdata = [
   {
     label: 'Reportes',
@@ -24,9 +25,9 @@ const mockdata = [
     label: 'Departamentos',
     icon: IconCalendarStats,
     links: [
+      { label: 'Crear Departamento', link: '/dashboard/departmentos/create' },
       { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
       { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
-      { label: 'Crear Departamento', link: '/dashboard/departamentos/crear' },
     ],
   },
   { label: 'Colaboradores', icon: IconPresentationAnalytics, link: '/dashboard/colaboradores' },

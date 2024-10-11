@@ -7,6 +7,7 @@ import {
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
+  InsertDepartmentPage,
   LoginPage,
   TotalReportPage,
 } from '@pages';
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: 'departments/assign-users',
         element: <AssignUsersPage />,
+      },
+      {
+        path: 'departments/create',
+        element: <InsertDepartmentPage />,
       },
       {
         path: 'colaboradores',

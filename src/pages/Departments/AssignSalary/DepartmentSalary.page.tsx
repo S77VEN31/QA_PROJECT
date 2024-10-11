@@ -1,4 +1,3 @@
-;
 // React
 import { useEffect, useState } from 'react';
 // API
@@ -117,7 +116,13 @@ export function AssignDepartmentSalaryPage() {
   }
   return (
     <div className={classes.mainLayout}>
-      <header className={classes.header}></header>
+      <header className={classes.header}>
+        <h1>Asignar salario a departamento</h1>
+        <p>
+          Seleccione un departamento y asigne un salario. El salario debe ser distinto de 0. El
+          porcentaje de aporte a la asociación solidarista debe ser menor que 5.
+        </p>
+      </header>
       <main className={classes.main}>
         <Flex wrap={'wrap'} gap={'md'}>
           <SearchableSelect
@@ -126,6 +131,7 @@ export function AssignDepartmentSalaryPage() {
             setSelectedItem={setSelectedDepartment}
             placeholder="Seleccione un departamento"
             label="Departamento"
+            aria-label="Seleccione un departamento"
           />
           <NumberInput
             style={{ width: '250px' }}
@@ -133,9 +139,49 @@ export function AssignDepartmentSalaryPage() {
             onChange={(value) => setSalary(value)} // Update salary state on change
             placeholder="Ingrese el salario"
             label="Salario"
+            aria-label="Ingrese el salario"
+            allowDecimal={false}
+            allowNegative={false}
           />
-          <Button onClick={handleAssignSalary}>Asignar</Button>
+          <NumberInput
+            style={{ width: '250px' }}
+            className={classes.input}
+            value={children} // Bound to salary state
+            onChange={(value) => setChildren(value)} // Update salary state on change
+            placeholder="Ingrese el número de hijos"
+            label="Número de hijos"
+            aria-label="Ingrese el número de hijos"
+            allowDecimal={false}
+            allowNegative={false}
+          />
+          <NumberInput
+            style={{ width: '250px' }}
+            value={percentage} // Bound to salary state
+            onChange={(value) => setPercentage(value)} // Update salary state on change
+            placeholder="Ingrese el porcentaje de aporte"
+            label="Porcentaje de aporte a la Asociación Solidarista"
+            aria-label="Ingrese el porcentaje de aporte a la Asociación Solidarista"
+            allowDecimal={true}
+            allowNegative={false}
+          />
         </Flex>
+        <div className={classes.checkbox}>
+          <label htmlFor="spouse">¿Tiene cónyuge?</label>
+          <select
+            className={classes.select}
+            id="spouse"
+            value={spouse === null ? 'null' : spouse.toString()}
+            onChange={handleSpouseChange}
+          >
+            <option value="null">Nulo</option>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+
+        <div className={classes.buttonContainer}>
+          <Button onClick={handleAssignSalary}>Asignar</Button>
+        </div>
       </main>
       <footer className={classes.footer}></footer>
     </div>
