@@ -5,7 +5,7 @@ import { ReportTotalData } from '@types';
 // Tools
 import cx from 'clsx';
 // Mantine
-import { Anchor, Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
+import { Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
 // Classes
 import classes from './TotalReportTable.module.css';
 
@@ -112,14 +112,14 @@ export function TotalReportTable({
           <Table.Tr>
             {showPatronal && (
               <>
-                <Table.Th>Pat EYM</Table.Th>
-                <Table.Th>Pat IVM</Table.Th>
+                <Table.Th>EyM</Table.Th>
+                <Table.Th>IVM</Table.Th>
               </>
             )}
             {showObrero && (
               <>
-                <Table.Th>Obr EYM</Table.Th>
-                <Table.Th>Obr IVM</Table.Th>
+                <Table.Th>EyM</Table.Th>
+                <Table.Th>IVM</Table.Th>
                 <Table.Th>Banco</Table.Th>
                 <Table.Th>Solidarista</Table.Th>
               </>

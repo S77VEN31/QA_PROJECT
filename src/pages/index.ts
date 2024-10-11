@@ -1,7 +1,7 @@
+import { SetCollaboratorSalaryPage } from './Collaborators/SetCollaboratorSalary/SetCollaboratorSalary';
 import { DashboardPage } from './Dashboard/Dashboard.page';
 import { CreateDepartmentPage } from './Departments/CreateDepartment/CreateDepartment.page';
-import { SetEmployeeSalaryPage } from './Departments/SetEmployeeSalary/SetEmployeeSalary';
-import { SetSalaryPage } from './Departments/SetSalary/SetSalary.page';
+import { SetDepartmentSalaryPage } from './Departments/SetDepartmentSalary/SetDepartmentSalary.page';
 import { SetUserPage } from './Departments/SetUser/SetUser.page';
 import { FortnightPage } from './Fortnight/Fortnight.page';
 import { HomePage } from './Home/Home.page';
@@ -16,8 +16,8 @@ export {
   FortnightPage,
   HomePage,
   LoginPage,
-  SetEmployeeSalaryPage,
-  SetSalaryPage,
+  SetCollaboratorSalaryPage,
+  SetDepartmentSalaryPage,
   SetUserPage,
   TotalReportPage,
 };

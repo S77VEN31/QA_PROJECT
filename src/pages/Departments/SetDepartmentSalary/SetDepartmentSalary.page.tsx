@@ -1,22 +1,23 @@
+// React
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, getEmployeeSalary, setEmployeeSalary, SetSalaryParams } from '@api';
+import { getDepartments, setDepartmentSalary, SetSalaryParams } from '@api';
 // Components
 import { SearchableSelect } from '@components';
 // Mantine
-import { Button, NumberInput, Switch, Text, TextInput, Title } from '@mantine/core';
+import { Button, NumberInput, Switch, Text, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { NotificationPosition } from '@mantine/notifications/lib/notifications.store';
 // Classes
-import classes from './SetEmployeeSalary.module.css';
+import classes from './SetDepartmentSalary.page.module.css';
 
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
 const notificationMessages = {
   successToast: (responseData: any) => ({
     title: 'Operación exitosa',
-    message: responseData.message || 'Salario asignado correctamente',
+    message: responseData.message || 'Salarios actualizados correctamente',
     color: 'green',
     position: defaultNotificationPosition,
   }),
@@ -28,7 +29,7 @@ const notificationMessages = {
   }),
   invalidFields: {
     title: 'Error al asignar salario',
-    message: 'Debe ingresar la cédula y el departamento',
+    message: 'Debe ingresar el departamento',
     color: 'red',
     position: defaultNotificationPosition,
   },
@@ -40,26 +41,21 @@ const notificationMessages = {
   },
 };
 
-export function SetEmployeeSalaryPage() {
+export function SetDepartmentSalaryPage() {
   const [departments, setDepartments] = useState<{ label: string; value: number }[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<{
     label: string;
     value: number;
   } | null>(null);
-  const [cardID, setCardID] = useState<string | undefined>(undefined);
   const form = useForm({
     initialValues: {
-      cardID: undefined,
       departmentID: undefined,
       salary: undefined,
       childrenQuantity: undefined,
-      hasSpouse: false,
+      hasSpouse: undefined,
       contributionPercentage: undefined,
     } as SetSalaryParams,
     validate: {
-      cardID: (value: string) => {
-        return value && value.length === 9 ? null : 'La cédula es requerida y debe tener 9 dígitos';
-      },
       salary: (value) => {
         if (value === null || value === undefined) {
           return null; // Allow empty value
@@ -86,62 +82,26 @@ export function SetEmployeeSalaryPage() {
     },
   });
 
-  const fetchDepartments = (cardID: string | undefined) => {
-    getDepartments(cardID).then((departmentsData) => {
+  useEffect(() => {
+    getDepartments().then((departmentsData) => {
       const formattedDepartments = departmentsData.map((dep: any) => ({
         label: dep.depnombre,
         value: dep.departamentoid,
       }));
       setDepartments(formattedDepartments);
     });
-  };
-
-  const fetchEmployeeSalary = async (cardID: string, departmentID: number) => {
-    try {
-      const employeeSalary = await getEmployeeSalary(cardID, departmentID);
-      const { salary, childrenquantity, hasspouse, contributionpercentage } = employeeSalary;
-
-      form.setValues({
-        salary,
-        childrenQuantity: childrenquantity,
-        hasSpouse: hasspouse,
-        contributionPercentage: contributionpercentage,
-      });
-    } catch (error) {
-      notifications.show(notificationMessages.errorToast(error));
-    }
-  };
-
-  useEffect(() => {
-    if (cardID) {
-      fetchDepartments(cardID);
-    } else {
-      setDepartments([]);
-    }
-    setSelectedDepartment(null);
-  }, [cardID]);
-
-  useEffect(() => {
-    if (cardID && selectedDepartment) {
-      fetchEmployeeSalary(cardID, selectedDepartment.value);
-    }
-  }, [cardID, selectedDepartment]);
+  }, []);
 
   const handleAssignSalary = (values: SetSalaryParams) => {
-    if (!values.cardID || !values.departmentID) {
+    if (!values.departmentID) {
       notifications.show(notificationMessages.invalidFields);
       return;
     }
 
-    setEmployeeSalary(values, values.cardID)
+    setDepartmentSalary(values)
       .then((responseData) => {
         notifications.show(notificationMessages.successToast(responseData));
-
-        // Reset all the form values
         form.reset();
-
-        // Manually clear the cardID and department after form reset
-        setCardID('');
         setSelectedDepartment(null);
       })
       .catch((error) => {
@@ -149,58 +109,30 @@ export function SetEmployeeSalaryPage() {
       });
   };
 
-  const handleHasSpouseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    form.setFieldValue('hasSpouse', event.currentTarget.checked);
-  };
-
   useEffect(() => {
     if (selectedDepartment) {
       form.setFieldValue('departmentID', selectedDepartment.value);
-    } else {
-      form.setFieldValue('departmentID', undefined);
     }
   }, [selectedDepartment]);
 
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
-        <Title>Asignar salario a empleado</Title>
-        <Text>
-          Seleccione un departamento y asigne un salario a un empleado. El salario debe ser distinto
-          de 0. El porcentaje de aporte a la asociación solidarista debe ser menor que 5.
-        </Text>
+        <Title>Asignar salario a departamento</Title>
+        <Text>Seleccione un departamento y asigne un salario.</Text>
       </header>
       <main className={classes.main}>
         <form onSubmit={form.onSubmit(handleAssignSalary)} className={classes.formContainer}>
           <div className={classes.inputsContainer}>
-            <TextInput
-              type="number"
-              required
-              className={classes.input}
-              value={form.values.cardID || ''}
-              onChange={(e) => {
-                if (e.target.value.length <= 9) {
-                  form.setFieldValue('cardID', e.target.value);
-                  setCardID(e.target.value);
-                }
-              }}
-              placeholder="Ingrese la cédula"
-              label="Cédula del empleado"
-              aria-label="Ingrese la cédula"
-            />
             <SearchableSelect
               required
               items={departments}
               selectedItem={selectedDepartment}
               setSelectedItem={setSelectedDepartment}
-              placeholder={
-                selectedDepartment ? selectedDepartment.label : 'Seleccione un departamento'
-              }
+              placeholder="Seleccione un departamento"
               label="Departamento"
               aria-label="Seleccione un departamento"
             />
-          </div>
-          <div className={classes.inputsContainer}>
             <NumberInput
               hideControls
               className={classes.input}
@@ -210,6 +142,19 @@ export function SetEmployeeSalaryPage() {
               placeholder="Ingrese el salario"
               label="Salario"
               aria-label="Ingrese el salario"
+              allowDecimal={false}
+              allowNegative={false}
+            />
+          </div>
+          <div className={classes.inputsContainer}>
+            <NumberInput
+              className={classes.input}
+              {...form.getInputProps('childrenQuantity')}
+              value={form.values.childrenQuantity || ''}
+              onChange={(value) => form.setFieldValue('childrenQuantity', value as number)}
+              placeholder="Ingrese el número de hijos"
+              label="Número de hijos"
+              aria-label="Ingrese el número de hijos"
               allowDecimal={false}
               allowNegative={false}
             />
@@ -227,27 +172,16 @@ export function SetEmployeeSalaryPage() {
             />
           </div>
           <div className={classes.inputsContainer}>
-            <NumberInput
-              className={classes.input}
-              {...form.getInputProps('childrenQuantity')}
-              value={form.values.childrenQuantity || ''}
-              onChange={(value) => form.setFieldValue('childrenQuantity', value as number)}
-              placeholder="Ingrese el número de hijos"
-              label="Número de hijos"
-              aria-label="Ingrese el número de hijos"
-              allowDecimal={false}
-              allowNegative={false}
-            />
             <Switch
               checked={form.values.hasSpouse}
-              onChange={handleHasSpouseChange}
+              onChange={(event) => form.setFieldValue('hasSpouse', event.currentTarget.checked)}
               label="¿Tiene cónyuge?"
               aria-label="¿Tiene cónyuge?"
               className={classes.switch}
             />
           </div>
           <div className={classes.buttonContainer}>
-            <Button type="submit">Asignar salario al empleado</Button>
+            <Button type="submit">Asignar salario a un departamento</Button>
           </div>
         </form>
       </main>

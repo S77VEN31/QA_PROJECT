@@ -38,6 +38,13 @@
   overflow-y: auto;
 }
 
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+}
+
+
 .switch {
   align-items: center;
 }

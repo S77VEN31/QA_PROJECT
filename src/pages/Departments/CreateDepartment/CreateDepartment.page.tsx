@@ -1,3 +1,4 @@
+;
 // API
 import { createDepartment, CreateDepartmentParams } from '@api';
 // Mantine
@@ -7,6 +8,7 @@ import { notifications } from '@mantine/notifications';
 import { NotificationPosition } from '@mantine/notifications/lib/notifications.store';
 // Classes
 import classes from './CreateDepartment.page.module.css';
+
 
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
@@ -32,7 +34,7 @@ export function CreateDepartmentPage() {
     } as CreateDepartmentParams,
     validate: {
       departmentName: (value) =>
-        value.length > 0 ? null : 'El nombre del departamento es obligatorio',
+        value.length < 3 ? 'El nombre del departamento debe tener al menos 3 caracteres' : null,
     },
   });
 
