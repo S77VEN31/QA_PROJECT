@@ -63,6 +63,7 @@ export function CreateDepartmentPage() {
               label="Nombre del departamento"
               aria-label="Nombre del departamento"
               required
+              {...form.getInputProps('departmentName')}
               value={form.values.departmentName}
               onChange={(event) => form.setFieldValue('departmentName', event.currentTarget.value)}
             />

@@ -57,17 +57,20 @@ export function SetSalaryPage() {
     } as SetSalaryParams,
     validate: {
       salary: (value) => {
+        if (value === null || value === undefined) {
+          return null; // Allow empty value
+        }
         const numericSalary = Number(value);
-        return numericSalary > 0 ? null : 'El salario es requerido y debe ser mayor a 0';
+        return numericSalary > 0 ? null : 'El salario si se ingresó debe ser mayor a 0';
       },
       contributionPercentage: (value) => {
         if (value === null || value === undefined) {
           return null; // Allow empty value
         }
         const numericPercentage = Number(value);
-        return numericPercentage >= 1 && numericPercentage <= 5
+        return numericPercentage >= 0 && numericPercentage <= 5
           ? null
-          : 'El porcentaje debe ser mayor o igual a 1 y menor o igual a 5';
+          : 'El porcentaje debe ser mayor o igual a 0 y menor o igual a 5';
       },
       childrenQuantity: (value) => {
         if (value === null || value === undefined) {
@@ -136,6 +139,7 @@ export function SetSalaryPage() {
             <NumberInput
               hideControls
               className={classes.input}
+              {...form.getInputProps('salary')}
               value={form.values.salary || ''}
               onChange={(value) => form.setFieldValue('salary', value as number)}
               placeholder="Ingrese el salario"
@@ -148,6 +152,7 @@ export function SetSalaryPage() {
           <div className={classes.inputsContainer}>
             <NumberInput
               className={classes.input}
+              {...form.getInputProps('childrenQuantity')}
               value={form.values.childrenQuantity || ''}
               onChange={(value) => form.setFieldValue('childrenQuantity', value as number)}
               placeholder="Ingrese el número de hijos"
@@ -159,6 +164,7 @@ export function SetSalaryPage() {
             <NumberInput
               hideControls
               className={classes.input}
+              {...form.getInputProps('contributionPercentage')}
               value={form.values.contributionPercentage || ''}
               onChange={(value) => form.setFieldValue('contributionPercentage', value as number)}
               placeholder="Ingrese el porcentaje de aporte"
