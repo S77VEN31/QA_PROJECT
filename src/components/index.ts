@@ -6,7 +6,6 @@ import { ColorSchemeToggle } from './ColorSchemeToggle/ColorSchemeToggle';
 import { DateRangePicker } from './Datepickers/DateRangePicker/DateRangePicker';
 // Inputs
 import { SearchInput } from './Inputs/SearchInput/SearchInput';
-import { NumInput } from './Inputs/NumberInput/NumberInput';
 // Navbars
 import { NavbarNested } from './Navbars/NavbarNested/NavbarNested';
 // Pagination
@@ -17,7 +16,6 @@ import { SearchableSelect } from './Selects/SearchableSelect/SearchableSelect';
 import { FortnightReportTable } from './Tables/FortnightReportTable/FortnightReportTable';
 import { TotalReportTable } from './Tables/TotalReportTable/TotalReportTable';
 
-
 export {
   CheckboxCard,
   ColorSchemeToggle,
@@ -27,6 +25,5 @@ export {
   NavbarNested,
   SearchableSelect,
   SearchInput,
-  NumInput,
   TotalReportTable,
 };

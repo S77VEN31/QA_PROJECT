@@ -6,19 +6,22 @@ export const getDepartments = async () => {
   return response.data;
 };
 
-
 interface AssignDepartmentParams {
-  departamentoId?: number;
-  salario?: number;
+  departamentID?: number;
+  salary?: number;
+  children?: number;
+  spouse?: boolean;
+  percentage?: number;
 }
 
 export const assignDepartmentSalary = async (params: AssignDepartmentParams) => {
-  const queryParams = new URLSearchParams({
-    departamentoId: params.departamentoId?.toString() || '',
-    salario: params.salario?.toString() || ''
-  });
+  const body = {
+    ...params,
+  };
 
-  const response = await api.patch(`/department?${queryParams.toString()}`);
+  console.log(body);
+
+  const response = await api.patch(`/department`, body);
   console.log(response);
   return response.data;
 };
@@ -28,4 +31,3 @@ export const insertDepartment = async (depNombre: string) => {
   console.log(response);
   return response.data;
 };
-
