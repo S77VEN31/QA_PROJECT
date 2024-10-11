@@ -40,9 +40,11 @@ export function CreateDepartmentPage() {
     createDepartment(body)
       .then((_) => {
         notifications.show(notificationMessages.successToast);
+        form.reset();
       })
       .catch((error) => {
         notifications.show(notificationMessages.errorToast(error.response?.data?.message));
+        form.reset();
       });
   };
 
@@ -60,7 +62,9 @@ export function CreateDepartmentPage() {
               placeholder="Ingrese el nombre del departamento"
               label="Nombre del departamento"
               aria-label="Nombre del departamento"
-              {...form.getInputProps('depName')}
+              required
+              value={form.values.departmentName}
+              onChange={(event) => form.setFieldValue('departmentName', event.currentTarget.value)}
             />
           </div>
           <div className={classes.buttonContainer}>
