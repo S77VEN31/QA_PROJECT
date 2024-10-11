@@ -8,14 +8,15 @@ import { LoginPage } from './Login/Login.page';
 import { DetailedReportPage } from './Reports/DetailedReport/DetailedReport.page';
 import { TotalReportPage } from './Reports/TotalReport/TotalReport.page';
 
+
 export {
-  AssignDepartmentSalaryPage,
-  AssignUsersPage,
-  DashboardPage,
-  DetailedReportPage,
-  FortnightPage,
-  HomePage,
-  InsertDepartmentPage,
-  LoginPage,
-  TotalReportPage,
+    AssignDepartmentSalaryPage,
+    AssignUsersPage,
+    DashboardPage,
+    DetailedReportPage,
+    FortnightPage,
+    HomePage,
+    InsertDepartmentPage,
+    LoginPage,
+    TotalReportPage
 };
