@@ -22,3 +22,10 @@ export const assignDepartmentSalary = async (params: AssignDepartmentParams) => 
   console.log(response);
   return response.data;
 };
+
+export const insertDepartment = async (depNombre: string) => {
+  const response = await api.post(`/department?depNombre=${depNombre}`);
+  console.log(response);
+  return response.data;
+};
+

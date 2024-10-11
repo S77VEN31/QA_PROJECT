@@ -5,5 +5,5 @@ import { LoginPage } from './Login/Login.page';
 import { DetailedReportPage } from './Reports/DetailedReport/DetailedReport.page';
 import { TotalReportPage } from './Reports/TotalReport/TotalReport.page';
 import { AssignDepartmentSalaryPage } from './Departments/AssignSalary/DepartmentSalary.page';
-
-export { DashboardPage, DetailedReportPage, FortnightPage, HomePage, LoginPage, TotalReportPage, AssignDepartmentSalaryPage };
+import { InsertDepartmentPage } from './Departments/InsertDepartment/InsertDepartment.page';
+export { DashboardPage, DetailedReportPage, FortnightPage, HomePage, LoginPage, TotalReportPage, AssignDepartmentSalaryPage, InsertDepartmentPage };

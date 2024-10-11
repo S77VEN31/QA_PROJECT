@@ -1,5 +1,5 @@
 // Department
-import { assignDepartmentSalary, getDepartments } from './department.api';
+import { assignDepartmentSalary, getDepartments, insertDepartment } from './department.api';
 // Fortnight
 import { insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
@@ -12,4 +12,5 @@ export {
   insertFortnight,
   insertNFortnights,
   assignDepartmentSalary,
+  insertDepartment,
 };
