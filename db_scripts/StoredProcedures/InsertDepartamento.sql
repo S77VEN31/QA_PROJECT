@@ -1,28 +1,20 @@
 DROP PROCEDURE IF EXISTS insertdepartamento;
-CREATE PROCEDURE insertdepartamento(
-    IN p_depnombre TEXT,
-    OUT p_id INT  -- This will hold the returned ID
-)
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    dept_exists BOOLEAN;
+CREATE OR REPLACE PROCEDURE public.insertdepartamento(IN p_depnombre text)
+ LANGUAGE plpgsql
+AS $procedure$
 BEGIN
-    -- Check if the department exists
-    SELECT EXISTS (
-        SELECT 1
-        FROM departamentos
-        WHERE depnombre = p_depnombre
-    ) INTO dept_exists;
+    BEGIN
+        -- Insert the new department, rely on unique constraint for duplicates
+        INSERT INTO departamentos (depnombre)
+        VALUES (p_depnombre);
 
-    -- Raise an exception if the department does not exist
-    IF NOT dept_exists THEN
-        RAISE EXCEPTION 'Department with ID % does not exist', p_departamentoid;
-    END IF;
-
-    -- Insert the record and return the id of the inserted record
-    INSERT INTO departamentos (depnombre)
-    VALUES (p_depnombre)
-    RETURNING departamentoid INTO p_id;
+    EXCEPTION
+        -- Capture unique constraint violation and raise custom exception
+        WHEN unique_violation THEN
+            RAISE EXCEPTION 'Department already exists' USING ERRCODE = '45000';
+        -- Log and re-raise any other errors for debugging purposes
+        WHEN others THEN
+            RAISE EXCEPTION 'Unexpected error occurred: %', SQLERRM USING ERRCODE = '45001';
+    END;
 END;
-$$;
+$procedure$

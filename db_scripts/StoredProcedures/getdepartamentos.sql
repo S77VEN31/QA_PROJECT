@@ -12,5 +12,5 @@ BEGIN
 END;
 $$;
 
-DROP FUNCTION getdepartamentos()
+DROP FUNCTION getdepartamentos(int)
 SELECT * FROM getdepartamentos();
