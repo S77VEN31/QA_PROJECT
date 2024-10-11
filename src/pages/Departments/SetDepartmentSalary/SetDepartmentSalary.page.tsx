@@ -57,14 +57,14 @@ export function SetDepartmentSalaryPage() {
     } as SetSalaryParams,
     validate: {
       salary: (value) => {
-        if (value === null || value === undefined) {
+        if (value === undefined || (typeof value === 'string' && value === '')) {
           return null; // Allow empty value
         }
         const numericSalary = Number(value);
         return numericSalary > 0 ? null : 'El salario si se ingresó debe ser mayor a 0';
       },
       contributionPercentage: (value) => {
-        if (value === null || value === undefined) {
+        if (value === undefined || (typeof value === 'string' && value === '')) {
           return null; // Allow empty value
         }
         const numericPercentage = Number(value);
@@ -73,7 +73,7 @@ export function SetDepartmentSalaryPage() {
           : 'El porcentaje debe ser mayor o igual a 0 y menor o igual a 5';
       },
       childrenQuantity: (value) => {
-        if (value === null || value === undefined) {
+        if (value === undefined || (typeof value === 'string' && value === '')) {
           return null; // Allow empty value
         }
         const numericChildren = Number(value);

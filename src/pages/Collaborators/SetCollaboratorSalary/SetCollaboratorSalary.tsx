@@ -11,6 +11,7 @@ import { NotificationPosition } from '@mantine/notifications/lib/notifications.s
 // Classes
 import classes from './SetCollaboratorSalary.module.css';
 
+
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
 const notificationMessages = {
@@ -61,14 +62,14 @@ export function SetCollaboratorSalaryPage() {
         return value && value.length === 9 ? null : 'La cédula es requerida y debe tener 9 dígitos';
       },
       salary: (value) => {
-        if (value === null || value === undefined) {
+        if (value === undefined || (typeof value === 'string' && value === '')) {
           return null; // Allow empty value
         }
         const numericSalary = Number(value);
         return numericSalary > 0 ? null : 'El salario si se ingresó debe ser mayor a 0';
       },
       contributionPercentage: (value) => {
-        if (value === null || value === undefined) {
+        if (value === undefined || (typeof value === 'string' && value === '')) {
           return null; // Allow empty value
         }
         const numericPercentage = Number(value);
@@ -77,7 +78,7 @@ export function SetCollaboratorSalaryPage() {
           : 'El porcentaje debe ser mayor o igual a 0 y menor o igual a 5';
       },
       childrenQuantity: (value) => {
-        if (value === null || value === undefined) {
+        if (value === undefined || (typeof value === 'string' && value === '')) {
           return null; // Allow empty value
         }
         const numericChildren = Number(value);
@@ -136,11 +137,7 @@ export function SetCollaboratorSalaryPage() {
     setEmployeeSalary(values, values.cardID)
       .then((responseData) => {
         notifications.show(notificationMessages.successToast(responseData));
-
-        // Reset all the form values
         form.reset();
-
-        // Manually clear the cardID and department after form reset
         setCardID('');
         setSelectedDepartment(null);
       })
@@ -174,7 +171,7 @@ export function SetCollaboratorSalaryPage() {
               type="number"
               required
               className={classes.input}
-              value={form.values.cardID || ''}
+              value={form.values.cardID}
               onChange={(e) => {
                 if (e.target.value.length <= 9) {
                   form.setFieldValue('cardID', e.target.value);
@@ -202,7 +199,7 @@ export function SetCollaboratorSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('salary')}
-              value={form.values.salary || ''}
+              value={form.values.salary || undefined}
               onChange={(value) => form.setFieldValue('salary', value as number)}
               placeholder="Ingrese el salario"
               label="Salario"
@@ -227,7 +224,7 @@ export function SetCollaboratorSalaryPage() {
             <NumberInput
               className={classes.input}
               {...form.getInputProps('childrenQuantity')}
-              value={form.values.childrenQuantity || ''}
+              value={form.values.childrenQuantity}
               onChange={(value) => form.setFieldValue('childrenQuantity', value as number)}
               placeholder="Ingrese el número de hijos"
               label="Número de hijos"
