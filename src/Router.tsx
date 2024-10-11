@@ -7,6 +7,7 @@ import {
   HomePage,
   LoginPage,
   TotalReportPage,
+  InsertDepartmentPage
 } from '@pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: 'departments/assign-users',
         element: <AssignUsersPage />,
+      },
+      {
+        path: 'departments/create',
+        element: <InsertDepartmentPage />
       },
       {
         path: 'colaboradores',

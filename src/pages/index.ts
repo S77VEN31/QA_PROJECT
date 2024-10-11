@@ -6,6 +6,8 @@ import { HomePage } from './Home/Home.page';
 import { LoginPage } from './Login/Login.page';
 import { DetailedReportPage } from './Reports/DetailedReport/DetailedReport.page';
 import { TotalReportPage } from './Reports/TotalReport/TotalReport.page';
+import { AssignDepartmentSalaryPage } from './Departments/AssignSalary/DepartmentSalary.page';
+import { InsertDepartmentPage } from './Departments/InsertDepartment/InsertDepartment.page';
 
 export {
   DashboardPage,
@@ -16,4 +18,5 @@ export {
   TotalReportPage,
   AssignDepartmentSalaryPage,
   AssignUsersPage,
+  InsertDepartmentPage,
 };
