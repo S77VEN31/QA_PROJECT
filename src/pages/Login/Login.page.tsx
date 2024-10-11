@@ -1,3 +1,4 @@
+;
 // React
 import { useState } from 'react';
 // API
@@ -6,20 +7,11 @@ import { login } from '@api';
 import { ColorSchemeToggle } from '@components';
 import { useNavigate } from 'react-router-dom';
 // Mantine
-import {
-  Anchor,
-  Button,
-  Container,
-  Group,
-  Paper,
-  PasswordInput,
-  Text,
-  TextInput,
-  Title,
-} from '@mantine/core';
+import { Anchor, Button, Container, Group, Paper, PasswordInput, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 // Classes
 import classes from './Login.page.module.css';
+
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -32,7 +24,7 @@ export function LoginPage() {
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      password: (value) => (value.length < 6 ? 'Password must be at least 6 characters' : null),
+      password: () => null,
     },
   });
 
