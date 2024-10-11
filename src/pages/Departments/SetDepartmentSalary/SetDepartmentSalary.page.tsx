@@ -137,7 +137,7 @@ export function SetDepartmentSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('salary')}
-              value={form.values.salary || ''}
+              value={form.values.salary}
               onChange={(value) => form.setFieldValue('salary', value as number)}
               placeholder="Ingrese el salario"
               label="Salario"
@@ -150,7 +150,7 @@ export function SetDepartmentSalaryPage() {
             <NumberInput
               className={classes.input}
               {...form.getInputProps('childrenQuantity')}
-              value={form.values.childrenQuantity || ''}
+              value={form.values.childrenQuantity}
               onChange={(value) => form.setFieldValue('childrenQuantity', value as number)}
               placeholder="Ingrese el número de hijos"
               label="Número de hijos"
@@ -162,7 +162,7 @@ export function SetDepartmentSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('contributionPercentage')}
-              value={form.values.contributionPercentage || ''}
+              value={form.values.contributionPercentage}
               onChange={(value) => form.setFieldValue('contributionPercentage', value as number)}
               placeholder="Ingrese el porcentaje de aporte"
               label="Porcentaje de aporte a la Asociación Solidarista"
