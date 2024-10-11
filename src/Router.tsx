@@ -1,11 +1,16 @@
+;
 // API
 import { getAuthToken } from '@api';
 // Pages
 import {
+  CreateDepartmentPage,
   DashboardPage,
   DetailedReportPage,
   FortnightPage,
   LoginPage,
+  SetEmployeeSalaryPage,
+  SetSalaryPage,
+  SetUserPage,
   TotalReportPage,
 } from '@pages';
 // Router
@@ -41,12 +46,20 @@ const router = createBrowserRouter([
         element: <FortnightPage />,
       },
       {
-        path: 'departamentos/administrar',
-        element: <div>Administrar page</div>,
+        path: 'departments/assign-salary',
+        element: <SetSalaryPage />,
       },
       {
-        path: 'departamentos/consultar',
-        element: <div>Consultar page</div>,
+        path: 'departments/assign-users',
+        element: <SetUserPage />,
+      },
+      {
+        path: 'departments/create',
+        element: <CreateDepartmentPage />,
+      },
+      {
+        path: 'departments/assign-employee-salary',
+        element: <SetEmployeeSalaryPage />,
       },
       {
         path: 'colaboradores',
