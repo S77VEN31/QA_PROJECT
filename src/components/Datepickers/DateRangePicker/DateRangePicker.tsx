@@ -63,6 +63,7 @@ export function DateRangePicker({
         value={startDate}
         onChange={handleStartDateChange}
         minDate={minDate}
+        clearable
       />
       <DateInput
         className={classes.input}
@@ -71,6 +72,7 @@ export function DateRangePicker({
         value={endDate}
         onChange={handleEndDateChange}
         minDate={startDate || minDate}
+        clearable
       />
     </div>
   );

@@ -10,3 +10,11 @@ export interface SetSalaryParams {
 export interface CreateDepartmentParams {
   departmentName: string;
 }
+
+export interface SingleFortnightParams {
+  quincenaDate: Date | null;
+}
+export interface MultipleFortnightsParams {
+  quincenaDate: Date | null;
+  n: number;
+}

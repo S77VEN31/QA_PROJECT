@@ -1,10 +1,16 @@
 // React
 import { useState } from 'react';
 // API
-import { insertFortnight, insertNFortnights } from '@api';
+import {
+  insertFortnight,
+  insertNFortnights,
+  MultipleFortnightsParams,
+  SingleFortnightParams,
+} from '@api';
 // Mantine
 import { Button, Container, Group, Text, Title } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
+import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { NotificationPosition } from '@mantine/notifications/lib/notifications.store';
 // Classes
@@ -53,8 +59,8 @@ const notificationMessages = {
 type NullableDate = Date | null;
 
 export function FortnightPage() {
-  const [quincenaDate, setQuincenaDate] = useState<NullableDate>(null);
-  const [multiQuincenaDate, setMultiQuincenaDate] = useState<NullableDate>(null);
+  // const [quincenaDate, setQuincenaDate] = useState<NullableDate>(null);
+  // const [multiQuincenaDate, setMultiQuincenaDate] = useState<NullableDate>(null);
   const [loading, setLoading] = useState(false);
 
   const { loadingToast, successToast, errorToast, invalidDate, selectDate } = notificationMessages;
@@ -98,6 +104,47 @@ export function FortnightPage() {
     }
   };
 
+  const singleFortnightForm = useForm({
+    initialValues: {
+      quincenaDate: null,
+    } as SingleFortnightParams,
+    validate: {
+      quincenaDate: (value: NullableDate) => {
+        return validateDate(value) ? null : 'Seleccione el 14 o 28.';
+      },
+    },
+  });
+
+  const handleInsertSingleFortnight = async (body: SingleFortnightParams) => {
+    const quincenaDate = body.quincenaDate as Date;
+    handleNotification(quincenaDate, undefined, () =>
+      insertFortnight({ timestamp: quincenaDate as Date })
+    ).then((_) => singleFortnightForm.reset());
+  };
+
+  const multipleFortnightForm = useForm({
+    initialValues: {
+      quincenaDate: null,
+      n: 5,
+    } as MultipleFortnightsParams,
+    validate: {
+      quincenaDate: (value: NullableDate) => {
+        return validateDate(value) ? null : 'Seleccione el 14 o 28.';
+      },
+      n: (value: number) => {
+        return value == 5 || value == 10 ? null : 'Ingrese un número mayor a 0.';
+      },
+    },
+  });
+
+  const handleInsertMultipleFortnights = async (body: MultipleFortnightsParams, event?: any) => {
+    const quincenaDate = body.quincenaDate as Date;
+    const n = parseInt(event.nativeEvent.submitter.value);
+    handleNotification(quincenaDate, n, () =>
+      insertNFortnights({ timestamp: quincenaDate as Date, n })
+    ).then((_) => multipleFortnightForm.reset());
+  };
+
   return (
     <div>
       <header className={classes.header}>
@@ -106,58 +153,47 @@ export function FortnightPage() {
       </header>
       <main className={classes.mainLayout}>
         <Container fluid>
-          <Title order={2}>Insertar una quincena</Title>
-          <DateInput
-            label="Fecha"
-            value={quincenaDate}
-            onChange={setQuincenaDate}
-            valueFormat="DD-MM-YYYY"
-            excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
-          />
-          <Button
-            mt="md"
-            onClick={() =>
-              handleNotification(quincenaDate, undefined, () =>
-                insertFortnight({ timestamp: quincenaDate as Date })
-              )
-            }
-            disabled={loading}
-          >
-            Generar
-          </Button>
+          <form onSubmit={singleFortnightForm.onSubmit(handleInsertSingleFortnight)}>
+            <Title order={2}>Insertar una quincena</Title>
+            <DateInput
+              label="Fecha"
+              aria-label="Ingrese la fecha para insertar una única quincena."
+              required
+              {...singleFortnightForm.getInputProps('quincenaDate')}
+              value={singleFortnightForm.values.quincenaDate}
+              onChange={(event) => singleFortnightForm.setFieldValue('quincenaDate', event)}
+              valueFormat="DD-MM-YYYY"
+              excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
+            />
+            <Button mt="md" type="submit" disabled={loading}>
+              Generar
+            </Button>
+          </form>
 
-          <Title order={2} mt="xl">
-            Insertar múltiples quincenas
-          </Title>
-          <DateInput
-            label="Fecha de inicio"
-            value={multiQuincenaDate}
-            onChange={setMultiQuincenaDate}
-            valueFormat="DD-MM-YYYY"
-            excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
-          />
-          <Group mt="md">
-            <Button
-              onClick={() =>
-                handleNotification(multiQuincenaDate, 5, () =>
-                  insertNFortnights({ timestamp: multiQuincenaDate as Date, n: 5 })
-                )
-              }
-              disabled={loading}
-            >
-              Generar 5 quincenas
-            </Button>
-            <Button
-              onClick={() =>
-                handleNotification(multiQuincenaDate, 10, () =>
-                  insertNFortnights({ timestamp: multiQuincenaDate as Date, n: 10 })
-                )
-              }
-              disabled={loading}
-            >
-              Generar 10 quincenas
-            </Button>
-          </Group>
+          <form onSubmit={multipleFortnightForm.onSubmit(handleInsertMultipleFortnights)}>
+            <Title order={2} mt="xl">
+              Insertar múltiples quincenas
+            </Title>
+            <DateInput
+              label="Fecha de inicio"
+              aria-label="Ingrese la fecha para insertar múltiples quincenas."
+              required
+              {...multipleFortnightForm.getInputProps('quincenaDate')}
+              value={multipleFortnightForm.values.quincenaDate}
+              onChange={(event) => multipleFortnightForm.setFieldValue('quincenaDate', event)}
+              valueFormat="DD-MM-YYYY"
+              excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
+            />
+            <Group mt="md">
+              <Button type="submit" value="5" disabled={loading}>
+                Generar 5 quincenas
+              </Button>
+              <Button type="submit" value="10" disabled={loading}>
+                Generar 10 quincenas
+              </Button>
+            </Group>
+            <Text mt={'md'}>Si la quincena ya se había pagado, no se duplican los pagos.</Text>
+          </form>
         </Container>
       </main>
     </div>
