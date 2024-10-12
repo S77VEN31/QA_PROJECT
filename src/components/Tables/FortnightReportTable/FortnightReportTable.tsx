@@ -56,45 +56,9 @@ export function FortnightReportTable({
         <Table.Td>
           {salarioBruto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
-        {showPatronal && (
-          <>
-            <Table.Td>
-              {pateym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {pativm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-          </>
-        )}
-        {showObrero && (
-          <>
-            <Table.Td>
-              {obreym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {obrivm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {obrbanco.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {obrsolidarista.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-          </>
-        )}
-        {showReservas && (
-          <>
-            <Table.Td>
-              {resaguinaldo.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {rescesantia.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {resvacaciones.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-          </>
-        )}
+        <Table.Td>
+          {salarioNeto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+        </Table.Td>
         <Table.Td>
           <Group justify="space-between">
             <Text fz="xs" c="teal" fw={700}>
@@ -120,6 +84,45 @@ export function FortnightReportTable({
         <Table.Td>
           {impuestorenta.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
+        {showObrero && (
+          <>
+            <Table.Td>
+              {obreym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {obrivm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {obrbanco.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {obrsolidarista.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+          </>
+        )}
+        {showPatronal && (
+          <>
+            <Table.Td>
+              {pateym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {pativm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+          </>
+        )}
+        {showReservas && (
+          <>
+            <Table.Td>
+              {resaguinaldo.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {rescesantia.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {resvacaciones.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+          </>
+        )}
       </Table.Tr>
     );
   });
@@ -140,23 +143,23 @@ export function FortnightReportTable({
             <Table.Th rowSpan={2}>Salario Neto</Table.Th>
             <Table.Th rowSpan={2}>Deducciones %</Table.Th>
             <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
-            {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}
             {showObrero && <Table.Th colSpan={4}>Deducciones Obrero</Table.Th>}
+            {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}
             {showReservas && <Table.Th colSpan={3}>Reservas</Table.Th>}
           </Table.Tr>
           <Table.Tr>
-            {showPatronal && (
-              <>
-                <Table.Th>EyM</Table.Th>
-                <Table.Th>IVM</Table.Th>
-              </>
-            )}
             {showObrero && (
               <>
                 <Table.Th>EyM</Table.Th>
                 <Table.Th>IVM</Table.Th>
                 <Table.Th>Banco</Table.Th>
                 <Table.Th>Solidarista</Table.Th>
+              </>
+            )}
+            {showPatronal && (
+              <>
+                <Table.Th>EyM</Table.Th>
+                <Table.Th>IVM</Table.Th>
               </>
             )}
             {showReservas && (
