@@ -107,6 +107,8 @@ export function FortnightReportTable({
       className={classes.scrollArea}
     >
       <Table miw={800} className={classes.table}>
+        
+      <Table.Caption>Tabla de reportes detallados</Table.Caption>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
             <Table.Th rowSpan={2}>Cédula</Table.Th>

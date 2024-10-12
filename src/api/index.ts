@@ -15,6 +15,8 @@ import {
 import { insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
 import { getReportDetail, getReportTotal } from './report.api';
+// Collaborator
+import { getCollaboratorName } from './collaborator.api';
 
 export {
   createDepartment,
@@ -30,6 +32,7 @@ export {
   setEmployeeSalary,
   setupInterceptors,
   assignCollaborators,
+  getCollaboratorName,
 };
 
 export type { CreateDepartmentParams, SetSalaryParams, AssignCollaboratorsParams } from './api.d';

@@ -11,7 +11,6 @@ import {
   LoginPage,
   SetCollaboratorSalaryPage,
   SetDepartmentSalaryPage,
-  SetUserPage,
   TotalReportPage,
   AssignCollaboratorsPage,
 } from '@pages';

@@ -48,7 +48,7 @@ BEGIN
 	INNER JOIN apellidos a1 ON a1.apellidoId = e.apellido1Id
 	INNER JOIN apellidos a2 ON a2.apellidoId = e.apellido2Id
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
-	WHERE TRUE
+	WHERE p.fechapago BETWEEN ed.validfrom AND COALESCE(ed.validto, (CURRENT_DATE + INTERVAL ''5 years''))
 	';
 	IF p_start IS NULL THEN
 		l_start := 0;
@@ -101,5 +101,8 @@ SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, 3::SMALLINT, 9::IN
 
 
 SELECT COUNT(*) FROM empleadosdepartamentos GROUP BY departamentoId;
+
+SELECT * FROM pagos WHERE cedula = 100010209
+SELECT * FROM pagos WHERE fechapago = 
 
 

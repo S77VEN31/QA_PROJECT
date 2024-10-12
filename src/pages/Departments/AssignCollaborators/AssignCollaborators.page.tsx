@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, AssignCollaboratorsParams, assignCollaborators } from '@api';
+import { getDepartments, AssignCollaboratorsParams, assignCollaborators, getCollaboratorName } from '@api';
 // Components
 import { SearchableSelect } from '@components';
 // Mantine
@@ -11,6 +11,9 @@ import { NotificationPosition } from '@mantine/notifications/lib/notifications.s
 // Classes
 import classes from './AssignCollaborators.module.css';
 
+interface EmpleadoNombreData {
+  getempleadonombre: string;
+}
 
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
@@ -57,8 +60,6 @@ const notificationMessages = {
     color: 'red',
     position: defaultNotificationPosition,
   },
-
-
 };
 
 export function AssignCollaboratorsPage() {
@@ -69,6 +70,7 @@ export function AssignCollaboratorsPage() {
   } | null>(null);
   const [cardIDs, setCardIDs] = useState<number[]>([]); // Using cardIDs instead of items
   const [newCardID, setNewCardID] = useState<number>(0);
+  const [collaboratorMap, setCollaboratorMap] = useState<{ [key: number]: string }>({}); // Map for cardID -> Name
 
   useEffect(() => {
     getDepartments().then((departmentsData) => {
@@ -82,8 +84,16 @@ export function AssignCollaboratorsPage() {
 
   const deleteCardID = (index: number) => {
     const updatedCardIDs = cardIDs.filter((_, i) => i !== index);
+    const removedCardID = cardIDs[index]; 
     setCardIDs(updatedCardIDs);
     form.setFieldValue('cardIDs', updatedCardIDs); // Update the form's cardIDs
+    
+    // Remove the cardID from the collaboratorMap
+    setCollaboratorMap((prevMap) => {
+      const newMap = { ...prevMap };
+      delete newMap[removedCardID];
+      return newMap;
+    });
   };
 
   const addCardID = () => {
@@ -91,10 +101,25 @@ export function AssignCollaboratorsPage() {
       if (cardIDs.includes(newCardID)) {
         notifications.show(notificationMessages.cardIDExists);
       } else {
-        const updatedCardIDs = [...cardIDs, newCardID];
-        setCardIDs(updatedCardIDs); // Update local state
-        form.setFieldValue('cardIDs', updatedCardIDs); // Update the form's cardIDs
-        setNewCardID(0); // Clear the input after adding
+        getCollaboratorName(newCardID)
+          .then((collaboratorName: EmpleadoNombreData) => {
+            if (!collaboratorName) {
+              notifications.show(notificationMessages.errorToast({ message: 'Colaborador no encontrado' }));
+              return;
+            }
+            // Add new cardID and corresponding name to the map
+            setCollaboratorMap((prevMap) => ({
+              ...prevMap,
+              [newCardID]: collaboratorName.getempleadonombre,
+            }));
+            const updatedCardIDs = [...cardIDs, newCardID];
+            setCardIDs(updatedCardIDs); // Update local state
+            form.setFieldValue('cardIDs', updatedCardIDs); // Update the form's cardIDs
+            setNewCardID(0); // Clear the input after adding
+            })
+          .catch((error) => {
+            notifications.show(notificationMessages.errorToast(error));
+          });
       }
     } else {
       notifications.show(notificationMessages.invalidCardID);
@@ -158,6 +183,7 @@ export function AssignCollaboratorsPage() {
         notifications.show(notificationMessages.successToast({ message: 'Colaboradores asignados correctamente.'}));
         form.reset(); // Reset the form after successful submission
         setCardIDs([]); // Clear cardIDs after submitting
+        setCollaboratorMap({}); // Clear the map after submitting
         setSelectedDepartment(null); // Clear department selection
       })
       .catch((error) => {
@@ -200,9 +226,12 @@ export function AssignCollaboratorsPage() {
           </div>
           <div className={classes.tableContainer}>
             <Table>
+              <Table.Caption> Colaboradores por añadir </Table.Caption>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th colSpan={2}>Cédulas por añadir</Table.Th>
+                  <Table.Th scope="col">Cédula</Table.Th>
+                  <Table.Th scope="col">Nombre</Table.Th>
+                  <Table.Th scope="col">Eliminar</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -211,14 +240,20 @@ export function AssignCollaboratorsPage() {
                     <Table.Td>
                       {cardID}
                     </Table.Td>
+                    <Table.Td>{collaboratorMap[cardID]}</Table.Td> 
                     <Table.Td>
-                      <Button
-                        color="red"
-                        variant="outline"
-                        onClick={() => deleteCardID(index)}
-                      >
-                        X
-                      </Button>
+                    <Button
+                      color="red" // Sets the button's background color to red
+                      variant="filled" // Makes the button filled with color (no outline)
+                      onClick={() => deleteCardID(index)}
+                      styles={(theme) => ({
+                        root: {
+                          color: 'white', // Ensures the text is white
+                        },
+                      })}
+                    >
+                      X
+                    </Button>
                     </Table.Td>
                   </Table.Tr>
                 ))}
