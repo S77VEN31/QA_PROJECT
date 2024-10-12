@@ -34,6 +34,6 @@ export {
 export type {
   CreateDepartmentParams,
   SetSalaryParams,
-  SingleFortnightParams as InsertFortnightParams,
+  SingleFortnightParams,
   MultipleFortnightsParams,
 } from './api.d';
