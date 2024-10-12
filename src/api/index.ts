@@ -31,4 +31,9 @@ export {
   setupInterceptors,
 };
 
-export type { CreateDepartmentParams, SetSalaryParams } from './api.d';
+export type {
+  CreateDepartmentParams,
+  SetSalaryParams,
+  SingleFortnightParams as InsertFortnightParams,
+  MultipleFortnightsParams,
+} from './api.d';
