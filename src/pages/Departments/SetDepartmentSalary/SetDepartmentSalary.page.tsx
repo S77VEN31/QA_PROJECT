@@ -115,6 +115,10 @@ export function SetDepartmentSalaryPage() {
     }
   }, [selectedDepartment]);
 
+  useEffect(() => {
+    console.log(form.values);
+  }, [form.values]);
+
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
@@ -137,8 +141,12 @@ export function SetDepartmentSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('salary')}
-              value={form.values.salary}
-              onChange={(value) => form.setFieldValue('salary', value as number)}
+              value={form.values.salary || ''}
+              onChange={(value) =>
+                value === ''
+                  ? form.setFieldValue('salary', undefined)
+                  : form.setFieldValue('salary', value as number)
+              }
               placeholder="Ingrese el salario"
               label="Salario"
               aria-label="Ingrese el salario"
@@ -150,8 +158,8 @@ export function SetDepartmentSalaryPage() {
             <NumberInput
               className={classes.input}
               {...form.getInputProps('childrenQuantity')}
-              value={form.values.childrenQuantity}
-              onChange={(value) => form.setFieldValue('childrenQuantity', value as number)}
+              value={form.values.contributionPercentage !== undefined ? form.values.contributionPercentage : ''}
+              onChange={(value) => value === '' ? form.setFieldValue('childrenQuantity', undefined) : form.setFieldValue('childrenQuantity', value as number)}
               placeholder="Ingrese el número de hijos"
               label="Número de hijos"
               aria-label="Ingrese el número de hijos"
@@ -162,8 +170,8 @@ export function SetDepartmentSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('contributionPercentage')}
-              value={form.values.contributionPercentage}
-              onChange={(value) => form.setFieldValue('contributionPercentage', value as number)}
+              value={form.values.contributionPercentage !== undefined ? form.values.contributionPercentage : ''}
+              onChange={(value) => value === '' ? form.setFieldValue('contributionPercentage', undefined) : form.setFieldValue('contributionPercentage', value as number)}
               placeholder="Ingrese el porcentaje de aporte"
               label="Porcentaje de aporte a la Asociación Solidarista"
               aria-label="Ingrese el porcentaje de aporte a la Asociación Solidarista"
