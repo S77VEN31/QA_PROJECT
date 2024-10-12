@@ -5,6 +5,7 @@ import { login } from './auth.api';
 // Department
 import {
   createDepartment,
+  getDepartmentEmployees,
   getDepartments,
   getDepartmentTotals,
   getEmployeeSalary,
@@ -31,6 +32,7 @@ export {
   setEmployeeSalary,
   setupInterceptors,
   getDepartmentTotals,
+  getDepartmentEmployees,
 };
 
 export type {

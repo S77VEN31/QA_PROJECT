@@ -1,6 +1,11 @@
 // API
 import { api } from './api';
-import { CreateDepartmentParams, DepartmentTotalParams, SetSalaryParams } from './api.d';
+import {
+  CreateDepartmentParams,
+  DepartmentEmployeesParams,
+  DepartmentTotalParams,
+  SetSalaryParams,
+} from './api.d';
 
 export const getDepartments = async (query?: string) => {
   const response = await api.get(`/department?cardID=${query}`);
@@ -35,6 +40,18 @@ export const getDepartmentTotals = async (params: DepartmentTotalParams) => {
   };
 
   const response = await api.get(`/department/totals`, {
+    params: queryParams,
+  });
+
+  return response.data;
+};
+
+export const getDepartmentEmployees = async (params: DepartmentEmployeesParams) => {
+  const queryParams = {
+    ...params,
+  };
+
+  const response = await api.get(`/department/all-employees`, {
     params: queryParams,
   });
 

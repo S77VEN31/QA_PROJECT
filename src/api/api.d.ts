@@ -25,3 +25,10 @@ export interface DepartmentTotalParams {
   startRange?: number;
   limitRange?: number;
 }
+
+export interface DepartmentEmployeesParams {
+  departmentID: number;
+  IDCard?: string;
+  startRange?: number;
+  limitRange?: number;
+}

@@ -2,6 +2,7 @@ import { CalculatorPage } from './Collaborators/Calculator/Calculator.page';
 import { SetCollaboratorSalaryPage } from './Collaborators/SetCollaboratorSalary/SetCollaboratorSalary';
 import { DashboardPage } from './Dashboard/Dashboard.page';
 import { CreateDepartmentPage } from './Departments/CreateDepartment/CreateDepartment.page';
+import { DepartmentEmployeesPage } from './Departments/DepartmentEmployees/DepartmentEmployees';
 import { DepartmentTotalsPage } from './Departments/DepartmentTotals/DepartmentTotals.page';
 import { SetDepartmentSalaryPage } from './Departments/SetDepartmentSalary/SetDepartmentSalary.page';
 import { SetUserPage } from './Departments/SetUser/SetUser.page';
@@ -24,4 +25,5 @@ export {
   TotalReportPage,
   CalculatorPage,
   DepartmentTotalsPage,
+  DepartmentEmployeesPage,
 };

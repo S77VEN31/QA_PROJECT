@@ -44,3 +44,14 @@ export interface DepartmentTotalData {
   rescesantia: string;
   resvacaciones: string;
 }
+
+export interface DepartmentEmployeeData {
+  depnombre: string;
+  cedula: number;
+  nombre: string;
+  salariobruto: number;
+  hijos: number;
+  conyuge: boolean;
+  obrsolidarista: string;
+  validfrom: Date;
+}
