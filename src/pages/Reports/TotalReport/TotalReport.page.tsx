@@ -80,7 +80,10 @@ export function TotalReportPage() {
     <div className={classes.mainLayout}>
       <header className={classes.header}>
         <Title>Reporte de Totales</Title>
-
+        <Text>
+          Consulte los pagos totales por quincena. Puede filtrar por cédula, departamento o rango de
+          fechas.
+        </Text>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"

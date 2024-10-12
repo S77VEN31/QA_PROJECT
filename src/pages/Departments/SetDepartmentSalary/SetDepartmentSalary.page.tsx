@@ -15,11 +15,12 @@ import classes from './SetDepartmentSalary.page.module.css';
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
 const notificationMessages = {
-  successToast: (responseData: any) => ({
+  successToast: (responseData: any, updatedValues: string) => ({
     title: 'Operación exitosa',
-    message: responseData.message || 'Salarios actualizados correctamente',
+    message: responseData.message + updatedValues || 'Salarios actualizados correctamente',
     color: 'green',
     position: defaultNotificationPosition,
+    autoClose: 8000,
   }),
   errorToast: (error: any) => ({
     title: 'Error al asignar salario',
@@ -36,6 +37,12 @@ const notificationMessages = {
   invalidPercentage: {
     title: 'Error al asignar salario',
     message: 'El porcentaje debe ser mayor a 0 y menor que 5',
+    color: 'red',
+    position: defaultNotificationPosition,
+  },
+  emptyFields: {
+    title: 'Error al asignar salario',
+    message: 'Debe ingresar al menos un campo',
     color: 'red',
     position: defaultNotificationPosition,
   },
@@ -98,9 +105,32 @@ export function SetDepartmentSalaryPage() {
       return;
     }
 
+    if (
+      !values.salary &&
+      !values.childrenQuantity &&
+      values.hasSpouse === undefined &&
+      !values.contributionPercentage
+    ) {
+      notifications.show(notificationMessages.emptyFields);
+      return;
+    }
+
     setDepartmentSalary(values)
       .then((responseData) => {
-        notifications.show(notificationMessages.successToast(responseData));
+        let updatedValues = '. Se actualizó:';
+        if (values.salary) {
+          updatedValues += ` Salario: ${values.salary}.`;
+        }
+        if (values.childrenQuantity) {
+          updatedValues += ` Número de hijos: ${values.childrenQuantity}.`;
+        }
+        if (values.hasSpouse !== undefined) {
+          updatedValues += ` Tiene cónyuge: ${values.hasSpouse ? 'Sí' : 'No'}.`;
+        }
+        if (values.contributionPercentage) {
+          updatedValues += `  Porcentaje de aporte: ${values.contributionPercentage}%.`;
+        }
+        notifications.show(notificationMessages.successToast(responseData, updatedValues));
         form.reset();
         setSelectedDepartment(null);
       })
@@ -123,7 +153,11 @@ export function SetDepartmentSalaryPage() {
     <div className={classes.mainLayout}>
       <header className={classes.header}>
         <Title>Asignar salario a departamento</Title>
-        <Text>Seleccione un departamento y asigne un salario.</Text>
+        <Text>
+          Seleccione un departamento y asigne los valores a modificar: salario, número de hijos,
+          porcentaje de aporte a la asociación solidarista y cónyuge. Deje en blanco los campos que
+          desea que se mantengan con su valor anterior.
+        </Text>
       </header>
       <main className={classes.main}>
         <form onSubmit={form.onSubmit(handleAssignSalary)} className={classes.formContainer}>

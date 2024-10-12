@@ -73,7 +73,10 @@ export function DepartmentTotalsPage() {
     <div className={classes.mainLayout}>
       <header className={classes.header}>
         <Title>Totales por departamento</Title>
-
+        <Text>
+          Consulte los totales pagados en salarios, deducciones y reservas para todos los
+          departamentos.
+        </Text>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"
