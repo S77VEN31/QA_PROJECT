@@ -1,8 +1,13 @@
-;
 // Components
 import { ColorSchemeToggle } from '@components';
 // Icons
-import { IconAdjustments, IconCalendarStats, IconGauge, IconNotes, IconPresentationAnalytics } from '@tabler/icons-react';
+import {
+  IconBuilding,
+  IconCash,
+  IconFileReport,
+  IconSettings,
+  IconUsers,
+} from '@tabler/icons-react';
 // Mantine
 import { Code, Group, ScrollArea } from '@mantine/core';
 // Components
@@ -10,20 +15,19 @@ import { LinksGroup } from './NavbarLinksGroup';
 // Classes
 import classes from './NavbarNested.module.css';
 
-
 const mockdata = [
   {
     label: 'Reportes',
-    icon: IconNotes,
+    icon: IconFileReport,
     links: [
       { label: 'Total', link: '/dashboard/report/total' },
       { label: 'Detallado', link: '/dashboard/report/detailed' },
     ],
   },
-  { label: 'Pagos', icon: IconGauge, link: '/dashboard/pagos' },
+  { label: 'Pagos', icon: IconCash, link: '/dashboard/pagos' },
   {
     label: 'Departamentos',
-    icon: IconCalendarStats,
+    icon: IconBuilding,
     links: [
       { label: 'Crear Departamento', link: '/dashboard/departments/create' },
       { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
@@ -32,10 +36,10 @@ const mockdata = [
   },
   {
     label: 'Colaboradores',
-    icon: IconPresentationAnalytics,
+    icon: IconUsers,
     links: [{ label: 'Asignar Salario', link: '/dashboard/collaborators/assign-salary' }],
   },
-  { label: 'Configuración', icon: IconAdjustments, link: '/dashboard/configuracion' },
+  { label: 'Configuración', icon: IconSettings, link: '/dashboard/configuracion' },
 ];
 
 export function NavbarNested() {

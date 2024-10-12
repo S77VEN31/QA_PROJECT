@@ -58,6 +58,13 @@ export function FortnightPage() {
   const [loading, setLoading] = useState(false);
 
   const { loadingToast, successToast, errorToast, invalidDate, selectDate } = notificationMessages;
+
+  // Filtrar las fechas para permitir solo el 14 o el 28 de cada mes
+  const filterQuincenaDays = (date: Date) => {
+    const day = date.getDate();
+    return day === 14 || day === 28;
+  };
+
   const validateDate = (date: NullableDate): boolean => {
     const day = date?.getDate();
     if (day !== 14 && day !== 28) {
@@ -69,7 +76,7 @@ export function FortnightPage() {
 
   const handleNotification = async (date: NullableDate, n?: number, apiCall?: any) => {
     if (!validateDate(date)) {
-      return; 
+      return;
     }
 
     if (date instanceof Date) {
@@ -105,6 +112,7 @@ export function FortnightPage() {
             value={quincenaDate}
             onChange={setQuincenaDate}
             valueFormat="DD-MM-YYYY"
+            excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
           />
           <Button
             mt="md"
@@ -126,6 +134,7 @@ export function FortnightPage() {
             value={multiQuincenaDate}
             onChange={setMultiQuincenaDate}
             valueFormat="DD-MM-YYYY"
+            excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
           />
           <Group mt="md">
             <Button
