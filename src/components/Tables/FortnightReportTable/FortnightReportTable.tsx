@@ -52,26 +52,46 @@ export function FortnightReportTable({
         <Table.Td>{row.nombre}</Table.Td>
         <Table.Td>{row.depnombre}</Table.Td>
         <Table.Td>{new Date(row.fechapago).toLocaleDateString()}</Table.Td>
-        <Table.Td>{Intl.NumberFormat().format(salarioBruto)}</Table.Td>
+        <Table.Td>
+          {salarioBruto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+        </Table.Td>
         {showPatronal && (
           <>
-            <Table.Td>{pateym.toFixed(2)}</Table.Td>
-            <Table.Td>{pativm.toFixed(2)}</Table.Td>
+            <Table.Td>
+              {pateym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {pativm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
           </>
         )}
         {showObrero && (
           <>
-            <Table.Td>{obreym.toFixed(2)}</Table.Td>
-            <Table.Td>{obrivm.toFixed(2)}</Table.Td>
-            <Table.Td>{obrbanco.toFixed(2)}</Table.Td>
-            <Table.Td>{obrsolidarista.toFixed(2)}</Table.Td>
+            <Table.Td>
+              {obreym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {obrivm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {obrbanco.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {obrsolidarista.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
           </>
         )}
         {showReservas && (
           <>
-            <Table.Td>{resaguinaldo.toFixed(2)}</Table.Td>
-            <Table.Td>{rescesantia.toFixed(2)}</Table.Td>
-            <Table.Td>{resvacaciones.toFixed(2)}</Table.Td>
+            <Table.Td>
+              {resaguinaldo.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {rescesantia.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
+            <Table.Td>
+              {resvacaciones.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+            </Table.Td>
           </>
         )}
         <Table.Td>
@@ -96,7 +116,9 @@ export function FortnightReportTable({
             />
           </Progress.Root>
         </Table.Td>
-        <Table.Td>{impuestorenta.toFixed(2)}</Table.Td>
+        <Table.Td>
+          {impuestorenta.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+        </Table.Td>
       </Table.Tr>
     );
   });

@@ -1,9 +1,8 @@
-;
-
 // API
 import { getAuthToken } from '@api';
 // Pages
 import {
+  CalculatorPage,
   CreateDepartmentPage,
   DashboardPage,
   DetailedReportPage,
@@ -61,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: 'collaborators/assign-salary',
         element: <SetCollaboratorSalaryPage />,
+      },
+      {
+        path: 'collaborators/calculator',
+        element: <CalculatorPage />,
       },
       {
         path: 'configuracion',

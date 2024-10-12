@@ -37,7 +37,10 @@ const mockdata = [
   {
     label: 'Colaboradores',
     icon: IconUsers,
-    links: [{ label: 'Asignar Salario', link: '/dashboard/collaborators/assign-salary' }],
+    links: [
+      { label: 'Asignar Salario', link: '/dashboard/collaborators/assign-salary' },
+      { label: 'Calculadora', link: '/dashboard/collaborators/calculator' },
+    ],
   },
   { label: 'Configuración', icon: IconSettings, link: '/dashboard/configuracion' },
 ];

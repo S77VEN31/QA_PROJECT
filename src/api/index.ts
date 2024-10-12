@@ -11,12 +11,13 @@ import {
   setEmployeeSalary,
 } from './department.api';
 // Fortnight
-import { insertFortnight, insertNFortnights } from './fortnight.api';
+import { calculateTax, insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
 import { getReportDetail, getReportTotal } from './report.api';
 
 export {
   createDepartment,
+  calculateTax,
   getAuthToken,
   getDepartments,
   getEmployeeSalary,
