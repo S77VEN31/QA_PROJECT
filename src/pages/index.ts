@@ -1,3 +1,4 @@
+import { CalculatorPage } from './Collaborators/Calculator/Calculator.page';
 import { SetCollaboratorSalaryPage } from './Collaborators/SetCollaboratorSalary/SetCollaboratorSalary';
 import { DashboardPage } from './Dashboard/Dashboard.page';
 import { CreateDepartmentPage } from './Departments/CreateDepartment/CreateDepartment.page';
@@ -20,4 +21,5 @@ export {
   SetDepartmentSalaryPage,
   SetUserPage,
   TotalReportPage,
+  CalculatorPage,
 };

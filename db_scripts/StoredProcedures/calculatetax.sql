@@ -13,3 +13,5 @@ SELECT SUM(
 FROM impuestorenta ir
 WHERE ir.enabled = true;
 $$;
+
+SELECT * FROM calculate_tax(5000000)

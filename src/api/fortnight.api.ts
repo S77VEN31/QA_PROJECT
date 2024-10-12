@@ -44,4 +44,11 @@ const insertNFortnights = async (params: NFortnightParams) => {
   }
 };
 
-export { insertFortnight, insertNFortnights };
+const calculateTax = async (params: { salary: number }) => {
+  const queryParams = { ...params };
+  const response = await api.get('/fortnight/calculate', { params: queryParams });
+  console.log(response);
+  return response.data;
+};
+
+export { insertFortnight, insertNFortnights, calculateTax };
