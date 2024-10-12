@@ -158,8 +158,12 @@ export function SetDepartmentSalaryPage() {
             <NumberInput
               className={classes.input}
               {...form.getInputProps('childrenQuantity')}
-              value={form.values.contributionPercentage !== undefined ? form.values.contributionPercentage : ''}
-              onChange={(value) => value === '' ? form.setFieldValue('childrenQuantity', undefined) : form.setFieldValue('childrenQuantity', value as number)}
+              value={form.values.childrenQuantity !== undefined ? form.values.childrenQuantity : ''}
+              onChange={(value) =>
+                value === ''
+                  ? form.setFieldValue('childrenQuantity', undefined)
+                  : form.setFieldValue('childrenQuantity', value as number)
+              }
               placeholder="Ingrese el número de hijos"
               label="Número de hijos"
               aria-label="Ingrese el número de hijos"
@@ -170,8 +174,16 @@ export function SetDepartmentSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('contributionPercentage')}
-              value={form.values.contributionPercentage !== undefined ? form.values.contributionPercentage : ''}
-              onChange={(value) => value === '' ? form.setFieldValue('contributionPercentage', undefined) : form.setFieldValue('contributionPercentage', value as number)}
+              value={
+                form.values.contributionPercentage !== undefined
+                  ? form.values.contributionPercentage
+                  : ''
+              }
+              onChange={(value) =>
+                value === ''
+                  ? form.setFieldValue('contributionPercentage', undefined)
+                  : form.setFieldValue('contributionPercentage', value as number)
+              }
               placeholder="Ingrese el porcentaje de aporte"
               label="Porcentaje de aporte a la Asociación Solidarista"
               aria-label="Ingrese el porcentaje de aporte a la Asociación Solidarista"
