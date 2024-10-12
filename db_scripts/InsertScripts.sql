@@ -143,6 +143,16 @@ SELECT empleadooptimizado.cedula, empleadooptimizado.salario, CURRENT_DATE, NULL
 
 CREATE INDEX idx_cedula_salarios ON salarios (cedula);
 
+SELECT * from salarios limit 1
+
+-- INSERTAR DEDUCCIONES PERSONALES
+INSERT INTO public.deduccionespersonales(
+	cedula, porcentaje, hijos, conyuge, validfrom, enabled)
+	SELECT e.cedula, 0, 0, false, '2024-09-29 00:00:00', TRUE FROM empleados e;
+
+CREATE INDEX idx_cedula_deduccionespersonales ON deduccionespersonales (cedula);
+CREATE INDEX idx_validfrom_deduccionespersonales ON deduccionespersonales (validfrom);
+
 -- Crear indices en tabla empleado
 CREATE INDEX idx_nombre_empleados ON empleados (nombreId);
 CREATE INDEX idx_apellido1_empleados ON empleados (apellido1Id);
@@ -185,6 +195,10 @@ INSERT INTO public.impuestorenta(
 
 SELECT * FROM impuestoRenta;
 
+-- CREDITOS FISCALES
+INSERT INTO public.creditosfiscales(
+	credhijos, credconyuge, validfrom, enabled)
+	VALUES (1730, 2620, '2024-09-29 00:00:00', TRUE);
 
 SELECT * FROM salarios CROSS JOIN impuestoRenta LIMIT 100;
 SELECT

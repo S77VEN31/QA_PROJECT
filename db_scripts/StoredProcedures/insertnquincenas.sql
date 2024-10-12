@@ -9,7 +9,7 @@ BEGIN
 
     -- Inserción de todos los pagos, calculando que las fechas de los pagos sean el 14 y el 28 de cada mes.
     INSERT INTO public.pagos (
-        salarioid, cedula, fechapago, pateym, pativm, obreym, obrivm, obrbanco, 
+        salarioid, cedula, fechapago, pateym, pativm, obreym, obrivm, obrbanco, obrsolidarista,
         resaguinaldo, rescesantia, resvacaciones, impuestorenta, enabled
     )
     SELECT
@@ -21,15 +21,19 @@ BEGIN
         obr.obreym * (s.salariobruto / 2) / 100 AS obreym,
         obr.obrivm * (s.salariobruto / 2) / 100 AS obrivm,
         obr.obrbanco * (s.salariobruto / 2) / 100 AS obrbanco,
+		s.obrsolidarista * (s.salariobruto / 2) / 100 AS obrsolidarista,
         res.resaguinaldo * (s.salariobruto / 2) / 100 AS resaguinaldo,
         res.rescesantia * (s.salariobruto / 2) / 100 AS rescesantia,
         res.resvacaciones * (s.salariobruto / 2) / 100 AS resvacaciones,
-        calculate_tax(s.salariobruto) / 2 AS impuestorenta,  -- Calcular el impuesto de renta para el salario
+        calculate_tax(s.salariobruto, (s.hijos * cred.credhijos),
+			(CASE WHEN s.conyuge = TRUE THEN cred.credconyuge ELSE 0 END)
+		) / 2 AS impuestorenta,-- Calcular el impuesto de renta para el salario
         true AS enabled
     FROM salarios s
     CROSS JOIN deduccionesobrero obr
     CROSS JOIN deduccionespatronales pat
     CROSS JOIN reservaspatronales res
+	CROSS JOIN creditosfiscales cred
     CROSS JOIN (
         SELECT 
 		    CASE
@@ -53,6 +57,7 @@ BEGIN
     WHERE obr.enabled = TRUE
       AND pat.enabled = TRUE
       AND res.enabled = TRUE
+	  AND cred.enabled = TRUE
       AND payment_dates.payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 years'))
       AND NOT EXISTS (
           SELECT 1 FROM public.pagos p WHERE p.fechapago::date = payment_dates.payment_date::date
@@ -66,8 +71,9 @@ END;
 $$;
 
 
-CALL  insertnquincenas(5, '2024-10-14'::TIMESTAMP);
+CALL  insertnquincenas(5, '2025-01-14'::TIMESTAMP);
 
+SELECT * FROM getquincenas('2025-01-15'::DATE, '2025-12-12'::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, NULL::INT)
 
 SELECT 
     CASE

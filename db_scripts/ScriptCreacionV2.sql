@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS public.reservaspatronales CASCADE;
 DROP TABLE IF EXISTS public.usuarios CASCADE;
 DROP TABLE IF EXISTS public.salarios CASCADE;
 DROP TABLE IF EXISTS public.empleadosdepartamentos CASCADE;
-DROP TABLE IF EXISTS public.porcentajesvoluntarios CASCADE;
+DROP TABLE IF EXISTS public.creditosfiscales;
 
 CREATE TABLE IF NOT EXISTS public.apellidos
 (
@@ -136,11 +136,15 @@ CREATE TABLE IF NOT EXISTS public.salarios
     salarioid serial NOT NULL,
     cedula integer NOT NULL,
     salariobruto integer NOT NULL,
+    hijos smallint NOT NULL DEFAULT 0,
+    conyuge boolean NOT NULL DEFAULT false,
+    obrsolidarista numeric(4, 2) NOT NULL DEFAULT 0,
     validfrom timestamp without time zone,
     validto timestamp without time zone,
-    enabled boolean,
+    enabled boolean NOT NULL DEFAULT true,
     PRIMARY KEY (salarioid)
 );
+
 
 CREATE TABLE IF NOT EXISTS public.empleadosdepartamentos
 (
@@ -151,15 +155,28 @@ CREATE TABLE IF NOT EXISTS public.empleadosdepartamentos
     enabled boolean
 );
 
-CREATE TABLE IF NOT EXISTS public.porcentajesvoluntarios
+CREATE TABLE IF NOT EXISTS public.deduccionespersonales
 (
-    "voluntarioId" serial NOT NULL,
+    dedpersid serial NOT NULL,
     cedula integer NOT NULL,
-    porcentaje numeric(3, 2) NOT NULL,
+    porcentaje numeric(3, 2) NOT NULL DEFAULT 0,
+    hijos smallint NOT NULL DEFAULT 0,
+    conyuge boolean NOT NULL DEFAULT false,
     validfrom timestamp without time zone,
     validto timestamp without time zone,
     enabled boolean NOT NULL,
-    PRIMARY KEY ("voluntarioId")
+    PRIMARY KEY (dedpersid)
+);
+
+CREATE TABLE IF NOT EXISTS public.creditosfiscales
+(
+    creditoid serial NOT NULL,
+    credhijos integer NOT NULL,
+    credconyuge integer NOT NULL,
+    validfrom timestamp without time zone,
+    validto timestamp without time zone,
+    enabled boolean NOT NULL DEFAULT true,
+    PRIMARY KEY (creditoid)
 );
 
 ALTER TABLE IF EXISTS public.empleados
@@ -238,11 +255,11 @@ ALTER TABLE IF EXISTS public.empleadosdepartamentos
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.porcentajesvoluntarios
+ALTER TABLE IF EXISTS public.deduccionespersonales
     ADD FOREIGN KEY (cedula)
     REFERENCES public.empleados (cedula) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
-
+	
 END;
