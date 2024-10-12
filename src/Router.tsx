@@ -13,6 +13,7 @@ import {
   SetDepartmentSalaryPage,
   SetUserPage,
   TotalReportPage,
+  AssignCollaboratorsPage,
 } from '@pages';
 // Router
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
@@ -51,8 +52,8 @@ const router = createBrowserRouter([
         element: <SetDepartmentSalaryPage />,
       },
       {
-        path: 'departments/assign-users',
-        element: <SetUserPage />,
+        path: 'departments/assign-collaborators',
+        element: <AssignCollaboratorsPage />,
       },
       {
         path: 'departments/create',

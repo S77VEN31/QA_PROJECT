@@ -9,6 +9,7 @@ import {
   getEmployeeSalary,
   setDepartmentSalary,
   setEmployeeSalary,
+  assignCollaborators,
 } from './department.api';
 // Fortnight
 import { insertFortnight, insertNFortnights } from './fortnight.api';
@@ -28,6 +29,7 @@ export {
   setDepartmentSalary,
   setEmployeeSalary,
   setupInterceptors,
+  assignCollaborators,
 };
 
-export type { CreateDepartmentParams, SetSalaryParams } from './api.d';
+export type { CreateDepartmentParams, SetSalaryParams, AssignCollaboratorsParams } from './api.d';

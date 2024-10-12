@@ -10,3 +10,9 @@ export interface SetSalaryParams {
 export interface CreateDepartmentParams {
   departmentName: string;
 }
+
+
+export interface AssignCollaboratorsParams {
+  departmentID: number;
+  cardIDs: number[];
+}
