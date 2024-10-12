@@ -39,6 +39,7 @@ export function FortnightReportTable({
     const resvacaciones = parseFloat(row.resvacaciones);
 
     const totalDeducciones = obreym + obrivm + obrbanco + obrsolidarista + impuestorenta;
+    const salarioNeto = salarioBruto - 2 * totalDeducciones;
     const porcentajeDeducciones = (totalDeducciones / (salarioBruto / 2)) * 100;
     const porcentajeRestante = 100 - porcentajeDeducciones;
 
@@ -136,11 +137,12 @@ export function FortnightReportTable({
             <Table.Th rowSpan={2}>Departamento</Table.Th>
             <Table.Th rowSpan={2}>Fecha</Table.Th>
             <Table.Th rowSpan={2}>Salario Bruto</Table.Th>
+            <Table.Th rowSpan={2}>Salario Neto</Table.Th>
+            <Table.Th rowSpan={2}>Deducciones %</Table.Th>
+            <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
             {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}
             {showObrero && <Table.Th colSpan={4}>Deducciones Obrero</Table.Th>}
             {showReservas && <Table.Th colSpan={3}>Reservas</Table.Th>}
-            <Table.Th rowSpan={2}>Deducciones %</Table.Th>
-            <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
           </Table.Tr>
           <Table.Tr>
             {showPatronal && (
