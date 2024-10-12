@@ -145,7 +145,7 @@ export function FortnightReportTable({
             <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
             {showObrero && <Table.Th colSpan={4}>Deducciones Obrero</Table.Th>}
             {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}
-            {showReservas && <Table.Th colSpan={3}>Reservas</Table.Th>}
+            {showReservas && <Table.Th colSpan={3}>Reservas Patronales</Table.Th>}
           </Table.Tr>
           <Table.Tr>
             {showObrero && (

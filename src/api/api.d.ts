@@ -18,3 +18,10 @@ export interface MultipleFortnightsParams {
   quincenaDate: Date | null;
   n: number;
 }
+
+export interface DepartmentTotalParams {
+  startDate?: string;
+  endDate?: string;
+  startRange?: number;
+  limitRange?: number;
+}

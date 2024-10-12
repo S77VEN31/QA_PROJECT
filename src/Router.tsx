@@ -5,6 +5,7 @@ import {
   CalculatorPage,
   CreateDepartmentPage,
   DashboardPage,
+  DepartmentTotalsPage,
   DetailedReportPage,
   FortnightPage,
   LoginPage,
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: 'departments/create',
         element: <CreateDepartmentPage />,
+      },
+      {
+        path: 'departments/totals',
+        element: <DepartmentTotalsPage />,
       },
       {
         path: 'collaborators/assign-salary',
