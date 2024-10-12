@@ -5,6 +5,7 @@ import {
   DepartmentEmployeesParams,
   DepartmentTotalParams,
   SetSalaryParams,
+  AssignCollaboratorsParams,
 } from './api.d';
 
 export const getDepartments = async (query?: string) => {
@@ -55,5 +56,10 @@ export const getDepartmentEmployees = async (params: DepartmentEmployeesParams) 
     params: queryParams,
   });
 
+  return response.data;
+};
+
+export const assignCollaborators = async (body: AssignCollaboratorsParams) => {
+  const response = await api.put('/department', body);
   return response.data;
 };

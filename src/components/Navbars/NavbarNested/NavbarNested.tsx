@@ -31,7 +31,7 @@ const mockdata = [
     links: [
       { label: 'Crear Departamento', link: '/dashboard/departments/create' },
       { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
-      { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
+      { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-collaborators' },
       { label: 'Ver Totales', link: '/dashboard/departments/totals' },
       { label: 'Ver Empleados', link: '/dashboard/departments/employees' },
     ],

@@ -11,11 +11,14 @@ import {
   getEmployeeSalary,
   setDepartmentSalary,
   setEmployeeSalary,
+  assignCollaborators,
 } from './department.api';
 // Fortnight
 import { calculateTax, insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
 import { getReportDetail, getReportTotal } from './report.api';
+// Collaborator
+import { getCollaboratorName } from './collaborator.api';
 
 export {
   createDepartment,
@@ -33,6 +36,8 @@ export {
   setupInterceptors,
   getDepartmentTotals,
   getDepartmentEmployees,
+  assignCollaborators,
+  getCollaboratorName,
 };
 
 export type {
@@ -40,4 +45,5 @@ export type {
   SetSalaryParams,
   SingleFortnightParams,
   MultipleFortnightsParams,
+  AssignCollaboratorsParams,
 } from './api.d';

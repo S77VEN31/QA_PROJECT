@@ -32,3 +32,9 @@ export interface DepartmentEmployeesParams {
   startRange?: number;
   limitRange?: number;
 }
+
+
+export interface AssignCollaboratorsParams {
+  departmentID: number;
+  cardIDs: number[];
+}

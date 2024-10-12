@@ -126,6 +126,7 @@ export function TotalReportTable({
       className={classes.scrollArea}
     >
       <Table miw={800} className={classes.table}>
+        <Table.Caption>Tabla de reportes totales</Table.Caption>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
             <Table.Th rowSpan={2}>Salario Bruto</Table.Th>
