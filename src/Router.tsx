@@ -21,6 +21,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const token = getAuthToken();
   if (!token) {
+    console.log('REDIRECT');
     return <Navigate to="/" replace />;
   }
   return element;

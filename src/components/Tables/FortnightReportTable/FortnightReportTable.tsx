@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { ReportDetailData } from '@types';
 // Tools
 import cx from 'clsx';
+import { Link } from 'react-router-dom';
 // Mantine
-import { Anchor, Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
+import { Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
 // Classes
 import classes from './FortnightReportTable.module.css';
 
@@ -46,9 +47,13 @@ export function FortnightReportTable({
     return (
       <Table.Tr key={row.cedula}>
         <Table.Td>
-          <Anchor component="button" fz="sm">
+          <Link
+            to={`/dashboard/collaborators/assign-salary?cardID=${row.cedula}`}
+            style={{ fontSize: 'small' }}
+            aria-label={`Ver datos de ${row.nombre}`}
+          >
             {row.cedula}
-          </Anchor>
+          </Link>
         </Table.Td>
         <Table.Td>{row.nombre}</Table.Td>
         <Table.Td>{row.depnombre}</Table.Td>

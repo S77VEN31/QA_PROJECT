@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { DepartmentEmployeeData } from '@types';
 // Tools
 import cx from 'clsx';
+import { Link } from 'react-router-dom';
 // Mantine
-import { Anchor, ScrollArea, Table, TableCaption } from '@mantine/core';
+import { ScrollArea, Table, TableCaption } from '@mantine/core';
 // Classes
 import classes from './DepartmentEmployeesTable.module.css';
 
@@ -31,9 +32,13 @@ export function DepartmentEmployeesTable({ data }: DepartmentEmployeesTableProps
       <Table.Tr key={row.cedula}>
         <Table.Th scope="row">{departmentName}</Table.Th>
         <Table.Td>
-          <Anchor component="button" fz="sm">
+          <Link
+            to={`/dashboard/collaborators/assign-salary?cardID=${cedula}`}
+            style={{ fontSize: 'small' }}
+            aria-label={`Ver datos de ${nombre}`}
+          >
             {cedula}
-          </Anchor>
+          </Link>
         </Table.Td>
         <Table.Td>{nombre}</Table.Td>
         <Table.Td>

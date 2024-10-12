@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getDepartments, getEmployeeSalary, setEmployeeSalary, SetSalaryParams } from '@api';
 // Components
 import { SearchableSelect } from '@components';
+import { useSearchParams } from 'react-router-dom';
 // Mantine
 import { Button, NumberInput, Switch, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -10,7 +11,6 @@ import { notifications } from '@mantine/notifications';
 import { NotificationPosition } from '@mantine/notifications/lib/notifications.store';
 // Classes
 import classes from './SetCollaboratorSalary.module.css';
-
 
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
@@ -42,6 +42,7 @@ const notificationMessages = {
 };
 
 export function SetCollaboratorSalaryPage() {
+  const [searchParams] = useSearchParams();
   const [departments, setDepartments] = useState<{ label: string; value: number }[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<{
     label: string;
@@ -94,6 +95,11 @@ export function SetCollaboratorSalaryPage() {
         value: dep.departamentoid,
       }));
       setDepartments(formattedDepartments);
+      if (formattedDepartments.length === 1) {
+        setSelectedDepartment(formattedDepartments[0]);
+      } else {
+        setSelectedDepartment(null);
+      }
     });
   };
 
@@ -114,12 +120,21 @@ export function SetCollaboratorSalaryPage() {
   };
 
   useEffect(() => {
+    const cardIDquery = searchParams.get('cardID');
+    console.log('cardIDquery:', cardIDquery);
+    if (cardIDquery) {
+      form.setFieldValue('cardID', cardIDquery);
+      setCardID(cardIDquery);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     if (cardID) {
       fetchDepartments(cardID);
     } else {
       setDepartments([]);
+      setSelectedDepartment(null);
     }
-    setSelectedDepartment(null);
   }, [cardID]);
 
   useEffect(() => {
@@ -175,7 +190,7 @@ export function SetCollaboratorSalaryPage() {
               type="number"
               required
               className={classes.input}
-              value={form.values.cardID || ""}
+              value={form.values.cardID || ''}
               onChange={(e) => {
                 if (e.target.value.length <= 9) {
                   form.setFieldValue('cardID', e.target.value);
@@ -204,7 +219,11 @@ export function SetCollaboratorSalaryPage() {
               className={classes.input}
               {...form.getInputProps('salary')}
               value={form.values.salary || ''}
-              onChange={(value) => value === "" ? form.setFieldValue('salary', undefined) : form.setFieldValue('salary', value as number)}
+              onChange={(value) =>
+                value === ''
+                  ? form.setFieldValue('salary', undefined)
+                  : form.setFieldValue('salary', value as number)
+              }
               placeholder="Ingrese el salario"
               label="Salario"
               aria-label="Ingrese el salario"
@@ -215,8 +234,16 @@ export function SetCollaboratorSalaryPage() {
               hideControls
               className={classes.input}
               {...form.getInputProps('contributionPercentage')}
-              value={form.values.contributionPercentage !== undefined ? form.values.contributionPercentage : ''}
-              onChange={(value) => value === "" ? form.setFieldValue('contributionPercentage', undefined) : form.setFieldValue('contributionPercentage', value as number)}
+              value={
+                form.values.contributionPercentage !== undefined
+                  ? form.values.contributionPercentage
+                  : ''
+              }
+              onChange={(value) =>
+                value === ''
+                  ? form.setFieldValue('contributionPercentage', undefined)
+                  : form.setFieldValue('contributionPercentage', value as number)
+              }
               placeholder="Ingrese el porcentaje de aporte"
               label="Porcentaje de aporte a la Asociación Solidarista"
               aria-label="Ingrese el porcentaje de aporte a la Asociación Solidarista"
@@ -229,7 +256,11 @@ export function SetCollaboratorSalaryPage() {
               className={classes.input}
               {...form.getInputProps('childrenQuantity')}
               value={form.values.childrenQuantity !== undefined ? form.values.childrenQuantity : ''}
-              onChange={(value) => value === "" ? form.setFieldValue('childrenQuantity', undefined) : form.setFieldValue('childrenQuantity', value as number)}
+              onChange={(value) =>
+                value === ''
+                  ? form.setFieldValue('childrenQuantity', undefined)
+                  : form.setFieldValue('childrenQuantity', value as number)
+              }
               placeholder="Ingrese el número de hijos"
               label="Número de hijos"
               aria-label="Ingrese el número de hijos"

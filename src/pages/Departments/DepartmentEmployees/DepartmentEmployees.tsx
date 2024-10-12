@@ -85,19 +85,19 @@ export function DepartmentEmployeesPage() {
           Consulte los empleados en un departamento y su información de créditos fiscales.
         </Text>
         <div className={classes.inputsContainer}>
-          <SearchInput
-            type="number"
-            value={IDCard}
-            onChange={setIDCard}
-            placeholder="Búsqueda por cédula"
-            label="Cédula"
-          />
           <SearchableSelect
             items={departments}
             selectedItem={selectedDepartment}
             setSelectedItem={setSelectedDepartment}
             placeholder="Seleccione un departamento"
             label="Departamento"
+          />
+          <SearchInput
+            type="number"
+            value={IDCard}
+            onChange={setIDCard}
+            placeholder="Búsqueda por cédula"
+            label="Cédula"
           />
         </div>
       </header>
