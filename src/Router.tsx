@@ -2,6 +2,7 @@
 import { getAuthToken } from '@api';
 // Pages
 import {
+  AssignCollaboratorsPage,
   CalculatorPage,
   CreateDepartmentPage,
   DashboardPage,
@@ -13,7 +14,6 @@ import {
   SetCollaboratorSalaryPage,
   SetDepartmentSalaryPage,
   TotalReportPage,
-  AssignCollaboratorsPage,
 } from '@pages';
 // Router
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
@@ -75,10 +75,6 @@ const router = createBrowserRouter([
       {
         path: 'collaborators/calculator',
         element: <CalculatorPage />,
-      },
-      {
-        path: 'configuracion',
-        element: <div>Configuración page</div>,
       },
     ],
   },
