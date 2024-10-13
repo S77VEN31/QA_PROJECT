@@ -91,6 +91,9 @@ export function FortnightReportTable({
           style={{
             backgroundColor: creditosfiscales ? 'rgba(255, 0, 0, 0.1)' : 'transparent',
           }}
+          aria-label={
+            creditosfiscales ? `${impuestorenta} Este colaborador tiene créditos fiscales` : ''
+          }
         >
           {impuestorenta.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>

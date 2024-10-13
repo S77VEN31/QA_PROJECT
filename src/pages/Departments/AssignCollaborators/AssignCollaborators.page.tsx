@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, AssignCollaboratorsParams, assignCollaborators, getCollaboratorName } from '@api';
+import {
+  assignCollaborators,
+  AssignCollaboratorsParams,
+  getCollaboratorName,
+  getDepartments,
+} from '@api';
 // Components
 import { SearchableSelect } from '@components';
 // Mantine
@@ -69,7 +74,7 @@ export function AssignCollaboratorsPage() {
     value: number;
   } | null>(null);
   const [cardIDs, setCardIDs] = useState<number[]>([]); // Using cardIDs instead of items
-  const [newCardID, setNewCardID] = useState<number>(0);
+  const [newCardID, setNewCardID] = useState<number | string>('');
   const [collaboratorMap, setCollaboratorMap] = useState<{ [key: number]: string }>({}); // Map for cardID -> Name
 
   useEffect(() => {
@@ -84,10 +89,10 @@ export function AssignCollaboratorsPage() {
 
   const deleteCardID = (index: number) => {
     const updatedCardIDs = cardIDs.filter((_, i) => i !== index);
-    const removedCardID = cardIDs[index]; 
+    const removedCardID = cardIDs[index];
     setCardIDs(updatedCardIDs);
     form.setFieldValue('cardIDs', updatedCardIDs); // Update the form's cardIDs
-    
+
     // Remove the cardID from the collaboratorMap
     setCollaboratorMap((prevMap) => {
       const newMap = { ...prevMap };
@@ -97,14 +102,21 @@ export function AssignCollaboratorsPage() {
   };
 
   const addCardID = () => {
-    if (newCardID > 99999999) { // Ensure the cardID is valid (9 digits)
+    if (typeof newCardID !== 'number') {
+      notifications.show(notificationMessages.invalidCardID);
+      return;
+    }
+    if (newCardID > 99999999) {
+      // Ensure the cardID is valid (9 digits)
       if (cardIDs.includes(newCardID)) {
         notifications.show(notificationMessages.cardIDExists);
       } else {
         getCollaboratorName(newCardID)
           .then((collaboratorName: EmpleadoNombreData) => {
             if (!collaboratorName) {
-              notifications.show(notificationMessages.errorToast({ message: 'Colaborador no encontrado' }));
+              notifications.show(
+                notificationMessages.errorToast({ message: 'Colaborador no encontrado' })
+              );
               return;
             }
             // Add new cardID and corresponding name to the map
@@ -115,8 +127,8 @@ export function AssignCollaboratorsPage() {
             const updatedCardIDs = [...cardIDs, newCardID];
             setCardIDs(updatedCardIDs); // Update local state
             form.setFieldValue('cardIDs', updatedCardIDs); // Update the form's cardIDs
-            setNewCardID(0); // Clear the input after adding
-            })
+            setNewCardID(''); // Clear the input after adding
+          })
           .catch((error) => {
             notifications.show(notificationMessages.errorToast(error));
           });
@@ -143,7 +155,7 @@ export function AssignCollaboratorsPage() {
           notifications.show(notificationMessages.invalidCardID);
           return 'Cada cédula debe tener 9 dígitos y ser un número válido.';
         } else {
-          return null
+          return null;
         }
       },
       departmentID: (value) => {
@@ -166,12 +178,11 @@ export function AssignCollaboratorsPage() {
     if (selectedDepartment) {
       form.setFieldValue('departmentID', selectedDepartment.value);
     } else {
-      form.setFieldValue('departmentID',  -1);
+      form.setFieldValue('departmentID', -1);
     }
   }, [selectedDepartment]);
 
-
-  const handleAssignCollaborators = (values: AssignCollaboratorsParams) => {    
+  const handleAssignCollaborators = (values: AssignCollaboratorsParams) => {
     if (values.cardIDs.length === 0 || !values.departmentID) {
       notifications.show(notificationMessages.invalidFields);
       return;
@@ -180,7 +191,9 @@ export function AssignCollaboratorsPage() {
 
     assignCollaborators(values)
       .then(() => {
-        notifications.show(notificationMessages.successToast({ message: 'Colaboradores asignados correctamente.'}));
+        notifications.show(
+          notificationMessages.successToast({ message: 'Colaboradores asignados correctamente.' })
+        );
         form.reset(); // Reset the form after successful submission
         setCardIDs([]); // Clear cardIDs after submitting
         setCollaboratorMap({}); // Clear the map after submitting
@@ -195,7 +208,11 @@ export function AssignCollaboratorsPage() {
     <div className={classes.mainLayout}>
       <header className={classes.header}>
         <Title>Añadir colaboradores a departamento</Title>
-        <Text>Seleccione un departamento e ingrese las cédulas de los empleados. Escriba la cédula de uno y luego presione el botón de añadir. Cuando ya están todos los empleados, presione el botón de asignar.</Text>
+        <Text>
+          Seleccione un departamento e ingrese las cédulas de los empleados. Escriba la cédula de
+          uno y luego presione el botón de añadir. Cuando ya están todos los empleados, presione el
+          botón de asignar.
+        </Text>
       </header>
       <main className={classes.main}>
         <form onSubmit={form.onSubmit(handleAssignCollaborators)} className={classes.formContainer}>
@@ -212,17 +229,20 @@ export function AssignCollaboratorsPage() {
               aria-label="Seleccione un departamento"
             />
             <NumberInput
-              max = {999999999}
-              clampBehavior='strict'
+              max={999999999}
+              clampBehavior="strict"
               allowDecimal={false}
               className={classes.input}
               value={newCardID}
-              onChange={(value) => setNewCardID(typeof value === 'number' ? value : 0)}
+              onChange={(value) => setNewCardID(typeof value === 'number' ? value : '')}
               placeholder="Ingrese la cédula"
               label="Cédula del colaborador"
               aria-label="Ingrese la cédula"
+              allowNegative={false}
             />
-            <Button onClick={addCardID} type="button">Agregar cédula</Button>
+            <Button onClick={addCardID} type="button" aria-label={`Agregar cédula ${newCardID}`}>
+              Agregar cédula
+            </Button>
           </div>
           <div className={classes.tableContainer}>
             <Table>
@@ -237,29 +257,28 @@ export function AssignCollaboratorsPage() {
               <Table.Tbody>
                 {cardIDs.map((cardID, index) => (
                   <Table.Tr key={index}>
+                    <Table.Td>{cardID}</Table.Td>
+                    <Table.Td>{collaboratorMap[cardID]}</Table.Td>
                     <Table.Td>
-                      {cardID}
-                    </Table.Td>
-                    <Table.Td>{collaboratorMap[cardID]}</Table.Td> 
-                    <Table.Td>
-                    <Button
-                      color="red" // Sets the button's background color to red
-                      variant="filled" // Makes the button filled with color (no outline)
-                      onClick={() => deleteCardID(index)}
-                      styles={(theme) => ({
-                        root: {
-                          color: 'white', // Ensures the text is white
-                        },
-                      })}
-                    >
-                      X
-                    </Button>
+                      <Button
+                        color="red" // Sets the button's background color to red
+                        variant="filled" // Makes the button filled with color (no outline)
+                        onClick={() => deleteCardID(index)}
+                        styles={(theme) => ({
+                          root: {
+                            color: 'white', // Ensures the text is white
+                          },
+                        })}
+                        aria-label={`Eliminar a ${collaboratorMap[cardID]}`}
+                      >
+                        X
+                      </Button>
                     </Table.Td>
                   </Table.Tr>
                 ))}
               </Table.Tbody>
-              </Table>  
-              <Button type="submit">Añadir colaboradores</Button>
+            </Table>
+            <Button type="submit">Añadir colaboradores</Button>
           </div>
         </form>
       </main>
