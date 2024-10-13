@@ -14,6 +14,7 @@ export interface ReportDetailData {
   resaguinaldo: string;
   rescesantia: string;
   resvacaciones: string;
+  creditosfiscales: boolean;
 }
 
 export interface ReportTotalData {

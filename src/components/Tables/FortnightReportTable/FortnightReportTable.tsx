@@ -38,6 +38,7 @@ export function FortnightReportTable({
     const resaguinaldo = parseFloat(row.resaguinaldo);
     const rescesantia = parseFloat(row.rescesantia);
     const resvacaciones = parseFloat(row.resvacaciones);
+    const creditosfiscales = row.creditosfiscales;
 
     const totalDeducciones = obreym + obrivm + obrbanco + obrsolidarista + impuestorenta;
     const salarioNeto = salarioBruto - 2 * totalDeducciones;
@@ -86,7 +87,11 @@ export function FortnightReportTable({
             />
           </Progress.Root>
         </Table.Td>
-        <Table.Td>
+        <Table.Td
+          style={{
+            backgroundColor: creditosfiscales ? 'rgba(255, 0, 0, 0.1)' : 'transparent',
+          }}
+        >
           {impuestorenta.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
         {showObrero && (
@@ -138,8 +143,7 @@ export function FortnightReportTable({
       className={classes.scrollArea}
     >
       <Table miw={800} className={classes.table}>
-        
-      <Table.Caption>Tabla de reportes detallados</Table.Caption>
+        <Table.Caption>Tabla de reportes detallados</Table.Caption>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
             <Table.Th rowSpan={2}>Cédula</Table.Th>

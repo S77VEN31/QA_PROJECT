@@ -25,7 +25,8 @@ RETURNS TABLE (
     rescesantia NUMERIC(13, 4),
     resvacaciones NUMERIC(13, 4),
     impuestorenta NUMERIC(13, 4),
-    enabled BOOLEAN
+    enabled BOOLEAN,
+	creditosfiscales BOOLEAN
 )
 LANGUAGE plpgsql
 AS $$
@@ -39,7 +40,11 @@ BEGIN
            ed.departamentoId, d.depnombre, s.salariobruto,
            p.fechapago, p.pateym, p.pativm, p.obreym, p.obrivm, p.obrbanco, 
            p.obrsolidarista, p.resaguinaldo, p.rescesantia, p.resvacaciones, 
-           p.impuestorenta, p.enabled
+           p.impuestorenta, p.enabled,
+		   CASE
+		   		WHEN s.hijos > 0 OR s.conyuge = TRUE THEN TRUE
+				ELSE FALSE
+			END AS creditosfiscales
     FROM public.pagos p
     INNER JOIN empleadosdepartamentos ed ON ed.cedula = p.cedula
 	INNER JOIN empleados e ON e.cedula = p.cedula
@@ -91,18 +96,21 @@ BEGIN
 END;
 $$;
 
-DROP FUNCTION getquincenas(date, date, integer, smallint, integer);
+DROP FUNCTION getquincenas(date, date, integer, smallint, integer, integer);
 
 SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, NULL::INT) ORDER BY pagoid DESC LIMIT 1;
 
-SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, 23::SMALLINT, NULL::INT, 15::INT)
+SELECT * FROM getquincenas('2024-10-28'::DATE, NULL::DATE, 106500405::INT, NULL::SMALLINT, NULL::INT, null::INT)
 SELECT * FROM getquincenas('2024-12-28'::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT, NULL::INT, 100::INT)
 SELECT * FROM getquincenas(NULL::DATE, NULL::DATE, NULL::INT, 3::SMALLINT, 9::INT, 9::INT)
 
 
 SELECT COUNT(*) FROM empleadosdepartamentos GROUP BY departamentoId;
 
-SELECT * FROM pagos WHERE cedula = 100010209
-SELECT * FROM pagos WHERE fechapago = 
+SELECT * FROM pagos WHERE cedula = 106500405
+SELECT * FROM pagos p INNER JOIN salarios s ON s.salarioid = p.salarioid where p.cedula = 106500405 
+
+SELECT COUNT(*) FROM pagos
+SELECT DISTINCT fechapago FROM pagos
 
 
