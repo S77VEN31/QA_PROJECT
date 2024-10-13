@@ -2,15 +2,17 @@
 import { getAuthToken } from '@api';
 // Pages
 import {
+  AssignCollaboratorsPage,
   CalculatorPage,
   CreateDepartmentPage,
   DashboardPage,
+  DepartmentEmployeesPage,
+  DepartmentTotalsPage,
   DetailedReportPage,
   FortnightPage,
   LoginPage,
   SetCollaboratorSalaryPage,
   SetDepartmentSalaryPage,
-  SetUserPage,
   TotalReportPage,
 } from '@pages';
 // Router
@@ -19,6 +21,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const token = getAuthToken();
   if (!token) {
+    console.log('REDIRECT');
     return <Navigate to="/" replace />;
   }
   return element;
@@ -50,12 +53,20 @@ const router = createBrowserRouter([
         element: <SetDepartmentSalaryPage />,
       },
       {
-        path: 'departments/assign-users',
-        element: <SetUserPage />,
+        path: 'departments/assign-collaborators',
+        element: <AssignCollaboratorsPage />,
       },
       {
         path: 'departments/create',
         element: <CreateDepartmentPage />,
+      },
+      {
+        path: 'departments/totals',
+        element: <DepartmentTotalsPage />,
+      },
+      {
+        path: 'departments/employees',
+        element: <DepartmentEmployeesPage />,
       },
       {
         path: 'collaborators/assign-salary',
@@ -64,10 +75,6 @@ const router = createBrowserRouter([
       {
         path: 'collaborators/calculator',
         element: <CalculatorPage />,
-      },
-      {
-        path: 'configuracion',
-        element: <div>Configuración page</div>,
       },
     ],
   },

@@ -31,7 +31,9 @@ const mockdata = [
     links: [
       { label: 'Crear Departamento', link: '/dashboard/departments/create' },
       { label: 'Asignar Salario', link: '/dashboard/departments/assign-salary' },
-      { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-users' },
+      { label: 'Asignar Usuarios', link: '/dashboard/departments/assign-collaborators' },
+      { label: 'Ver Totales', link: '/dashboard/departments/totals' },
+      { label: 'Ver Empleados', link: '/dashboard/departments/employees' },
     ],
   },
   {
@@ -42,7 +44,6 @@ const mockdata = [
       { label: 'Calculadora', link: '/dashboard/collaborators/calculator' },
     ],
   },
-  { label: 'Configuración', icon: IconSettings, link: '/dashboard/configuracion' },
 ];
 
 export function NavbarNested() {
@@ -52,7 +53,7 @@ export function NavbarNested() {
     <nav className={classes.navbar}>
       <div className={classes.header}>
         <Group justify="space-between">
-          <Code fw={700}>Evasion Fiscal TEC</Code>
+          <Code fw={700}>NóminaPro</Code>
         </Group>
       </div>
       <ScrollArea className={classes.links}>

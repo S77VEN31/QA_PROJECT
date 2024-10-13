@@ -26,18 +26,19 @@
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  align-items: flex-end;
 }
 
-.buttonContainer {
+.filterContainer {
   display: flex;
   flex-direction: column;
-  padding-top: 10px;
-  align-items: flex-start;
+  gap: 1rem;
 }
 
-.input {
-  min-width: 300px;
+.searchContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-end;
 }
 
 .main {
@@ -47,17 +48,18 @@
   overflow-y: auto;
 }
 
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+}
+
 .footer {
   grid-row: 3;
   display: flex;
   justify-content: center;
   height: 60px;
-}
-
-.checkbox {
-  margin: 10px;
-}
-.select {
-  margin: 0px 10px;
-  padding: 5px;
 }

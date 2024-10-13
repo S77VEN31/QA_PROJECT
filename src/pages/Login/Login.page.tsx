@@ -1,4 +1,3 @@
-;
 // React
 import { useState } from 'react';
 // API
@@ -7,11 +6,20 @@ import { login } from '@api';
 import { ColorSchemeToggle } from '@components';
 import { useNavigate } from 'react-router-dom';
 // Mantine
-import { Anchor, Button, Container, Group, Paper, PasswordInput, Text, TextInput, Title } from '@mantine/core';
+import {
+  Anchor,
+  Button,
+  Container,
+  Group,
+  Paper,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 // Classes
 import classes from './Login.page.module.css';
-
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -36,7 +44,7 @@ export function LoginPage() {
       });
       navigate('/dashboard/report/detailed');
     } catch (error) {
-      setError('Invalid email or password');
+      setError('Correo electrónico o contraseña inválidos.');
     }
   };
 
@@ -44,9 +52,9 @@ export function LoginPage() {
     <div className={classes.mainLayout}>
       <div className={classes.contentWrapper}>
         <header className={classes.header}>
-          <Title className={classes.title}>Welcome back!</Title>
+          <Title className={classes.title}>Bienvenido a NóminaPro</Title>
           <Text c="dimmed" size="lg" mt={10} className={classes.description}>
-            Enter your email and password to login
+            Ingrese su correo electrónico y contraseña para inicar sesión.
           </Text>
         </header>
         <main className={classes.main}>
@@ -54,13 +62,13 @@ export function LoginPage() {
             <Paper withBorder shadow="md" radius="md" className={classes.paper}>
               <form onSubmit={form.onSubmit(handleSubmit)}>
                 <TextInput
-                  label="Email"
+                  label="Correo electrónico"
                   placeholder="you@mantine.dev"
                   {...form.getInputProps('email')}
                 />
                 <Group justify="space-between" mb={5} mt="md">
                   <Text component="label" htmlFor="your-password" size="sm" fw={500}>
-                    Your password
+                    Contraseña
                   </Text>
                   <Anchor
                     href="#"
@@ -69,7 +77,7 @@ export function LoginPage() {
                     fw={500}
                     fz="xs"
                   >
-                    Forgot your password?
+                    ¿Olvidó su contraseña?
                   </Anchor>
                 </Group>
                 <PasswordInput

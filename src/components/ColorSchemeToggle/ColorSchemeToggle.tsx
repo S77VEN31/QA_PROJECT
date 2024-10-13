@@ -7,13 +7,13 @@ export function ColorSchemeToggle() {
 
   return (
     <Group justify="center" mt="xl" className={classes.footer}>
-      <Button onClick={() => setColorScheme('light')}>
+      <Button onClick={() => setColorScheme('light')} aria-label={'Activar modo claro'}>
         <IconSun size={18} />
       </Button>
-      <Button onClick={() => setColorScheme('dark')}>
+      <Button onClick={() => setColorScheme('dark')} aria-label={'Activar modo oscuro'}>
         <IconMoonStars size={18} />
       </Button>
-      <Button onClick={() => setColorScheme('auto')}>
+      <Button onClick={() => setColorScheme('auto')} aria-label={'Activar modo por defecto'}>
         <IconDeviceDesktop size={18} />
       </Button>
     </Group>

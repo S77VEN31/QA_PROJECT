@@ -1,32 +1,34 @@
 // React
 import { useState } from 'react';
 // Types
-import { ReportTotalData } from '@types';
+import { DepartmentTotalData } from '@types';
 // Tools
 import cx from 'clsx';
 // Mantine
 import { Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
 // Classes
-import classes from './TotalReportTable.module.css';
+import classes from './DepartmentTotalTable.module.css';
 
 // Interfaces
-interface TotalTableProps {
-  data: ReportTotalData[];
+interface DepartmentTotalTableProps {
+  data: DepartmentTotalData[];
   showPatronal: boolean;
   showObrero: boolean;
   showReservas: boolean;
 }
 
-export function TotalReportTable({
+export function DepartmentTotalTable({
   data,
   showPatronal,
   showObrero,
   showReservas,
-}: TotalTableProps) {
+}: DepartmentTotalTableProps) {
+  console.log(data);
   const [scrolled, setScrolled] = useState(false);
 
   const rows = data.map((row, index) => {
     console.log(row, index);
+    const nombre = row.depnombre;
     const salarioBruto = parseFloat(row.salariobruto.toString());
     const obreym = parseFloat(row.obreym);
     const obrivm = parseFloat(row.obrivm);
@@ -46,6 +48,7 @@ export function TotalReportTable({
 
     return (
       <Table.Tr key={index}>
+        <Table.Td>{nombre}</Table.Td>
         <Table.Td>
           {salarioBruto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
@@ -126,9 +129,9 @@ export function TotalReportTable({
       className={classes.scrollArea}
     >
       <Table miw={800} className={classes.table}>
-        <Table.Caption>Tabla de reportes totales</Table.Caption>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
+            <Table.Th rowSpan={2}>Departamento</Table.Th>
             <Table.Th rowSpan={2}>Salario Bruto</Table.Th>
             <Table.Th rowSpan={2}>Salario Neto</Table.Th>
             <Table.Th rowSpan={2}>Deducciones %</Table.Th>

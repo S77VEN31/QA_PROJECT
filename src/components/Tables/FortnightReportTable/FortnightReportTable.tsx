@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { ReportDetailData } from '@types';
 // Tools
 import cx from 'clsx';
+import { Link } from 'react-router-dom';
 // Mantine
-import { Anchor, Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
+import { Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
 // Classes
 import classes from './FortnightReportTable.module.css';
 
@@ -37,6 +38,7 @@ export function FortnightReportTable({
     const resaguinaldo = parseFloat(row.resaguinaldo);
     const rescesantia = parseFloat(row.rescesantia);
     const resvacaciones = parseFloat(row.resvacaciones);
+    const creditosfiscales = row.creditosfiscales;
 
     const totalDeducciones = obreym + obrivm + obrbanco + obrsolidarista + impuestorenta;
     const salarioNeto = salarioBruto - 2 * totalDeducciones;
@@ -46,9 +48,13 @@ export function FortnightReportTable({
     return (
       <Table.Tr key={row.cedula}>
         <Table.Td>
-          <Anchor component="button" fz="sm">
+          <Link
+            to={`/dashboard/collaborators/assign-salary?cardID=${row.cedula}`}
+            style={{ fontSize: 'small' }}
+            aria-label={`Ver datos de ${row.nombre}`}
+          >
             {row.cedula}
-          </Anchor>
+          </Link>
         </Table.Td>
         <Table.Td>{row.nombre}</Table.Td>
         <Table.Td>{row.depnombre}</Table.Td>
@@ -81,7 +87,14 @@ export function FortnightReportTable({
             />
           </Progress.Root>
         </Table.Td>
-        <Table.Td>
+        <Table.Td
+          style={{
+            backgroundColor: creditosfiscales ? 'rgba(255, 0, 0, 0.1)' : 'transparent',
+          }}
+          aria-label={
+            creditosfiscales ? `${impuestorenta} Este colaborador tiene créditos fiscales` : ''
+          }
+        >
           {impuestorenta.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
         {showObrero && (
@@ -133,6 +146,7 @@ export function FortnightReportTable({
       className={classes.scrollArea}
     >
       <Table miw={800} className={classes.table}>
+        <Table.Caption>Tabla de reportes detallados</Table.Caption>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
             <Table.Th rowSpan={2}>Cédula</Table.Th>
@@ -145,7 +159,7 @@ export function FortnightReportTable({
             <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
             {showObrero && <Table.Th colSpan={4}>Deducciones Obrero</Table.Th>}
             {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}
-            {showReservas && <Table.Th colSpan={3}>Reservas</Table.Th>}
+            {showReservas && <Table.Th colSpan={3}>Reservas Patronales</Table.Th>}
           </Table.Tr>
           <Table.Tr>
             {showObrero && (

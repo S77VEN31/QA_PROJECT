@@ -5,15 +5,20 @@ import { login } from './auth.api';
 // Department
 import {
   createDepartment,
+  getDepartmentEmployees,
   getDepartments,
+  getDepartmentTotals,
   getEmployeeSalary,
   setDepartmentSalary,
   setEmployeeSalary,
+  assignCollaborators,
 } from './department.api';
 // Fortnight
 import { calculateTax, insertFortnight, insertNFortnights } from './fortnight.api';
 // Report
 import { getReportDetail, getReportTotal } from './report.api';
+// Collaborator
+import { getCollaboratorName } from './collaborator.api';
 
 export {
   createDepartment,
@@ -29,6 +34,10 @@ export {
   setDepartmentSalary,
   setEmployeeSalary,
   setupInterceptors,
+  getDepartmentTotals,
+  getDepartmentEmployees,
+  assignCollaborators,
+  getCollaboratorName,
 };
 
 export type {
@@ -36,4 +45,5 @@ export type {
   SetSalaryParams,
   SingleFortnightParams,
   MultipleFortnightsParams,
+  AssignCollaboratorsParams,
 } from './api.d';

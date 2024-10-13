@@ -14,6 +14,7 @@ export interface ReportDetailData {
   resaguinaldo: string;
   rescesantia: string;
   resvacaciones: string;
+  creditosfiscales: boolean;
 }
 
 export interface ReportTotalData {
@@ -28,4 +29,30 @@ export interface ReportTotalData {
   resaguinaldo: string;
   rescesantia: string;
   resvacaciones: string;
+}
+
+export interface DepartmentTotalData {
+  depnombre: string;
+  salariobruto: number;
+  pateym: string;
+  pativm: string;
+  obreym: string;
+  obrivm: string;
+  obrbanco: string;
+  obrsolidarista: string;
+  impuestorenta: string;
+  resaguinaldo: string;
+  rescesantia: string;
+  resvacaciones: string;
+}
+
+export interface DepartmentEmployeeData {
+  depnombre: string;
+  cedula: number;
+  nombre: string;
+  salariobruto: number;
+  hijos: number;
+  conyuge: boolean;
+  obrsolidarista: string;
+  validfrom: Date;
 }

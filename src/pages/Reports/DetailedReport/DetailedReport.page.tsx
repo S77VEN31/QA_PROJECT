@@ -13,7 +13,7 @@ import {
 // Types
 import { ReportDetailData } from '@types';
 // Mantine
-import { Loader, Title } from '@mantine/core';
+import { Loader, Text, Title } from '@mantine/core';
 // Classes
 import classes from '../DetailedReport.page.module.css';
 
@@ -94,6 +94,10 @@ export function DetailedReportPage() {
     <div className={classes.mainLayout}>
       <header className={classes.header}>
         <Title>Reporte Detallado</Title>
+        <Text>
+          Consulte los pagos detallados por quincena. Puede filtrar por cédula, departamento o rango
+          de fechas.
+        </Text>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
             label="Deducciones Patronales"

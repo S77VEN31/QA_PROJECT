@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 // API
-import { getDepartments, getReportTotal } from '@api';
+import { getDepartmentTotals } from '@api';
 // Components
 import {
   CheckboxCard,
   DateRangePicker,
+  DepartmentTotalTable,
+  ElipticPagination,
   SearchableSelect,
   SearchInput,
-  TotalReportTable,
 } from '@components';
 // Types
-import { ReportTotalData } from '@types';
+import { DepartmentTotalData } from '@types';
 // Mantine
 import { Button, Loader, Text, Title } from '@mantine/core';
 // Classes
-import classes from '../DetailedReport.page.module.css';
+import classes from './DepartmentTotals.page.module.css';
 
-export function TotalReportPage() {
-  const [totalData, setTotalData] = useState<ReportTotalData[]>([]);
-  const [departments, setDepartments] = useState<{ label: string; value: number }[]>([]);
+export function DepartmentTotalsPage() {
+  const [data, setData] = useState<DepartmentTotalData[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<{
     label: string;
     value: number;
@@ -28,33 +28,21 @@ export function TotalReportPage() {
   const [showReservas, setShowReservas] = useState(true);
   const [IDCard, setIDCard] = useState('');
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [activePage, setActivePage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const limitRange = 9;
 
-  useEffect(() => {
-    getDepartments().then((departmentsData) => {
-      const formattedDepartments = departmentsData.map((dep: any) => ({
-        label: dep.depnombre,
-        value: dep.departamentoid,
-      }));
-      setDepartments(formattedDepartments);
-    });
-  }, []);
-
-  const loadPageData = () => {
+  const loadPageData = (page: number) => {
     setLoading(true);
-    setTotalData([]);
+    setActivePage(page);
+    setData([]);
     setSearched(true); // Marcar que se ha realizado una búsqueda
 
-    const params: any = {};
-
-    if (selectedDepartment) {
-      params.departmentID = selectedDepartment.value.toString();
-    }
-
-    if (IDCard) {
-      params.IDCard = IDCard;
-    }
+    const params: any = {
+      startRange: (page - 1) * limitRange,
+      limitRange,
+    };
 
     if (dateRange[0]) {
       params.startDate = dateRange[0].toISOString();
@@ -64,25 +52,30 @@ export function TotalReportPage() {
       params.endDate = dateRange[1].toISOString();
     }
 
-    getReportTotal(params)
+    getDepartmentTotals(params)
       .then((responseData) => {
-        setTotalData(responseData);
+        setData(responseData);
+        console.log('Department totals:', responseData);
       })
       .catch((error) => {
-        console.error('Error fetching report totals:', error);
+        console.error('Error fetching report details:', error);
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
+  const handlePageChange = (page: number) => {
+    loadPageData(page);
+  };
+
   return (
     <div className={classes.mainLayout}>
       <header className={classes.header}>
-        <Title>Reporte de Totales</Title>
+        <Title>Totales por departamento</Title>
         <Text>
-          Consulte los pagos totales por quincena. Puede filtrar por cédula, departamento o rango de
-          fechas.
+          Consulte los totales pagados en salarios, deducciones y reservas para todos los
+          departamentos.
         </Text>
         <div className={classes.checkboxCardContainer}>
           <CheckboxCard
@@ -106,22 +99,6 @@ export function TotalReportPage() {
         </div>
         <div className={classes.searchContainer}>
           <div className={classes.filterContainer}>
-            <div className={classes.inputsContainer}>
-              <SearchInput
-                type="number"
-                value={IDCard}
-                onChange={setIDCard}
-                placeholder="Búsqueda por cédula"
-                label="Cédula"
-              />
-              <SearchableSelect
-                items={departments}
-                selectedItem={selectedDepartment}
-                setSelectedItem={setSelectedDepartment}
-                placeholder="Seleccione un departamento"
-                label="Departamento"
-              />
-            </div>
             <DateRangePicker
               startDateLabel="Fecha de inicio"
               endDateLabel="Fecha de fin"
@@ -132,7 +109,7 @@ export function TotalReportPage() {
               onRangeChange={setDateRange}
             />
           </div>
-          <Button onClick={loadPageData} className={classes.searchButton} color="blue">
+          <Button onClick={() => loadPageData(1)} className={classes.searchButton} color="blue">
             Buscar
           </Button>
         </div>
@@ -147,9 +124,9 @@ export function TotalReportPage() {
           <>
             {!searched ? (
               <Text>Por favor realice una búsqueda para ver los resultados.</Text>
-            ) : totalData.length > 0 ? (
-              <TotalReportTable
-                data={totalData}
+            ) : data.length > 0 ? (
+              <DepartmentTotalTable
+                data={data}
                 showPatronal={showPatronal}
                 showObrero={showObrero}
                 showReservas={showReservas}
@@ -160,6 +137,15 @@ export function TotalReportPage() {
           </>
         )}
       </main>
+      <footer className={classes.footer}>
+        {!loading && searched && (
+          <ElipticPagination
+            totalPages={activePage + 1}
+            activePage={activePage}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </footer>
     </div>
   );
 }

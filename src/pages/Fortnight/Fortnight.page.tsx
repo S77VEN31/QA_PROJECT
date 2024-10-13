@@ -27,6 +27,7 @@ const notificationMessages = {
     id: 'fortnight-loading',
     position: defaultNotificationPosition,
     autoClose: false,
+    withCloseButton: false,
   }),
   successToast: (date: string, n?: number) => ({
     title: 'Quincena generada',

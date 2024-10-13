@@ -18,3 +18,23 @@ export interface MultipleFortnightsParams {
   quincenaDate: Date | null;
   n: number;
 }
+
+export interface DepartmentTotalParams {
+  startDate?: string;
+  endDate?: string;
+  startRange?: number;
+  limitRange?: number;
+}
+
+export interface DepartmentEmployeesParams {
+  departmentID: number;
+  IDCard?: string;
+  startRange?: number;
+  limitRange?: number;
+}
+
+
+export interface AssignCollaboratorsParams {
+  departmentID: number;
+  cardIDs: number[];
+}
