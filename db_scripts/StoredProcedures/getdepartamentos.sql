@@ -1,3 +1,6 @@
+-- Función para obtener los departamentos
+-- Puede recibir la cédula de un empleado para obtener los departamentos a los cuales está
+-- inscrito el empleado
 CREATE OR REPLACE FUNCTION public.getdepartamentos(p_cedula integer DEFAULT NULL::integer)
  RETURNS TABLE(departamentoid smallint, depnombre text)
  LANGUAGE plpgsql

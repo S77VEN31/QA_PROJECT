@@ -1,4 +1,9 @@
 DROP PROCEDURE IF EXISTS AsignarSalarioEmpleado;
+
+-- Asigna el salario a un empleado de acuerdo con su cédula
+-- También se puede asignar la cantidad de hijos, si tiene cónyuge,
+-- y el porcentaje de contribución a la asociación solidarista.
+-- Los campos a actualizar pueden venir nulos, en cuyo caso mantiene el dato anterior
 CREATE OR REPLACE PROCEDURE public.asignarsalarioempleado(IN p_cedula integer, IN p_salario integer, IN p_hijos smallint, IN p_conyuge boolean, IN p_solidarista numeric)
  LANGUAGE plpgsql
 AS $procedure$
@@ -6,25 +11,27 @@ DECLARE
 	actual_time TIMESTAMP;
     emp_exists BOOLEAN;
 BEGIN
-    -- Check if the department exists
+    -- Revisar si existe el empleado
     SELECT EXISTS (
         SELECT 1
         FROM empleados
         WHERE cedula = p_cedula
     ) INTO emp_exists;
 
-    -- Raise an exception if the department does not exist
+    -- Levantar una excepción si no existe el empleado con esa cédula
     IF NOT emp_exists THEN
         RAISE EXCEPTION 'Employee with ID % does not exist', p_cedula;
     END IF;
 
 	actual_time := CURRENT_TIMESTAMP;
-	
+
+	-- Desactivar el salario viejo del empleado
 	UPDATE salarios
 	SET enabled = false, validto = actual_time
 	WHERE salarios.cedula = p_cedula
 	AND salarios.enabled = true;
 
+	-- Insertar el salario nuevo.
 	INSERT INTO salarios(
 	cedula, salariobruto, hijos, conyuge, obrsolidarista, validfrom, validto, enabled)
 	SELECT

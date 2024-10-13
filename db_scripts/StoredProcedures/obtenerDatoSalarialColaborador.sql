@@ -1,3 +1,7 @@
+-- Función para obtener los datos del salario de un colaborador, como
+-- el salario, la cantidad de hijos, si tiene esposo y el porcentaje de contribucion
+-- Recibe una cédula y el id del departamento al que pertence el empleado.
+-- retorna la cédula, el id del departamento, el salariobruto, la cantidad de hijos, si tiene cónyuge y el porcentaje de contribución
 CREATE OR REPLACE FUNCTION public.obtenerdatosalarialcolaborador(p_cedula integer, p_departamentoid smallint)
  RETURNS TABLE(cardid integer, departmentid smallint, salary integer, childrenquantity smallint, hasspouse boolean, contributionpercentage numeric)
  LANGUAGE plpgsql

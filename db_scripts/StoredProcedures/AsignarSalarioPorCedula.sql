@@ -1,3 +1,8 @@
+
+-- Asigna el salario a un empleado de acuerdo con su cédula y un id del departamento
+-- También se puede asignar la cantidad de hijos, si tiene cónyuge,
+-- y el porcentaje de contribución a la asociación solidarista.
+-- Los campos a actualizar pueden venir nulos, en cuyo caso mantiene el dato anterior
 CREATE OR REPLACE PROCEDURE public.asignarsalarioporcedula(IN p_cedula integer, IN p_departamentoid smallint, IN p_salario integer, IN p_hijos smallint, IN p_conyuge boolean, IN p_solidarista numeric)
  LANGUAGE plpgsql
 AS $procedure$

@@ -1,3 +1,16 @@
+/* Función que retorna la información resumida o total de las quincenas.
+Recibe:
+la fecha del pago, la cual puede servir para filtrar directamente por esa fecha
+o como el inicio de un rango de fechas.
+la fecha del fin del rango de fechas por filtrar. Si solo viene la fecha del fin, sin
+fecha de inicio, se escogen todas las quincenas hasta la fecha del fin.
+la cédula del empleado: filtra las pagos realizados al empleado.
+el id del departamento: Filtra los pagos realizados a los empleados del departamento.
+Cualquiera o todos de estos valores podrían venir NULL, lo que significa que no se aplican filtros ni límites.
+Así, se pueden combinar los filtros deseados.
+Retorna el registro con la suma de los salarios brutos y todas las deducciones obrero y patronales, las reservas patronales
+y los impuestos sobra la renta.
+*/
 CREATE OR REPLACE FUNCTION getquincenastotal(
     p_fechapago DATE,
 	p_fechafin DATE,
@@ -40,16 +53,19 @@ BEGIN
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
     ';
 
-	
+	-- Filtro por fecha
 	IF p_fechapago IS NOT NULL THEN
+		-- Si la fechafin es null, se filtra solo por la fecha de inicio
 		IF p_fechafin IS NULL THEN
 			l_fechafin := p_fechapago;
 		ELSE
+			-- Se filtra por rango de fechas
 			l_fechafin := p_fechafin;
 		END IF;
 		queryStr := queryStr || ' WHERE p.fechapago BETWEEN $1 AND $2';
 		has_where := TRUE;
 	ELSE
+		-- Si hay fecha fin, se filtra hasta la fecha fin
 		IF p_fechafin IS NOT NULL THEN
 			l_fechafin := p_fechafin;
 			queryStr := queryStr || ' WHERE p.fechapago <= $2';
@@ -57,6 +73,7 @@ BEGIN
 		END IF;
 	END IF;
 
+	-- Se filtra por cédula
 	IF p_cedula IS NOT NULL THEN
 		IF has_where = TRUE THEN
 			queryStr := queryStr || ' AND p.cedula = $3';
@@ -66,6 +83,7 @@ BEGIN
 		END if;
 	END IF;
 
+	-- Se filtra por departamento
 	IF p_departamentoId IS NOT NULL THEN
 		IF has_where = TRUE THEN
 			queryStr := queryStr || ' AND d.departamentoId = $4';
@@ -75,6 +93,7 @@ BEGIN
 		END IF;
 	END IF;
 
+	-- El having hace que se retorna una lista vacía si el resultado de la suma es nulo.
 	queryStr := queryStr || ' HAVING SUM(s.salariobruto) IS NOT NULL';
     -- Execute the dynamic query
     RETURN QUERY EXECUTE queryStr USING p_fechapago, l_fechafin, p_cedula, p_departamentoId;

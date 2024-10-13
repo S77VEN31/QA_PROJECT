@@ -1,3 +1,21 @@
+/* Función para obtener la información detallada de las quincenas.
+Recibe:
+la fecha del pago, la cual puede servir para filtrar directamente por esa fecha
+o como el inicio de un rango de fechas.
+la fecha del fin del rango de fechas por filtrar. Si solo viene la fecha del fin, sin
+fecha de inicio, se escogen todas las quincenas hasta la fecha del fin.
+la cédula del empleado: filtra las pagos realizados al empleado.
+el id del departamento: Filtra los pagos realizados a los empleados del departamento.
+el punto a partir del cual se van a empezar a retornar registros,
+el límite de resultados que retorna la función.
+Cualquiera o todos de estos valores podrían venir NULL, lo que significa que no se aplican filtros ni límites.
+Así, se pueden combinar los filtros deseados.
+Retorna los registros con los datos del empleado como la cédula, el nombre, el salario bruto
+y las deducciones aplicadas a cada empleado, ya sean las obrero, patronales y las reservas patronales.
+También devuelve el impuesto de renta y un booleano llamado créditos fiscales para 
+señalar si al impuesto de renta se le hicieron deducciones por el tema de beneficios
+fiscales.
+*/
 CREATE OR REPLACE FUNCTION getquincenas(
     p_fechapago DATE,
 	p_fechafin DATE,
@@ -35,6 +53,9 @@ DECLARE
 	l_start INT;
 	queryStr TEXT;
 BEGIN
+	-- query: se hacen todos los joins con las tablas escogidas.
+	-- Se relaciona el departamento a devolver de acuerdo con la fecha del pago de la quincena
+	-- y el intervalo a partir del cual el empleado fue miembro del departamento. Esto se realiza por medio la primera cláusula del where.
 	queryStr := '
 	SELECT p.pagoid, p.salarioid, p.cedula, (n.nombre || '' '' || a1.apellido || '' '' || a2.apellido) AS nombre,
            ed.departamentoId, d.depnombre, s.salariobruto,
@@ -55,40 +76,52 @@ BEGIN
     INNER JOIN departamentos d ON d.departamentoId = ed.departamentoId
 	WHERE p.fechapago BETWEEN ed.validfrom AND COALESCE(ed.validto, (CURRENT_DATE + INTERVAL ''5 years''))
 	';
+
+	-- Si hay punto de inicio, lo establece	
 	IF p_start IS NULL THEN
 		l_start := 0;
 	ELSE
 		l_start := p_start;
 	END IF;
-	
+
+	-- Si hay filtro por fecha de inicio
 	IF p_fechapago IS NOT NULL THEN
+		-- Si no hay filtro por fecha fin, se filtra solo por la fecha de inicio
 		IF p_fechafin IS NULL THEN
 			l_fechafin := p_fechapago;
 		ELSE
+			-- Si hay fecha fin, se filtra por rango de fechas.
 			l_fechafin := p_fechafin;
 		END IF;
+		-- Se agrega el filtro al query
 		queryStr := queryStr || ' AND (p.fechapago::DATE BETWEEN $1 AND $2)';
 	ELSE
+		-- Si hay fecha de fin y no hay fecha de inicio, se agarran todos los anteriores a la fecha fin.
 		IF p_fechafin IS NOT NULL THEN
 			l_fechafin := p_fechafin;
 			queryStr := queryStr || ' AND p.fechapago::DATE <= $2';
 		END IF;
 	END IF;
 
+	-- Se agrega el filtro por cédula
 	IF p_cedula IS NOT NULL THEN
 		queryStr := queryStr || ' AND p.cedula = $3';
 	END IF;
 
+	-- Se agrega el filtro por departamento
 	IF p_departamentoId IS NOT NULL THEN
 		queryStr := queryStr || ' AND d.departamentoId = $4';
 	END IF;
 
+	-- Se ordena por pagoid
 	queryStr := queryStr || ' ORDER BY p.pagoid';
 
+	-- Se establece el límite máximo de registros a retornar.
 	IF p_limit IS NOT NULL THEN
 		queryStr := queryStr || ' LIMIT ' || p_limit::TEXT;
 	END IF;
 
+	-- El offset ignora los primeros l_start registros
 	queryStr := queryStr || ' OFFSET ' || l_start::TEXT;
 	
     RETURN QUERY EXECUTE queryStr

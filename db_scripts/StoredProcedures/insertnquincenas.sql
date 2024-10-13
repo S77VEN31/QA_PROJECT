@@ -1,3 +1,10 @@
+/*
+Procedimiento para insertar n quincenas.
+Recibe un número entero con la cantidad de quincenas a insertar y un timestamp con la fecha que se registrará
+en los pagos.
+A partir de la fecha de inicio, se insertan el 14 y el 28 de cada mes hasta llegar a los n pagos.
+Si ya hay una quincena pagada, se la salta para no duplicar los pagos.
+*/
 CREATE OR REPLACE PROCEDURE insertnquincenas(IN num_payments INT, IN start_date TIMESTAMP)
 LANGUAGE plpgsql
 AS $$
@@ -27,7 +34,7 @@ BEGIN
         res.resvacaciones * (s.salariobruto / 2) / 100 AS resvacaciones,
         calculate_tax(s.salariobruto, (s.hijos * cred.credhijos),
 			(CASE WHEN s.conyuge = TRUE THEN cred.credconyuge ELSE 0 END)
-		) / 2 AS impuestorenta,-- Calcular el impuesto de renta para el salario
+		) / 2 AS impuestorenta,-- Calcular el impuesto de renta para el salario. Se envían los montos a deducir por créditos fiscales ya calculados.
         true AS enabled
     FROM salarios s
     CROSS JOIN deduccionesobrero obr
@@ -61,10 +68,10 @@ BEGIN
       AND payment_dates.payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 years'))
       AND NOT EXISTS (
           SELECT 1 FROM public.pagos p WHERE p.fechapago::date = payment_dates.payment_date::date
-      );  -- Ensure there are no payments for the same date
+      );  -- Se asegura que no haya pagos para la fecha para evitar duplicar pagos.
 
 EXCEPTION
-    -- Handle any errors
+    -- Manejar errores
     WHEN OTHERS THEN
         RAISE EXCEPTION 'Error occurred during multiple payments insertion: %', SQLERRM;
 END;
