@@ -1,5 +1,5 @@
 DROP PROCEDURE IF EXISTS insertEmpleadosDepartamentos;
--- Función para asignar empleados a un departamento.
+-- Procedimiento para asignar empleados a un departamento.
 -- Recibe el id del departamento al cual se le asignan empleados.
 -- Recibe una lista de cédulas 
 CREATE PROCEDURE insertEmpleadosDepartamentos(

@@ -4,12 +4,12 @@ la fecha del pago, la cual puede servir para filtrar directamente por esa fecha
 o como el inicio de un rango de fechas.
 la fecha del fin del rango de fechas por filtrar. Si solo viene la fecha del fin, sin
 fecha de inicio, se escogen todas las quincenas hasta la fecha del fin.
-la cédula del empleado: filtra las pagos realizados al empleado.
+la cédula del empleado: filtra los pagos realizados al empleado.
 el id del departamento: Filtra los pagos realizados a los empleados del departamento.
 Cualquiera o todos de estos valores podrían venir NULL, lo que significa que no se aplican filtros ni límites.
 Así, se pueden combinar los filtros deseados.
 Retorna el registro con la suma de los salarios brutos y todas las deducciones obrero y patronales, las reservas patronales
-y los impuestos sobra la renta.
+y los impuestos sobre la renta.
 */
 CREATE OR REPLACE FUNCTION getquincenastotal(
     p_fechapago DATE,

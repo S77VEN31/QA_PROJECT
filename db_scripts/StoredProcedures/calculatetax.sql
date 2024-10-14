@@ -1,7 +1,7 @@
 -- Calcular el impuesto sobre la renta
 -- Recibe el salario bruto del empleado,
 -- el monto a deducir por la cantidad de hijos,
--- y el monto a deducir por el conyuge.
+-- y el monto a deducir por el cónyuge.
 -- Estos montos se reciben ya calculados.
 -- Retorna el monto correspondiente al impuesto de la renta.
 CREATE OR REPLACE FUNCTION calculate_tax(salariobruto NUMERIC, deduccionhijos INTEGER, deduccionconyuge INTEGER)

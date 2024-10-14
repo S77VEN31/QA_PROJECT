@@ -5,8 +5,8 @@
 -- el límite de resultados que retorna la función.
 -- La función retorna registros con el nombre del departamento,
 -- la cédula del empleado y su nombre, el salario bruto, la cantidad de hijos,
--- si tiene cónyugue, el porcentaje de la asociacón solidarista,
--- y desde cuando está el empleado en el departamento
+-- si tiene cónyuge, el porcentaje de la asociación solidarista,
+-- y desde cuándo está el empleado en el departamento
 CREATE OR REPLACE FUNCTION getdepartamentostotal(
     p_fechapago DATE,
 	p_fechafin DATE,

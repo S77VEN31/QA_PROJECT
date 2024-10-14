@@ -11,7 +11,7 @@ BEGIN
         RAISE EXCEPTION 'Ya hay pagos para la quincena %', payment_date::date;
     END IF;
 
-    -- 2. Insertar los registros en la tabla de pagos para cada uno de los epmleados.
+    -- 2. Insertar los registros en la tabla de pagos para cada uno de los empleados.
     INSERT INTO public.pagos (
         salarioid, cedula, fechapago, pateym, pativm, obreym, obrivm, obrbanco, obrsolidarista,
         resaguinaldo, rescesantia, resvacaciones, impuestorenta, enabled
