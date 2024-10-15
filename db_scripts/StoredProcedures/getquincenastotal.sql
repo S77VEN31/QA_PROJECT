@@ -62,13 +62,13 @@ BEGIN
 			-- Se filtra por rango de fechas
 			l_fechafin := p_fechafin;
 		END IF;
-		queryStr := queryStr || ' WHERE p.fechapago BETWEEN $1 AND $2';
+		queryStr := queryStr || ' WHERE p.fechapago::DATE BETWEEN $1 AND $2';
 		has_where := TRUE;
 	ELSE
 		-- Si hay fecha fin, se filtra hasta la fecha fin
 		IF p_fechafin IS NOT NULL THEN
 			l_fechafin := p_fechafin;
-			queryStr := queryStr || ' WHERE p.fechapago <= $2';
+			queryStr := queryStr || ' WHERE p.fechapago::DATE <= $2';
 			has_where := TRUE;
 		END IF;
 	END IF;
@@ -102,7 +102,7 @@ $$;
 
 DROP FUNCTION getquincenastotal(date, integer, smallint)
 
-SELECT * FROM getquincenastotal('2024-11-14'::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT)
+SELECT * FROM getquincenastotal('2024-10-13'::DATE, '2024-10-15'::DATE, NULL::INT, NULL::SMALLINT)
 SELECT * FROM getquincenastotal(NULL::DATE, NULL::DATE, NULL::INT, NULL::SMALLINT)
 SELECT * FROM getquincenastotal(NULL::DATE, '2024-10-05'::DATE, NULL::INT, NULL::SMALLINT)
 SELECT * FROM getquincenastotal(NULL::DATE, NULL::DATE, 105750751::INT, NULL::SMALLINT)

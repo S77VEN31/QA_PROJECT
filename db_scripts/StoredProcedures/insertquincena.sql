@@ -19,7 +19,7 @@ BEGIN
     SELECT
         s.salarioid, 
         s.cedula, 
-        payment_date, 
+        payment_date::DATE, 
         pat.pateym * (s.salariobruto / 2) / 100 AS pateym,
         pat.pativm * (s.salariobruto / 2) / 100 AS pativm,
         obr.obreym * (s.salariobruto / 2) / 100 AS obreym,
@@ -42,7 +42,7 @@ BEGIN
     AND pat.enabled = true
     AND res.enabled = true
 	AND cred.enabled = true
-	AND payment_date BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 year'));
+	AND payment_date::DATE BETWEEN s.validfrom AND COALESCE(s.validto, (CURRENT_DATE + INTERVAL '5 year'));
 	-- Se pagan solo los salarios que estén activos para la fecha que se insertó en la quincena.
 
 EXCEPTION
@@ -107,3 +107,4 @@ SELECT
     AND pat.enabled = true
     AND res.enabled = true
 	AND cred.enabled = true
+	

@@ -12,12 +12,12 @@ BEGIN
         SELECT d.departamentoid, d.depnombre
         FROM public.departamentos d
         JOIN public.empleadosdepartamentos ed ON d.departamentoid = ed.departamentoid
-        WHERE ed.cedula = p_cedula;
+        WHERE ed.cedula = p_cedula AND ed.enabled = TRUE ORDER BY d.departamentoId;
     ELSE
         -- Si no se proporciona la cédula, devolver todos los departamentos
         RETURN QUERY
         SELECT d.departamentoid, d.depnombre
-        FROM public.departamentos d;
+        FROM public.departamentos d ORDER BY d.departamentoId;
     END IF;
 END;
 $function$

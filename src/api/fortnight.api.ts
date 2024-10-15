@@ -14,6 +14,7 @@ interface NFortnightParams {
 
 const insertFortnight = async (params: FortnightParams) => {
   const { timestamp } = params;
+  console.log(timestamp);
   try {
     const response = await api.post('/fortnight', { timestamp: timestamp.toISOString() });
     return response.status;

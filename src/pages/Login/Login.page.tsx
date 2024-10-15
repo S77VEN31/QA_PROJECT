@@ -54,7 +54,7 @@ export function LoginPage() {
         <header className={classes.header}>
           <Title className={classes.title}>Bienvenido a NóminaPro</Title>
           <Text c="dimmed" size="lg" mt={10} className={classes.description}>
-            Ingrese su correo electrónico y contraseña para inicar sesión.
+            Ingrese su correo electrónico y contraseña para iniciar sesión.
           </Text>
         </header>
         <main className={classes.main}>
@@ -81,7 +81,7 @@ export function LoginPage() {
                   </Anchor>
                 </Group>
                 <PasswordInput
-                  placeholder="Your password"
+                  placeholder="Su contraseña"
                   id="your-password"
                   {...form.getInputProps('password')}
                 />

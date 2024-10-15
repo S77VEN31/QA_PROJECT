@@ -131,7 +131,7 @@ INNER JOIN apellidos as apellidos2 ON apellidos2.apellidoid = empleados.apellido
 -- INSERTAR EN EMPLEADOSDEPARTAMENTOS
 INSERT INTO public.empleadosdepartamentos(
 	cedula, departamentoid, validfrom, validto, enabled)
-SELECT empleadooptimizado.cedula, empleadoOptimizado.departamento, CURRENT_DATE, NULL, true FROM empleadooptimizado;
+SELECT empleadooptimizado.cedula, empleadoOptimizado.departamento, '2024-10-01 00:00:00', NULL, true FROM empleadooptimizado;
 
 CREATE INDEX idx_departamentoId_empleadosdepartamentos ON empleadosdepartamentos (departamentoId);
 CREATE INDEX idx_cedula_empleadosdepartamentos ON empleadosdepartamentos (cedula);
@@ -139,10 +139,12 @@ CREATE INDEX idx_cedula_empleadosdepartamentos ON empleadosdepartamentos (cedula
 -- INSERTAR SALARIOS
 INSERT INTO public.salarios(
 	cedula, salariobruto, validfrom, validto, enabled)
-SELECT empleadooptimizado.cedula, empleadooptimizado.salario, CURRENT_DATE, NULL, true FROM empleadooptimizado;
+SELECT empleadooptimizado.cedula, empleadooptimizado.salario, '2024-10-01 00:00:00', NULL, true FROM empleadooptimizado;
 
 CREATE INDEX idx_cedula_salarios ON salarios (cedula);
-
+CREATE INDEX idx_enabled_salarios ON salarios (enabled);
+CREATE INDEX idx_validfrom_salarios ON salarios (validfrom);
+CREATE INDEX idx_validto_salarios ON salarios(validto);
 SELECT * from salarios limit 1
 
 -- INSERTAR DEDUCCIONES PERSONALES
@@ -164,7 +166,7 @@ CREATE INDEX idx_organizacionId_empleados on empleados (organizacionId);
 -- DEDUCCIONES PATRONALES
 INSERT INTO public.deduccionespatronales(
 	pativm, pateym, validfrom, validto, enabled)
-	VALUES (5.42, 9.25, CURRENT_DATE, NULL, true);
+	VALUES (5.42, 9.25, '2024-10-01 00:00:00', NULL, true);
 	
 
 SELECT * FROM deduccionespatronales
@@ -172,7 +174,7 @@ SELECT * FROM deduccionespatronales
 -- DEDUCCIONES OBRERO
 INSERT INTO public.deduccionesobrero(
 	obrivm, obreym, obrbanco, validfrom, validto, enabled)
-	VALUES (4.17, 5.5, 1.0, CURRENT_DATE, null, true);
+	VALUES (4.17, 5.5, 1.0, '2024-10-01 00:00:00', null, true);
 
 select * from deduccionesobrero;
 
@@ -180,18 +182,18 @@ select * from deduccionesobrero;
 INSERT INTO public.reservaspatronales(
 	resaguinaldo, validfrom, validto, enabled, rescesantia, resvacaciones)
 	VALUES
-	(8.33, CURRENT_DATE, NULL, true, 6.33, 4.16);
+	(8.33, '2024-10-01 00:00:00', NULL, true, 6.33, 4.16);
 
 SELECT * FROM reservaspatronales;
 -- IMPUESTO DE RENTA AL SALRIO
 INSERT INTO public.impuestorenta(
 	impuestominimo, impuestomaximo, impuestoporcentaje, validfrom, validto, enabled)
 	VALUES
-(0.00, 929000.00, 0.0, CURRENT_DATE, NULL, true),
-(929000.00, 1363000.00, 10, CURRENT_DATE, NULL, true),
-(1363000.00, 2392000.00, 15, CURRENT_DATE, NULL, true),
-(2392000.00, 4783000.00, 20, CURRENT_DATE, NULL, true),
-(4783000.00, 999999999.00, 25, CURRENT_DATE, NULL, true);
+(0.00, 929000.00, 0.0, '2024-10-01 00:00:00', NULL, true),
+(929000.00, 1363000.00, 10, '2024-10-01 00:00:00', NULL, true),
+(1363000.00, 2392000.00, 15, '2024-10-01 00:00:00', NULL, true),
+(2392000.00, 4783000.00, 20, '2024-10-01 00:00:00', NULL, true),
+(4783000.00, 999999999.00, 25, '2024-10-01 00:00:00', NULL, true);
 
 SELECT * FROM impuestoRenta;
 
