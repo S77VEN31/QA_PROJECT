@@ -77,16 +77,14 @@ export function LoginPage() {
                   error={form.errors.password}
                   errorProps={{ id: 'password-error', role: 'alert' }}
                 />
-                <Group mt="md" grow>
-                  <Button type="submit" >
+                <Group mt="md" grow justify='center'>
+                  <Button type="submit">
                     Iniciar sesión
                   </Button>
                   <Group justify='flex-end' >
                     <Anchor
-                      truncate="end"
                       href="#"
                       onClick={(event) => event.preventDefault()}
-                      pt={2}
                       fw={500}
                       fz="xs"
                     >
