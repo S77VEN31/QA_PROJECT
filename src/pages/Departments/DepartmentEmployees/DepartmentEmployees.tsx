@@ -70,7 +70,9 @@ export function DepartmentEmployeesPage() {
   };
 
   useEffect(() => {
-    loadPageData(1);
+    if (selectedDepartment) {
+      loadPageData(1);
+    }
   }, [selectedDepartment, IDCard]);
 
   const handlePageChange = (page: number) => {
