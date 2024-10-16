@@ -77,7 +77,7 @@ export function LoginPage() {
                   error={form.errors.password}
                   errorProps={{ id: 'password-error', role: 'alert' }}
                 />
-                <Group mt="md" grow justify='center'>
+                <Group grow justify='center'>
                   <Button type="submit">
                     Iniciar sesión
                   </Button>
