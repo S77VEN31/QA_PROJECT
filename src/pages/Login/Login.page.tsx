@@ -77,20 +77,24 @@ export function LoginPage() {
                   error={form.errors.password}
                   errorProps={{ id: 'password-error', role: 'alert' }}
                 />
-                <Group justify="flex-end" mb={5} mt="md">
-                  <Anchor
-                    href="#"
-                    onClick={(event) => event.preventDefault()}
-                    pt={2}
-                    fw={500}
-                    fz="xs"
-                  >
-                    ¿Olvidó su contraseña?
-                  </Anchor>
+                <Group mt="md" grow>
+                  <Button type="submit" >
+                    Iniciar sesión
+                  </Button>
+                  <Group justify='flex-end' >
+                    <Anchor
+                      truncate="end"
+                      href="#"
+                      onClick={(event) => event.preventDefault()}
+                      pt={2}
+                      fw={500}
+                      fz="xs"
+                    >
+                      ¿Olvidó su contraseña?
+                    </Anchor>
+                  </Group>
                 </Group>
-                <Button type="submit" fullWidth mt="lg">
-                  Iniciar sesión
-                </Button>
+
                 {error && (
                   <Text role="alert" id="login-form-error" color="red" size="sm" mt="md">
                     {error}
