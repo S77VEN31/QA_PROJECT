@@ -4,19 +4,10 @@ import { useState } from 'react';
 import { login } from '@api';
 // Components
 import { ColorSchemeToggle } from '@components';
+// React Router
 import { useNavigate } from 'react-router-dom';
 // Mantine
-import {
-  Anchor,
-  Button,
-  Container,
-  Group,
-  Paper,
-  PasswordInput,
-  Text,
-  TextInput,
-  Title,
-} from '@mantine/core';
+import { Anchor, Button, Group, Paper, PasswordInput, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 // Classes
 import classes from './Login.page.module.css';
@@ -31,13 +22,14 @@ export function LoginPage() {
       password: '',
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      password: () => null,
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Correo electrónico inválido'),
+      password: (value) => (value && value.trim() ? null : 'La contraseña no puede estar vacía'),
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: { email: string; password: string }) => {
     try {
+      setError('');
       await login({
         email: values.email,
         password: values.password,
@@ -50,7 +42,7 @@ export function LoginPage() {
 
   return (
     <div className={classes.mainLayout}>
-      <div className={classes.contentWrapper}>
+      <div className={classes.contentWrapper} role="presentation">
         <header className={classes.header}>
           <Title className={classes.title}>Bienvenido a NóminaPro</Title>
           <Text c="dimmed" size="lg" mt={10} className={classes.description}>
@@ -58,18 +50,34 @@ export function LoginPage() {
           </Text>
         </header>
         <main className={classes.main}>
-          <Container size="xl" className={classes.container}>
+          <section className={classes.container}>
+            <h2 className={classes.visuallyHidden}>Formulario de inicio de sesión</h2>
             <Paper withBorder shadow="md" radius="md" className={classes.paper}>
-              <form onSubmit={form.onSubmit(handleSubmit)}>
+              <form
+                className={classes.form}
+                onSubmit={form.onSubmit(handleSubmit)}
+                id="login-form"
+                aria-describedby={error ? 'login-form-error' : undefined}
+              >
                 <TextInput
-                  label="Correo electrónico"
-                  placeholder="you@mantine.dev"
                   {...form.getInputProps('email')}
+                  id="email-input"
+                  label="Correo electrónico"
+                  placeholder="micorreo@tec.cr"
+                  aria-invalid={!!form.errors.email}
+                  error={form.errors.email}
+                  errorProps={{ id: 'email-error', role: 'alert' }}
                 />
-                <Group justify="space-between" mb={5} mt="md">
-                  <Text component="label" htmlFor="your-password" size="sm" fw={500}>
-                    Contraseña
-                  </Text>
+                <PasswordInput
+                  {...form.getInputProps('password')}
+                  id="password-input"
+                  label="Contraseña"
+                  placeholder="Mi contraseña super segura"
+                  aria-invalid={!!form.errors.password}
+                  error={form.errors.password}
+                  errorProps={{ id: 'password-error', role: 'alert' }}
+                />
+                <Group justify="flex-end" mb={5} mt="md">
                   <Anchor
                     href="#"
                     onClick={(event) => event.preventDefault()}
@@ -80,22 +88,17 @@ export function LoginPage() {
                     ¿Olvidó su contraseña?
                   </Anchor>
                 </Group>
-                <PasswordInput
-                  placeholder="Su contraseña"
-                  id="your-password"
-                  {...form.getInputProps('password')}
-                />
+                <Button type="submit" fullWidth mt="lg">
+                  Iniciar sesión
+                </Button>
                 {error && (
-                  <Text color="red" size="sm" mt="md">
+                  <Text role="alert" id="login-form-error" color="red" size="sm" mt="md">
                     {error}
                   </Text>
                 )}
-                <Button type="submit" fullWidth mt="lg">
-                  Login
-                </Button>
               </form>
             </Paper>
-          </Container>
+          </section>
         </main>
       </div>
       <footer className={classes.footer}>

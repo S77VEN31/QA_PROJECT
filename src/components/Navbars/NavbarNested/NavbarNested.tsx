@@ -1,19 +1,15 @@
+;
 // Components
 import { ColorSchemeToggle } from '@components';
 // Icons
-import {
-  IconBuilding,
-  IconCash,
-  IconFileReport,
-  IconSettings,
-  IconUsers,
-} from '@tabler/icons-react';
+import { IconBuilding, IconCash, IconFileReport, IconUsers } from '@tabler/icons-react';
 // Mantine
 import { Code, Group, ScrollArea } from '@mantine/core';
 // Components
 import { LinksGroup } from './NavbarLinksGroup';
 // Classes
 import classes from './NavbarNested.module.css';
+
 
 const mockdata = [
   {
