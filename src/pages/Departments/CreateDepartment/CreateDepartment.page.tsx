@@ -1,4 +1,3 @@
-;
 // API
 import { createDepartment, CreateDepartmentParams } from '@api';
 // Mantine
@@ -8,7 +7,6 @@ import { notifications } from '@mantine/notifications';
 import { NotificationPosition } from '@mantine/notifications/lib/notifications.store';
 // Classes
 import classes from './CreateDepartment.page.module.css';
-
 
 const defaultNotificationPosition: NotificationPosition = 'top-center';
 
@@ -57,15 +55,16 @@ export function CreateDepartmentPage() {
         <Text>Aquí puede insertar un nuevo departamento al sistema.</Text>
       </header>
       <main className={classes.main}>
+        <h2 className={classes.visuallyHidden}>Formulario de creación de departamento</h2>
         <form onSubmit={form.onSubmit(handleInsertDepartment)}>
           <div className={classes.inputsContainer}>
             <TextInput
               className={classes.input}
-              placeholder="Ingrese el nombre del departamento"
-              label="Nombre del departamento"
-              aria-label="Nombre del departamento"
-              required
               {...form.getInputProps('departmentName')}
+              label="Nombre del departamento"
+              placeholder="Ingrese el nombre del departamento"
+              error={form.errors.departmentName}
+              errorProps={{ id: 'departmentName-error', role: 'alert' }}
               value={form.values.departmentName}
               onChange={(event) => form.setFieldValue('departmentName', event.currentTarget.value)}
             />
