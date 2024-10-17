@@ -10,7 +10,6 @@ import { LinksGroup } from './NavbarLinksGroup';
 // Classes
 import classes from './NavbarNested.module.css';
 
-
 const mockdata = [
   {
     label: 'Reportes',

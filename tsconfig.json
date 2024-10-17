@@ -23,6 +23,7 @@
       "@api": ["./src/api/index.ts"],
       "@types": ["./src/types/index.ts"],
       "@components": ["./src/components/index.ts"],
+      "@contexts": ["./src/contexts/index.ts"],
     }
   },
   "include": ["src", "test-utils"]

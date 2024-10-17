@@ -94,7 +94,7 @@ export function LoginPage() {
                 </Group>
 
                 {error && (
-                  <Text role="alert" id="login-form-error" color="red" size="sm" mt="md">
+                  <Text role="alert" id="login-form-error" c="red" size="sm" mt="md">
                     {error}
                   </Text>
                 )}
