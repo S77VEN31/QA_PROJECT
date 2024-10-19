@@ -159,6 +159,7 @@ export function FortnightPage() {
             <DateInput
               label="Fecha"
               aria-label="Ingrese la fecha para insertar una única quincena."
+              placeholder='Seleccione el día 14 o 28'
               required
               {...singleFortnightForm.getInputProps('quincenaDate')}
               value={singleFortnightForm.values.quincenaDate}
@@ -183,7 +184,8 @@ export function FortnightPage() {
               value={multipleFortnightForm.values.quincenaDate}
               onChange={(event) => multipleFortnightForm.setFieldValue('quincenaDate', event)}
               valueFormat="DD-MM-YYYY"
-              excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
+              excludeDate={(date) => !filterQuincenaDays(date)}
+               placeholder='Seleccione el día 14 o 28'
             />
             <Group mt="md">
               <Button type="submit" value="5" disabled={loading}>

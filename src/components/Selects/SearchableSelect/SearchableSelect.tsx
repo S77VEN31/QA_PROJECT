@@ -1,9 +1,11 @@
+;
 // React
 import { useEffect, useState } from 'react';
 // Mantine
-import { Combobox, Input, InputBase, useCombobox } from '@mantine/core';
+import { CloseButton, Combobox, Input, InputBase, useCombobox } from '@mantine/core';
 // Classes
 import classes from './SearchableSelect.module.css';
+
 
 // Interfaces
 interface SearchableSelectProps {
@@ -65,7 +67,26 @@ export function SearchableSelect({
         <Combobox.Target>
           <InputBase
             classNames={{ input: classes.input }}
-            rightSection={<Combobox.Chevron />}
+            pointer
+            rightSection={
+              selectedItem ? (
+                <CloseButton
+                  size="sm"
+                  onMouseDown={(event) => {
+                    event.preventDefault(); // Prevenir que el combobox cierre automáticamente
+                  }}
+                  onClick={() => {
+                    setSelectedItem(null); // Limpiar la selección
+                    setSearch(''); // Limpiar el campo de búsqueda
+                    combobox.resetSelectedOption(); // Resetear la opción seleccionada del combobox
+                  }}
+                  style={{ cursor: 'pointer', zIndex: 1 }}
+                  aria-label="Limpiar selección"
+                />
+              ) : (
+                <Combobox.Chevron />
+              )
+            }
             value={search}
             onChange={(event) => {
               combobox.openDropdown();
@@ -79,7 +100,6 @@ export function SearchableSelect({
               setSearch(selectedItem?.label || '');
             }}
             placeholder={placeholder || 'Search an item...'}
-            rightSectionPointerEvents="none"
           />
         </Combobox.Target>
         <Combobox.Dropdown>
