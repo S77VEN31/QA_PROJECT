@@ -191,6 +191,7 @@ export function FortnightPage() {
               valueFormat="DD-MM-YYYY"
               excludeDate={(date) => !filterQuincenaDays(date)}
               placeholder="Seleccione el día 14 o 28"
+              clearable
             />
             <Group mt="md">
               <Button type="submit" value="5" disabled={loading}>
