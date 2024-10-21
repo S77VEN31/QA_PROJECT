@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // API
 import { getDepartments, getReportDetail } from '@api';
 // Components
@@ -31,6 +31,7 @@ export function DetailedReportPage() {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [activePage, setActivePage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
   const limitRange = 9;
 
   useEffect(() => {
@@ -82,12 +83,22 @@ export function DetailedReportPage() {
       });
   };
 
+  const focusTable = () => {
+    if (tableRef.current) {
+      tableRef.current.focus();
+    }
+  };
+
   useEffect(() => {
     loadPageData(1);
+    if (selectedDepartment || IDCard || dateRange[0] || dateRange[1]) {
+      focusTable();
+    }
   }, [selectedDepartment, IDCard, dateRange]);
 
   const handlePageChange = (page: number) => {
     loadPageData(page);
+    focusTable();
   };
 
   return (
@@ -144,7 +155,7 @@ export function DetailedReportPage() {
           onRangeChange={setDateRange}
         />
       </header>
-      <main className={classes.main}>
+      <main className={classes.main} ref={tableRef} tabIndex={-1}>
         <Title order={2}>Tabla de reportes detallados</Title>
         {loading ? (
           <div className={classes.loaderContainer}>
