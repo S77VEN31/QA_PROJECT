@@ -1,15 +1,11 @@
+;
 // React
 import { useState } from 'react';
 // API
-import {
-  insertFortnight,
-  insertNFortnights,
-  MultipleFortnightsParams,
-  SingleFortnightParams,
-} from '@api';
+import { insertFortnight, insertNFortnights, MultipleFortnightsParams, SingleFortnightParams } from '@api';
 // Mantine
 import { Button, Container, Group, Text, Title } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { NotificationPosition } from '@mantine/notifications/lib/notifications.store';
@@ -160,7 +156,7 @@ export function FortnightPage() {
         <Container fluid>
           <form onSubmit={singleFortnightForm.onSubmit(handleInsertSingleFortnight)}>
             <Title order={2}>Insertar una quincena</Title>
-            <DateInput
+            <DatePickerInput
               label="Fecha"
               aria-label="Ingrese la fecha para insertar una única quincena."
               placeholder="Seleccione el día 14 o 28"
@@ -181,7 +177,7 @@ export function FortnightPage() {
             <Title order={2} mt="xl">
               Insertar múltiples quincenas
             </Title>
-            <DateInput
+            <DatePickerInput
               label="Fecha de inicio"
               aria-label="Ingrese la fecha para insertar múltiples quincenas."
               required

@@ -25,25 +25,77 @@ export function FortnightReportTable({
   showReservas,
 }: FortnightReportTableProps) {
   const [scrolled, setScrolled] = useState(false);
-
+  const formatCurrency = (value: number): string => {
+    return value.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' });
+  };
+  const headers = [
+    'Cédula',
+    'Nombre',
+    'Departamento',
+    'Fecha',
+    'Salario Bruto',
+    'Salario Neto',
+    'Deducciones %',
+    'Impuesto Renta',
+  ];
+  const obreroHeaders = ['EyM', 'IVM', 'Banco', 'Solidarista'];
+  const patronalHeaders = ['EyM', 'IVM'];
+  const reservaHeaders = ['Aguinaldo', 'Cesantía', 'Vacaciones'];
+  const getHeaders = (headers: string[], rowSpan?: number): JSX.Element[] => {
+    return headers.map((header, index) => (
+      <Table.Th key={index} aria-label={header} rowSpan={rowSpan}>
+        {header}
+      </Table.Th>
+    ));
+  };
+  const getRows = (values: number[]): JSX.Element[] => {
+    return values.map((value, index) => <Table.Td key={index}>{formatCurrency(value)}</Table.Td>);
+  };
+  
   const rows = data.map((row) => {
-    const salarioBruto = parseFloat(row.salariobruto.toString());
-    const obreym = parseFloat(row.obreym);
-    const obrivm = parseFloat(row.obrivm);
-    const obrbanco = parseFloat(row.obrbanco);
-    const obrsolidarista = parseFloat(row.obrsolidarista);
-    const impuestorenta = parseFloat(row.impuestorenta);
-    const pateym = parseFloat(row.pateym);
-    const pativm = parseFloat(row.pativm);
-    const resaguinaldo = parseFloat(row.resaguinaldo);
-    const rescesantia = parseFloat(row.rescesantia);
-    const resvacaciones = parseFloat(row.resvacaciones);
-    const creditosfiscales = row.creditosfiscales;
+    const propsToParse = [
+      'salariobruto',
+      'obreym',
+      'obrivm',
+      'obrbanco',
+      'obrsolidarista',
+      'impuestorenta',
+      'pateym',
+      'pativm',
+      'resaguinaldo',
+      'rescesantia',
+      'resvacaciones',
+    ] as const;
+
+    const parsedValues = propsToParse.reduce((acc, prop) => {
+      acc[prop] = parseFloat(String(row[prop]));
+      return acc;
+    }, {} as Record<string, number>);
+
+    const {
+      salariobruto,
+      obreym,
+      obrivm,
+      obrbanco,
+      obrsolidarista,
+      impuestorenta,
+      pateym,
+      pativm,
+      resaguinaldo,
+      rescesantia,
+      resvacaciones,
+    } = parsedValues;
+    
+    const creditosfiscales = row.creditosfiscales
 
     const totalDeducciones = obreym + obrivm + obrbanco + obrsolidarista + impuestorenta;
-    const salarioNeto = salarioBruto - 2 * totalDeducciones;
-    const porcentajeDeducciones = (totalDeducciones / (salarioBruto / 2)) * 100;
+    const salarioNeto = salariobruto - 2 * totalDeducciones;
+    const porcentajeDeducciones = (totalDeducciones / (salariobruto / 2)) * 100;
     const porcentajeRestante = 100 - porcentajeDeducciones;
+
+    const obreroValores = [obreym, obrivm, obrbanco, obrsolidarista];
+    const patronalValores = [pateym, pativm];
+    const reservaValores = [resaguinaldo, rescesantia, resvacaciones];
 
     return (
       <Table.Tr key={row.cedula}>
@@ -59,12 +111,8 @@ export function FortnightReportTable({
         <Table.Th scope="row">{row.nombre}</Table.Th>
         <Table.Td>{row.depnombre}</Table.Td>
         <Table.Td>{new Date(row.fechapago).toLocaleDateString()}</Table.Td>
-        <Table.Td>
-          {salarioBruto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-        </Table.Td>
-        <Table.Td>
-          {salarioNeto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-        </Table.Td>
+        {getRows([salariobruto])}
+        {getRows([salarioNeto])}
         <Table.Td>
           <Group justify="space-between">
             <Text fz="xs" c="teal" fw={700}>
@@ -95,47 +143,11 @@ export function FortnightReportTable({
             creditosfiscales ? `${impuestorenta} Este colaborador tiene créditos fiscales` : ''
           }
         >
-          {impuestorenta.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
+          {formatCurrency(impuestorenta)}
         </Table.Td>
-        {showObrero && (
-          <>
-            <Table.Td>
-              {obreym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {obrivm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {obrbanco.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {obrsolidarista.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-          </>
-        )}
-        {showPatronal && (
-          <>
-            <Table.Td>
-              {pateym.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {pativm.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-          </>
-        )}
-        {showReservas && (
-          <>
-            <Table.Td>
-              {resaguinaldo.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {rescesantia.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-            <Table.Td>
-              {resvacaciones.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
-            </Table.Td>
-          </>
-        )}
+        {showObrero && <>{getRows(obreroValores)}</>}
+        {showPatronal && <>{getRows(patronalValores)}</>}
+        {showReservas && <>{getRows(reservaValores)}</>}
       </Table.Tr>
     );
   });
@@ -149,40 +161,15 @@ export function FortnightReportTable({
         <Table.Caption>Tabla de reportes detallados</Table.Caption>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
-            <Table.Th rowSpan={2}>Cédula</Table.Th>
-            <Table.Th rowSpan={2}>Nombre</Table.Th>
-            <Table.Th rowSpan={2}>Departamento</Table.Th>
-            <Table.Th rowSpan={2}>Fecha</Table.Th>
-            <Table.Th rowSpan={2}>Salario Bruto</Table.Th>
-            <Table.Th rowSpan={2}>Salario Neto</Table.Th>
-            <Table.Th rowSpan={2}>Deducciones %</Table.Th>
-            <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
+            {getHeaders(headers, 2)}
             {showObrero && <Table.Th colSpan={4}>Deducciones Obrero</Table.Th>}
             {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}
             {showReservas && <Table.Th colSpan={3}>Reservas Patronales</Table.Th>}
           </Table.Tr>
           <Table.Tr>
-            {showObrero && (
-              <>
-                <Table.Th>EyM</Table.Th>
-                <Table.Th>IVM</Table.Th>
-                <Table.Th>Banco</Table.Th>
-                <Table.Th>Solidarista</Table.Th>
-              </>
-            )}
-            {showPatronal && (
-              <>
-                <Table.Th>EyM</Table.Th>
-                <Table.Th>IVM</Table.Th>
-              </>
-            )}
-            {showReservas && (
-              <>
-                <Table.Th>Aguinaldo</Table.Th>
-                <Table.Th>Cesantía</Table.Th>
-                <Table.Th>Vacaciones</Table.Th>
-              </>
-            )}
+            {showObrero && <>{getHeaders(obreroHeaders)}</>}
+            {showPatronal && <>{getHeaders(patronalHeaders)}</>}
+            {showReservas && <>{getHeaders(reservaHeaders)}</>}
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>

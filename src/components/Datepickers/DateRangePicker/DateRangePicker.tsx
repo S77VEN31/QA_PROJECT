@@ -1,7 +1,7 @@
 // React
 import { useEffect, useState } from 'react';
 // Mantine
-import { DateInput } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
 // Classes
 import classes from './DateRangePicker.module.css';
 // Styles
@@ -56,7 +56,7 @@ export function DateRangePicker({
 
   return (
     <div className={classes.container}>
-      <DateInput
+      <DatePickerInput
         className={classes.input}
         label={startDateLabel}
         placeholder={startDatePlaceholder}
@@ -65,7 +65,7 @@ export function DateRangePicker({
         minDate={minDate}
         clearable
       />
-      <DateInput
+      <DatePickerInput
         className={classes.input}
         label={endDateLabel}
         placeholder={endDatePlaceholder}
