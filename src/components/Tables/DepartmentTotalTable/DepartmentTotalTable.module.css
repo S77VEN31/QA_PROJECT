@@ -12,8 +12,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-bottom: 1px solid
-    light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
 }
 
 .scrolled {
@@ -31,7 +30,6 @@
 
 .progressSection {
   &:not(:first-of-type) {
-    border-left: 3px solid
-      light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+    border-left: 3px solid light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
   }
 }

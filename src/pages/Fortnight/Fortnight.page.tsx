@@ -88,7 +88,11 @@ export function FortnightPage() {
 
     if (date instanceof Date) {
       setLoading(true);
-      const dateString = date.toDateString();
+      const dateString = date.toLocaleString('es-Es', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
       notifications.show(loadingToast(dateString, n));
       try {
         await apiCall();
@@ -159,13 +163,14 @@ export function FortnightPage() {
             <DateInput
               label="Fecha"
               aria-label="Ingrese la fecha para insertar una única quincena."
-              placeholder='Seleccione el día 14 o 28'
+              placeholder="Seleccione el día 14 o 28"
               required
               {...singleFortnightForm.getInputProps('quincenaDate')}
               value={singleFortnightForm.values.quincenaDate}
               onChange={(event) => singleFortnightForm.setFieldValue('quincenaDate', event)}
               valueFormat="DD-MM-YYYY"
               excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
+              clearable
             />
             <Button mt="md" type="submit" disabled={loading}>
               Generar
@@ -185,7 +190,7 @@ export function FortnightPage() {
               onChange={(event) => multipleFortnightForm.setFieldValue('quincenaDate', event)}
               valueFormat="DD-MM-YYYY"
               excludeDate={(date) => !filterQuincenaDays(date)}
-               placeholder='Seleccione el día 14 o 28'
+              placeholder="Seleccione el día 14 o 28"
             />
             <Group mt="md">
               <Button type="submit" value="5" disabled={loading}>

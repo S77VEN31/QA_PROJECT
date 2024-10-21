@@ -48,7 +48,7 @@ export function DepartmentTotalTable({
 
     return (
       <Table.Tr key={index}>
-        <Table.Td>{nombre}</Table.Td>
+        <Table.Th scope="row">{nombre}</Table.Th>
         <Table.Td>
           {salarioBruto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
@@ -57,14 +57,24 @@ export function DepartmentTotalTable({
         </Table.Td>
         <Table.Td>
           <Group justify="space-between">
-            <Text fz="xs" c="teal" fw={700}>
+            <Text
+              fz="xs"
+              c="teal"
+              fw={700}
+              aria-label={`${porcentajeRestante.toFixed(0)} como salario neto`}
+            >
               {porcentajeRestante.toFixed(0)}%
             </Text>
-            <Text fz="xs" c="red" fw={700}>
+            <Text
+              fz="xs"
+              c="red"
+              fw={700}
+              aria-label={`${porcentajeDeducciones.toFixed(0)} por ciento pagado en deducciones obrero`}
+            >
               {porcentajeDeducciones.toFixed(0)}%
             </Text>
           </Group>
-          <Progress.Root>
+          <Progress.Root aria-hidden>
             <Progress.Section
               className={classes.progressSection}
               value={porcentajeRestante}

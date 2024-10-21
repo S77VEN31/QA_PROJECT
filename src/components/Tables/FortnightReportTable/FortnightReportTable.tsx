@@ -56,7 +56,7 @@ export function FortnightReportTable({
             {row.cedula}
           </Link>
         </Table.Td>
-        <Table.Td>{row.nombre}</Table.Td>
+        <Table.Th scope="row">{row.nombre}</Table.Th>
         <Table.Td>{row.depnombre}</Table.Td>
         <Table.Td>{new Date(row.fechapago).toLocaleDateString()}</Table.Td>
         <Table.Td>
@@ -74,7 +74,7 @@ export function FortnightReportTable({
               {porcentajeDeducciones.toFixed(0)}%
             </Text>
           </Group>
-          <Progress.Root>
+          <Progress.Root aria-hidden>
             <Progress.Section
               className={classes.progressSection}
               value={porcentajeRestante}

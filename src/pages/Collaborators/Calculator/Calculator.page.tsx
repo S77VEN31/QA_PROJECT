@@ -19,7 +19,7 @@ const defaultNotificationPosition: NotificationPosition = 'top-center';
 const notificationMessages = {
   successToast: (tax: number) => ({
     title: 'Impuesto calculado',
-    message: `El impuesto de renta es de ${tax.toFixed(2)}`,
+    message: `El impuesto de renta es de ${tax.toFixed(2)} colones.`,
     color: 'green',
     position: defaultNotificationPosition,
   }),

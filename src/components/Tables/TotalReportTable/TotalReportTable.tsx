@@ -61,7 +61,7 @@ export function TotalReportTable({
               {porcentajeDeducciones.toFixed(0)}%
             </Text>
           </Group>
-          <Progress.Root>
+          <Progress.Root aria-hidden>
             <Progress.Section
               className={classes.progressSection}
               value={porcentajeRestante}

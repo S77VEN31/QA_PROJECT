@@ -40,7 +40,7 @@ export function DepartmentEmployeesTable({ data }: DepartmentEmployeesTableProps
             {cedula}
           </Link>
         </Table.Td>
-        <Table.Td>{nombre}</Table.Td>
+        <Table.Th scope="row">{nombre}</Table.Th>
         <Table.Td>
           {salarioBruto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
