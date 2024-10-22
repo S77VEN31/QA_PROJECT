@@ -2,18 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 // API
 import { getDepartmentEmployees, getDepartments } from '@api';
 // Components
-import {
-  DepartmentEmployeesTable,
-  ElipticPagination,
-  SearchableSelect,
-  SearchInput,
-} from '@components';
+import { DepartmentEmployeesTable, ElipticPagination, SearchableSelect, SearchInput } from '@components';
 // Types
 import { DepartmentEmployeeData } from '@types';
 // Mantine
 import { Loader, Text, Title } from '@mantine/core';
 // Classes
 import classes from './DepartmentEmployees.page.module.css';
+
 
 export function DepartmentEmployeesPage() {
   const [data, setData] = useState<DepartmentEmployeeData[]>([]);
@@ -86,6 +82,7 @@ export function DepartmentEmployeesPage() {
 
   const handlePageChange = (page: number) => {
     loadPageData(page);
+    focusTable();
   };
 
   return (

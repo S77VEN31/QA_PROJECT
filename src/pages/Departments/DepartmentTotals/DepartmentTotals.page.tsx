@@ -2,18 +2,14 @@ import { useRef, useState } from 'react';
 // API
 import { getDepartmentTotals } from '@api';
 // Components
-import {
-  CheckboxCard,
-  DateRangePicker,
-  DepartmentTotalTable,
-  ElipticPagination,
-} from '@components';
+import { CheckboxCard, DateRangePicker, DepartmentTotalTable, ElipticPagination } from '@components';
 // Types
 import { DepartmentTotalData } from '@types';
 // Mantine
 import { Button, Loader, Text, Title } from '@mantine/core';
 // Classes
 import classes from './DepartmentTotals.page.module.css';
+
 
 export function DepartmentTotalsPage() {
   const [data, setData] = useState<DepartmentTotalData[]>([]);
@@ -73,6 +69,7 @@ export function DepartmentTotalsPage() {
 
   const handlePageChange = (page: number) => {
     loadPageData(page);
+    focusTable();
   };
 
   return (
