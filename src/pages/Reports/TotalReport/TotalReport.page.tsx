@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // API
 import { getDepartments, getReportTotal } from '@api';
 // Components
@@ -30,6 +30,7 @@ export function TotalReportPage() {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getDepartments().then((departmentsData) => {
@@ -67,6 +68,7 @@ export function TotalReportPage() {
     getReportTotal(params)
       .then((responseData) => {
         setTotalData(responseData);
+        focusTable();
       })
       .catch((error) => {
         console.error('Error fetching report totals:', error);
@@ -74,6 +76,12 @@ export function TotalReportPage() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const focusTable = () => {
+    if (tableRef.current) {
+      tableRef.current.focus();
+    }
   };
 
   return (
@@ -137,7 +145,7 @@ export function TotalReportPage() {
           </Button>
         </div>
       </header>
-      <main className={classes.main}>
+      <main className={classes.main} ref={tableRef} tabIndex={-1}>
         <Title order={2}>Tabla de reportes totales</Title>
         {loading ? (
           <div className={classes.loaderContainer}>

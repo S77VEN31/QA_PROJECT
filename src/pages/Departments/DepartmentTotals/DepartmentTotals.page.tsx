@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 // API
 import { getDepartmentTotals } from '@api';
 // Components
@@ -7,8 +7,6 @@ import {
   DateRangePicker,
   DepartmentTotalTable,
   ElipticPagination,
-  SearchableSelect,
-  SearchInput,
 } from '@components';
 // Types
 import { DepartmentTotalData } from '@types';
@@ -31,6 +29,7 @@ export function DepartmentTotalsPage() {
   const [activePage, setActivePage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
   const limitRange = 9;
 
   const loadPageData = (page: number) => {
@@ -55,6 +54,7 @@ export function DepartmentTotalsPage() {
     getDepartmentTotals(params)
       .then((responseData) => {
         setData(responseData);
+        focusTable();
         console.log('Department totals:', responseData);
       })
       .catch((error) => {
@@ -63,6 +63,12 @@ export function DepartmentTotalsPage() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const focusTable = () => {
+    if (tableRef.current) {
+      tableRef.current.focus();
+    }
   };
 
   const handlePageChange = (page: number) => {
@@ -114,7 +120,7 @@ export function DepartmentTotalsPage() {
           </Button>
         </div>
       </header>
-      <main className={classes.main}>
+      <main className={classes.main} ref={tableRef} tabIndex={-1}>
         <Title order={2}>Tabla de reportes totales</Title>
         {loading ? (
           <div className={classes.loaderContainer}>

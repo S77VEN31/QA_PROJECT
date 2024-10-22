@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // API
 import { getDepartmentEmployees, getDepartments } from '@api';
 // Components
 import {
-  CheckboxCard,
   DepartmentEmployeesTable,
   ElipticPagination,
   SearchableSelect,
@@ -26,6 +25,7 @@ export function DepartmentEmployeesPage() {
   const [IDCard, setIDCard] = useState('');
   const [activePage, setActivePage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
   const limitRange = 15;
 
   useEffect(() => {
@@ -69,9 +69,18 @@ export function DepartmentEmployeesPage() {
       });
   };
 
+  const focusTable = () => {
+    if (tableRef.current) {
+      tableRef.current.focus();
+    }
+  };
+
   useEffect(() => {
     if (selectedDepartment) {
       loadPageData(1);
+    }
+    if (IDCard || selectedDepartment) {
+      focusTable();
     }
   }, [selectedDepartment, IDCard]);
 
@@ -103,7 +112,7 @@ export function DepartmentEmployeesPage() {
           />
         </div>
       </header>
-      <main className={classes.main}>
+      <main className={classes.main} ref={tableRef} tabIndex={-1}>
         <Title order={2}>Tabla de colaboradores</Title>
         {loading ? (
           <div className={classes.loaderContainer}>
