@@ -1,8 +1,12 @@
-;
 // React
 import { useState } from 'react';
 // API
-import { insertFortnight, insertNFortnights, MultipleFortnightsParams, SingleFortnightParams } from '@api';
+import {
+  insertFortnight,
+  insertNFortnights,
+  MultipleFortnightsParams,
+  SingleFortnightParams,
+} from '@api';
 // Mantine
 import { Button, Container, Group, Text, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
@@ -158,7 +162,7 @@ export function FortnightPage() {
             <Title order={2}>Insertar una quincena</Title>
             <DatePickerInput
               label="Fecha"
-              aria-label="Ingrese la fecha para insertar una única quincena."
+              aria-label="Ingrese la fecha para insertar una única quincena. Solo se permiten los días 14 y 28. Navegue hasta el calendario con el tabulador y navegue el calendario como una tabla."
               placeholder="Seleccione el día 14 o 28"
               required
               {...singleFortnightForm.getInputProps('quincenaDate')}
@@ -167,8 +171,10 @@ export function FortnightPage() {
               valueFormat="DD-MM-YYYY"
               excludeDate={(date) => !filterQuincenaDays(date)} // Filtrar días permitidos
               clearable
+              locale="es"
+              aria-haspopup="dialog"
             />
-            <Button mt="md" type="submit" disabled={loading}>
+            <Button mt="md" type="submit" disabled={loading} aria-label={'Generar quincena'}>
               Generar
             </Button>
           </form>
@@ -188,6 +194,8 @@ export function FortnightPage() {
               excludeDate={(date) => !filterQuincenaDays(date)}
               placeholder="Seleccione el día 14 o 28"
               clearable
+              locale="es"
+              aria-haspopup="dialog"
             />
             <Group mt="md">
               <Button type="submit" value="5" disabled={loading}>

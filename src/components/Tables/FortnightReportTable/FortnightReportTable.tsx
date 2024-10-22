@@ -1,5 +1,5 @@
 // React
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 // Types
 import { ReportDetailData } from '@types';
 // Tools
@@ -7,6 +7,8 @@ import cx from 'clsx';
 import { Link } from 'react-router-dom';
 // Mantine
 import { Group, Progress, ScrollArea, Table, Text } from '@mantine/core';
+// Contexts
+import { FocusContext } from '@/contexts';
 // Classes
 import classes from './FortnightReportTable.module.css';
 
@@ -51,7 +53,7 @@ export function FortnightReportTable({
   const getRows = (values: number[]): JSX.Element[] => {
     return values.map((value, index) => <Table.Td key={index}>{formatCurrency(value)}</Table.Td>);
   };
-  
+
   const rows = data.map((row) => {
     const propsToParse = [
       'salariobruto',
@@ -67,10 +69,13 @@ export function FortnightReportTable({
       'resvacaciones',
     ] as const;
 
-    const parsedValues = propsToParse.reduce((acc, prop) => {
-      acc[prop] = parseFloat(String(row[prop]));
-      return acc;
-    }, {} as Record<string, number>);
+    const parsedValues = propsToParse.reduce(
+      (acc, prop) => {
+        acc[prop] = parseFloat(String(row[prop]));
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const {
       salariobruto,
@@ -85,8 +90,8 @@ export function FortnightReportTable({
       rescesantia,
       resvacaciones,
     } = parsedValues;
-    
-    const creditosfiscales = row.creditosfiscales
+
+    const creditosfiscales = row.creditosfiscales;
 
     const totalDeducciones = obreym + obrivm + obrbanco + obrsolidarista + impuestorenta;
     const salarioNeto = salariobruto - 2 * totalDeducciones;
@@ -97,6 +102,7 @@ export function FortnightReportTable({
     const patronalValores = [pateym, pativm];
     const reservaValores = [resaguinaldo, rescesantia, resvacaciones];
 
+    const focusContext = useContext(FocusContext);
     return (
       <Table.Tr key={row.cedula}>
         <Table.Td>
@@ -104,6 +110,7 @@ export function FortnightReportTable({
             to={`/dashboard/collaborators/assign-salary?cardID=${row.cedula}`}
             style={{ fontSize: 'small' }}
             aria-label={`Ver datos de ${row.nombre}`}
+            onClick={focusContext?.focusContent}
           >
             {row.cedula}
           </Link>

@@ -52,7 +52,7 @@ export function TotalReportTable({
         <Table.Td>
           {salarioNeto.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}
         </Table.Td>
-        <Table.Td>
+        <Table.Td aria-hidden>
           <Group justify="space-between">
             <Text fz="xs" c="teal" fw={700}>
               {porcentajeRestante.toFixed(0)}%
@@ -131,7 +131,9 @@ export function TotalReportTable({
           <Table.Tr>
             <Table.Th rowSpan={2}>Salario Bruto</Table.Th>
             <Table.Th rowSpan={2}>Salario Neto</Table.Th>
-            <Table.Th rowSpan={2}>Deducciones %</Table.Th>
+            <Table.Th rowSpan={2} aria-hidden>
+              Deducciones %
+            </Table.Th>
             <Table.Th rowSpan={2}>Impuesto Renta</Table.Th>
             {showObrero && <Table.Th colSpan={4}>Deducciones Obrero</Table.Th>}
             {showPatronal && <Table.Th colSpan={2}>Deducciones Patronales</Table.Th>}

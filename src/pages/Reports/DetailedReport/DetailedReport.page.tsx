@@ -91,7 +91,10 @@ export function DetailedReportPage() {
 
   useEffect(() => {
     loadPageData(1);
-    if (selectedDepartment || IDCard || dateRange[0] || dateRange[1]) {
+    const hasValidID = IDCard.length >= 9;
+    const hasEmptyID = IDCard.length === 0;
+    const hasFilter = selectedDepartment || dateRange[0] || dateRange[1];
+    if (hasValidID || (hasFilter && (hasValidID || hasEmptyID))) {
       focusTable();
     }
   }, [selectedDepartment, IDCard, dateRange]);

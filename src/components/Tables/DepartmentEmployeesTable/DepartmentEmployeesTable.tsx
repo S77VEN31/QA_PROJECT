@@ -1,5 +1,5 @@
 // React
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 // Types
 import { DepartmentEmployeeData } from '@types';
 // Tools
@@ -7,6 +7,8 @@ import cx from 'clsx';
 import { Link } from 'react-router-dom';
 // Mantine
 import { ScrollArea, Table, TableCaption } from '@mantine/core';
+// Contexts
+import { FocusContext } from '@/contexts';
 // Classes
 import classes from './DepartmentEmployeesTable.module.css';
 
@@ -17,6 +19,8 @@ interface DepartmentEmployeesTableProps {
 
 export function DepartmentEmployeesTable({ data }: DepartmentEmployeesTableProps) {
   const [scrolled, setScrolled] = useState(false);
+
+  const focusContext = useContext(FocusContext);
 
   const rows = data.map((row) => {
     const departmentName = row.depnombre;
@@ -36,6 +40,7 @@ export function DepartmentEmployeesTable({ data }: DepartmentEmployeesTableProps
             to={`/dashboard/collaborators/assign-salary?cardID=${cedula}`}
             style={{ fontSize: 'small' }}
             aria-label={`Ver datos de ${nombre}`}
+            onClick={focusContext?.focusContent}
           >
             {cedula}
           </Link>
