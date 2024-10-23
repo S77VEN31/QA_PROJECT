@@ -65,6 +65,7 @@ export function DateRangePicker({
         minDate={minDate}
         clearable
         locale="es"
+        aria-label="Ingrese la fecha de inicio del rango. Navegue hasta el calendario con el tabulador y navegue el calendario como una tabla."
       />
       <DatePickerInput
         className={classes.input}
@@ -75,6 +76,7 @@ export function DateRangePicker({
         minDate={startDate || minDate}
         clearable
         locale="es"
+        aria-label="Ingrese la fecha de inicio del rango. Navegue hasta el calendario con el tabulador y navegue el calendario como una tabla."
       />
     </div>
   );

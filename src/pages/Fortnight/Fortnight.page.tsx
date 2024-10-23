@@ -185,7 +185,7 @@ export function FortnightPage() {
             </Title>
             <DatePickerInput
               label="Fecha de inicio"
-              aria-label="Ingrese la fecha para insertar múltiples quincenas."
+              aria-label="Ingrese la fecha para insertar múltiples quincenas. Solo se permiten los días 14 y 28. Navegue hasta el calendario con el tabulador y navegue el calendario como una tabla."
               required
               {...multipleFortnightForm.getInputProps('quincenaDate')}
               value={multipleFortnightForm.values.quincenaDate}
