@@ -76,7 +76,7 @@ export function DateRangePicker({
         minDate={startDate || minDate}
         clearable
         locale="es"
-        aria-label="Ingrese la fecha de inicio del rango. Navegue hasta el calendario con el tabulador y navegue el calendario como una tabla."
+        aria-label="Ingrese la fecha del fin del rango. Navegue hasta el calendario con el tabulador y navegue el calendario como una tabla."
       />
     </div>
   );
